@@ -1,5 +1,6 @@
-package cn.edu.xmu.privilegegateway.util;
+package cn.edu.xmu.oomall.core.util;
 
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.sardine.Sardine;
 import com.github.sardine.SardineFactory;
 import org.slf4j.Logger;
@@ -8,12 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
 public class ImgHelper {
 
-    private static Logger logger = LoggerFactory.getLogger(Common.class);
+    private static Logger logger = LoggerFactory.getLogger(ImgHelper.class);
 
     /**
      * 保存单个图片并限制大小在远程服务器，直接以multipartFile形式
@@ -26,16 +28,16 @@ public class ImgHelper {
      * @author 3218
      * @return
      */
-    public static ReturnObject remoteSaveImg(MultipartFile multipartFile,
-                                             int size, String username, String password, String baseUrl) throws IOException {
+    public static cn.edu.xmu.privilegegateway.util.ReturnObject remoteSaveImg(MultipartFile multipartFile,
+                                                                              int size, String username, String password, String baseUrl) throws IOException {
 
         //判断是否是图片
         if(!isImg(multipartFile))
-            return new ReturnObject(ResponseCode.IMG_FORMAT_ERROR);
+            return new cn.edu.xmu.privilegegateway.util.ReturnObject(ReturnNo.IMG_FORMAT_ERROR);
 
         //判断文件大小是否符合要求
         if(multipartFile.getSize()>size*1024*1024){
-            return new ReturnObject(ResponseCode.IMG_SIZE_EXCEED);
+            return new cn.edu.xmu.privilegegateway.util.ReturnObject(ReturnNo.IMG_SIZE_EXCEED);
         }
 
         Sardine sardine = SardineFactory.begin(username,password);

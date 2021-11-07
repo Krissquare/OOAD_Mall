@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cn.edu.xmu.ooad</groupId>
-    <artifactId>coupon</artifactId>
+    <artifactId>groupon</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

@@ -1,4 +1,4 @@
-package cn.edu.xmu.privilegegateway.util;
+package cn.edu.xmu.oomall.core.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;

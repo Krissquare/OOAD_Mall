@@ -1,4 +1,4 @@
-package cn.edu.xmu.privilegegateway.util;
+package cn.edu.xmu.oomall.core.util;
 
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ public class ReturnObject<T> {
     /**
      * 错误号
      */
-    ResponseCode code = ResponseCode.OK;
+    ReturnNo code = ReturnNo.OK;
 
     /**
      * 自定义的错误码
@@ -43,7 +43,7 @@ public class ReturnObject<T> {
      * 有错误码的构造函数
      * @param code 错误码
      */
-    public ReturnObject(ResponseCode code) {
+    public ReturnObject(ReturnNo code) {
         this.code = code;
     }
 
@@ -52,7 +52,7 @@ public class ReturnObject<T> {
      * @param code 错误码
      * @param errmsg 自定义message
      */
-    public ReturnObject(ResponseCode code, String errmsg) {
+    public ReturnObject(ReturnNo code, String errmsg) {
         this(code);
         this.errmsg = errmsg;
     }
