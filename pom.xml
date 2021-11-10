@@ -30,10 +30,9 @@
     </properties>
 
     <modules>
-        <module>advancesale</module>
+        <module>activity</module>
         <module>core</module>
         <module>goods</module>
-        <module>groupon</module>
         <module>coupon</module>
         <module>freight</module>
         <module>shop</module>

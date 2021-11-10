@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.core.util;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.*;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -20,6 +21,35 @@ import java.util.*;
 public class Common {
 
     private static Logger logger = LoggerFactory.getLogger(Common.class);
+
+
+    /**
+     * 生成八位数序号
+     * @return 序号
+     */
+    public static String genSeqNum(){
+        int  maxNum = 36;
+        int i;
+
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmssS");
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String strDate = localDateTime.format(dtf);
+        StringBuffer sb = new StringBuffer(strDate);
+
+        int count = 0;
+        char[] str = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K',
+                'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
+                'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
+        Random r = new Random();
+        while(count < 2){
+            i = Math.abs(r.nextInt(maxNum));
+            if (i >= 0 && i < str.length) {
+                sb.append(str[i]);
+                count ++;
+            }
+        }
+        return sb.toString();
+    }
 
     /**
      * 处理BindingResult的错误
@@ -36,7 +66,7 @@ public class Common {
                 msg.append(";");
             }
             logger.debug("processFieldErrors: msg = "+ msg.toString());
-            retObj = cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(ReturnNo.FIELD_NOTVALID, msg.toString());
+            retObj = ResponseUtil.fail(ReturnNo.FIELD_NOTVALID, msg.toString());
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
         return retObj;
@@ -47,19 +77,19 @@ public class Common {
      * @param returnObject 返回的对象
      * @return
      */
-    public static Object getRetObject(cn.edu.xmu.privilegegateway.util.ReturnObject<VoObject> returnObject) {
+    public static Object getRetObject(ReturnObject<VoObject> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
-            case ReturnNo.OK:
+            case OK:
                 VoObject data = returnObject.getData();
                 if (data != null){
                     Object voObj = data.createVo();
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok(voObj);
+                    return ResponseUtil.ok(voObj);
                 }else{
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok();
+                    return ResponseUtil.ok();
                 }
             default:
-                return cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -68,10 +98,10 @@ public class Common {
      * @param returnObject 返回的对象
      * @return
      */
-    public static Object getListRetObject(cn.edu.xmu.privilegegateway.util.ReturnObject<List> returnObject) {
+    public static Object getListRetObject(ReturnObject<List> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
-            case ReturnNo.OK:
+            case OK:
                 List objs = returnObject.getData();
                 if (objs != null){
                     List<Object> ret = new ArrayList<>(objs.size());
@@ -80,12 +110,12 @@ public class Common {
                             ret.add(((VoObject)data).createVo());
                         }
                     }
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok(ret);
+                    return ResponseUtil.ok(ret);
                 }else{
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok();
+                    return ResponseUtil.ok();
                 }
             default:
-                return cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -95,11 +125,10 @@ public class Common {
      * @param returnObject 返回的对象
      * @return
      */
-    public static Object getPageRetObject(cn.edu.xmu.privilegegateway.util.ReturnObject<PageInfo<VoObject>> returnObject) {
+    public static Object getPageRetObject(ReturnObject<PageInfo<VoObject>> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
-            case ReturnNo.OK:
-
+            case OK:
                 PageInfo<VoObject> objs = returnObject.getData();
                 if (objs != null){
                     List<Object> voObjs = new ArrayList<>(objs.getList().size());
@@ -115,26 +144,26 @@ public class Common {
                     ret.put("page", objs.getPageNum());
                     ret.put("pageSize", objs.getPageSize());
                     ret.put("pages", objs.getPages());
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok(ret);
+                    return ResponseUtil.ok(ret);
                 }else{
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok();
+                    return ResponseUtil.ok();
                 }
             default:
-                return cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
 
 
 
-    public static Object getNullRetObj(cn.edu.xmu.privilegegateway.util.ReturnObject<Object> returnObject, HttpServletResponse httpServletResponse) {
+    public static Object getNullRetObj(ReturnObject<Object> returnObject, HttpServletResponse httpServletResponse) {
         ReturnNo code = returnObject.getCode();
         switch (code) {
-            case ReturnNo.RESOURCE_ID_NOTEXIST:
+            case RESOURCE_ID_NOTEXIST:
                 httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
-                return cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode());
+                return ResponseUtil.fail(returnObject.getCode());
             default:
-                return cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -145,23 +174,23 @@ public class Common {
      */
     public static Object decorateReturnObject(ReturnObject returnObject) {
         switch (returnObject.getCode()) {
-            case ReturnNo.RESOURCE_ID_NOTEXIST:
+            case RESOURCE_ID_NOTEXIST:
                 // 404：资源不存在
                 return new ResponseEntity(
-                        cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.NOT_FOUND);
-            case ReturnNo.INTERNAL_SERVER_ERR:
+            case INTERNAL_SERVER_ERR:
                 // 500：数据库或其他严重错误
                 return new ResponseEntity(
-                        cn.edu.xmu.privilegegateway.util.ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.INTERNAL_SERVER_ERROR);
-            case ReturnNo.OK:
+            case OK:
                 // 200: 无错误
                 Object data = returnObject.getData();
                 if (data != null){
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok(data);
+                    return ResponseUtil.ok(data);
                 }else{
-                    return cn.edu.xmu.privilegegateway.util.ResponseUtil.ok();
+                    return ResponseUtil.ok();
                 }
             default:
                 return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());

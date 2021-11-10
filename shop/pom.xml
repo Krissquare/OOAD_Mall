@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.edu.xmu.ooad</groupId>
-    <artifactId>groupon</artifactId>
+    <groupId>cn.edu.xmu.oomall</groupId>
+    <artifactId>shop</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

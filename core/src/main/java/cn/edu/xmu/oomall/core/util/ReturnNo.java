@@ -34,20 +34,17 @@ public enum ReturnNo {
     RESOURCE_ID_OUTSCOPE(505,"操作的资源id不是自己的对象"),
     FILE_NO_WRITE_PERMISSION(506,"目录文件夹没有写入的权限"),
 
+    //状态码 200
+    STATENOTALLOW(507,"当前状态禁止此操作"),
     /***************************************************
      *    其他模块错误码
      **************************************************/
     ADDRESS_OUTLIMIT(601,"达到地址簿上限"),
-    REGION_OBSOLETE(602,"地区已废弃"),
-    ADVERTISEMENT_OUTLIMIT(603,"达到时段广告上限"),
-    TIMESEG_CONFLICT(604,"时段冲突"),
+
     SHAREACT_CONFLICT(605,"分享活动时段冲突"),
     ORDERITEM_NOTSHARED(606,"订单明细无分享记录"),
     ADVERTISEMENT_STATENOTALLOW(608,"广告状态禁止"),
-    AFTERSALE_STATENOTALLOW(609,"售后单状态禁止"),
-    Log_Bigger(610,"开始时间大于结束时间"),
-    Log_BEGIN_NULL(611,"开始时间不能为空"),
-    Log_END_NULL(612,"结束时间不能为空"),
+
 
     /***************************************************
      *    订单模块错误码
@@ -62,33 +59,35 @@ public enum ReturnNo {
      *    商品模块错误码
      **************************************************/
     GOODS_STOCK_NOTENOUGH(900,"商品规格库存不够"),
-    GOODS_PRICE_CONFLICT(902,"商品浮动价格时间冲突"),
-    USER_NOTBUY(903,"用户没有购买此商品"),
-    COUPONACT_STATENOTALLOW(904,"优惠活动状态禁止"),
-    COUPON_STATENOTALLOW(905,"优惠卷状态禁止"),
-    PRESALE_STATENOTALLOW(906,"预售活动状态禁止"),
-    GROUPON_STATENOTALLOW(907,"团购活动状态禁止"),
-    USER_HASSHOP(908,"用户已经有店铺"),
+    GOODS_CATEGORY_SAME(901, "类目名称已存在"),
+    GOODS_PRICE_CONFLICT(902,"商品销售时间冲突"),
+    GOODS_CATEGORY_NOTALLOW(903, "不允许加入到一级分类"),
+
+
     COUPON_NOTBEGIN(909,"未到优惠卷领取时间"),
     COUPON_FINISH(910,"优惠卷领罄"),
     COUPON_END(911,"优惠卷活动终止"),
     STATE_NOCHANGE(920,"状态未改变"),
     CATEALTER_INVALID(921,"对SPU类别操作无效"),
-    BRANDALTER_INVALID(922,"对SPU品牌操作无效"),
-    ACTIVITYALTER_INVALID(923,"对活动的无效操作"),
     ACTIVITY_NOTFOUND(924,"无符合条件的优惠活动"),
     SHOP_NOTOPERABLE(925,"不可对该商铺进行操作"),
-    SPU_NOTOPERABLE(926,"失效的SPU"),
-    DELETE_ONLINE_NOTALLOW(931, "不允许删除已上线状态的活动"),
     COMMENT_EXISTED(941,"该订单条目已评论"),
 
-    CATEGORY_NAME_SAME(991, "类目名称已存在"),
-    SHOP_STATENOTALLOW(980, "当前店铺状态不允许进行此类操作"),
+    ACT_LATE_BEGINTIME(947, "开始时间不能晚于结束时间"),
+    ACT_LATE_PAYTIME(948, "尾款支付时间晚于活动结束时间"),
+    ACT_EARLY_PAYTIME(949, "尾款支付时间早于活动开始时间"),
+    COUPON_LATE_COUPONTIME(950,"优惠卷领卷时间晚于活动开始时间"),
 
+    SHOP_NOT_RECON(968,"店铺尚有支付未清算完毕"),
+    SHOP_USER_HASSHOP(969,"用户已经有店铺"),
+    COMMENT_USER_NOORDER(970,"用户没有购买此商品"),
+
+    FREIGHT_REGIONOBSOLETE(995,"地区已废弃"),
     FREIGHT_WRONGTYPE(996,"该运费模板类型与内容不符"),
     FREIGHT_REGIONEXIST(997,"该运费模板中该地区已经定义"),
     FREIGHT_NOTDELETED(998,"存在上架销售商品，不能删除运费模板"),
     FREIGHT_REGIONSAME(999,"运费模板中该地区已经定义");
+
     private int code;
     private String message;
     ReturnNo(int code, String message){

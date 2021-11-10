@@ -28,16 +28,16 @@ public class ImgHelper {
      * @author 3218
      * @return
      */
-    public static cn.edu.xmu.privilegegateway.util.ReturnObject remoteSaveImg(MultipartFile multipartFile,
+    public static ReturnObject remoteSaveImg(MultipartFile multipartFile,
                                                                               int size, String username, String password, String baseUrl) throws IOException {
 
         //判断是否是图片
         if(!isImg(multipartFile))
-            return new cn.edu.xmu.privilegegateway.util.ReturnObject(ReturnNo.IMG_FORMAT_ERROR);
+            return new ReturnObject(ReturnNo.IMG_FORMAT_ERROR);
 
         //判断文件大小是否符合要求
         if(multipartFile.getSize()>size*1024*1024){
-            return new cn.edu.xmu.privilegegateway.util.ReturnObject(ReturnNo.IMG_SIZE_EXCEED);
+            return new ReturnObject(ReturnNo.IMG_SIZE_EXCEED);
         }
 
         Sardine sardine = SardineFactory.begin(username,password);
