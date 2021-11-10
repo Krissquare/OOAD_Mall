@@ -16,208 +16,179 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `oomall_advance_sale`
+-- Table structure for table `advance_sale`
 --
 
-DROP TABLE IF EXISTS `oomall_advance_sale`;
+DROP TABLE IF EXISTS `advance_sale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_advance_sale` (
+CREATE TABLE `advance_sale` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
-  `shop_name` varchar(128) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `pay_time` datetime DEFAULT NULL,
   `advance_pay_price` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='预售';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_category`
+-- Table structure for table `category`
 --
 
-DROP TABLE IF EXISTS `oomall_category`;
+DROP TABLE IF EXISTS `category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_category` (
+CREATE TABLE `category` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
-  `commission_ratio` int DEFAULT '15' COMMENT '平台抽佣比例（千分位）',
+  `commission_ratio` bigint DEFAULT NULL,
   `pid` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modified_by` bigint DEFAULT NULL,
-  `modify_time` datetime DEFAULT NULL,
-  `modify_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分类';
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_comment`
+-- Table structure for table `comment`
 --
 
-DROP TABLE IF EXISTS `oomall_comment`;
+DROP TABLE IF EXISTS `comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_comment` (
+CREATE TABLE `comment` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `product_id` bigint DEFAULT NULL,
   `orderitem_id` bigint DEFAULT NULL,
   `type` tinyint DEFAULT NULL,
   `content` varchar(500) DEFAULT NULL,
   `state` tinyint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `audit_by` bigint DEFAULT NULL,
-  `audit_time` datetime DEFAULT NULL,
-  `audit_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_coupon_activity`
+-- Table structure for table `coupon_activity`
 --
 
-DROP TABLE IF EXISTS `oomall_coupon_activity`;
+DROP TABLE IF EXISTS `coupon_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_coupon_activity` (
+CREATE TABLE `coupon_activity` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
-  `shop_id` bigint DEFAULT NULL,
-  `shop_name` varchar(128) DEFAULT NULL,
   `coupon_time` datetime DEFAULT NULL,
-  `begin_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
+  `shop_id` bigint DEFAULT NULL,
   `quantity` int DEFAULT NULL,
   `quantity_type` tinyint DEFAULT NULL,
   `valid_term` tinyint DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `strategy` varchar(500) DEFAULT NULL,
-  `state` tinyint default 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_coupon_onsale`
+-- Table structure for table `coupon_onsale`
 --
 
-DROP TABLE IF EXISTS `oomall_coupon_onsale`;
+DROP TABLE IF EXISTS `coupon_onsale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_coupon_onsale` (
+CREATE TABLE `coupon_onsale` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `activity_id` bigint DEFAULT NULL,
   `onsale_id` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_freight_model`
+-- Table structure for table `freight_model`
 --
 
-DROP TABLE IF EXISTS `oomall_freight_model`;
+DROP TABLE IF EXISTS `freight_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_freight_model` (
+CREATE TABLE `freight_model` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
   `default_model` tinyint DEFAULT NULL,
-  `type` tinyint DEFAULT NULL,
+  `tpye` tinyint DEFAULT NULL,
   `unit` int DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modified_by` bigint DEFAULT NULL,
-  `modify_time` datetime DEFAULT NULL,
-  `modify_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='运费模板';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_goods`
+-- Table structure for table `goods`
 --
 
-DROP TABLE IF EXISTS `oomall_goods`;
+DROP TABLE IF EXISTS `goods`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_goods` (
+CREATE TABLE `goods` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
   `shop_id` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品集合';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_groupon_activity`
+-- Table structure for table `groupon_activity`
 --
 
-DROP TABLE IF EXISTS `oomall_groupon_activity`;
+DROP TABLE IF EXISTS `groupon_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_groupon_activity` (
+CREATE TABLE `groupon_activity` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
-  `shop_id` bigint DEFAULT NULL,
-  `shop_name` varchar(128) DEFAULT NULL,
   `strategy` varchar(500) DEFAULT NULL,
-  `begin_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
-  `state` tinyint default 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='团购活动';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_onsale`
+-- Table structure for table `onsale`
 --
 
-DROP TABLE IF EXISTS `oomall_onsale`;
+DROP TABLE IF EXISTS `onsale`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_onsale` (
+CREATE TABLE `onsale` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
   `product_id` bigint DEFAULT NULL,
@@ -228,28 +199,25 @@ CREATE TABLE `oomall_onsale` (
   `type` tinyint DEFAULT NULL,
   `activity_id` bigint DEFAULT NULL,
   `share_act_id` bigint DEFAULT NULL,
-  `state` tinyint default 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
+  `invalid_by` varchar(64) DEFAULT NULL,
+  `invalid_time` datetime DEFAULT NULL,
+  `valid` tinyint DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='价格与数量';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_piece_freight`
+-- Table structure for table `piece_freight_model`
 --
 
-DROP TABLE IF EXISTS `oomall_piece_freight`;
+DROP TABLE IF EXISTS `piece_freight_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_piece_freight` (
+CREATE TABLE `piece_freight_model` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `freight_model_id` bigint DEFAULT NULL,
   `first_items` int DEFAULT NULL,
@@ -257,71 +225,56 @@ CREATE TABLE `oomall_piece_freight` (
   `additional_items` int DEFAULT NULL,
   `additional_items_price` bigint DEFAULT NULL,
   `region_id` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modified_by` bigint DEFAULT NULL,
-  `modify_time` datetime DEFAULT NULL,
-  `modify_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='计件运费';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_product`
+-- Table structure for table `product`
 --
 
-DROP TABLE IF EXISTS `oomall_product`;
+DROP TABLE IF EXISTS `product`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_product` (
+CREATE TABLE `product` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
-  `shop_name` varchar(128) DEFAULT NULL,
-  `goods_id` bigint DEFAULT '0',
-  `category_id` bigint DEFAULT '0',
-  `freight_id` bigint DEFAULT '0',
+  `pre_id` bigint DEFAULT NULL,
+  `goods_id` bigint DEFAULT NULL,
+  `brand_id` bigint DEFAULT NULL,
+  `category_id` bigint DEFAULT NULL,
+  `freight_id` bigint DEFAULT NULL,
   `sku_sn` varchar(128) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `original_price` bigint DEFAULT NULL,
-  `weight` bigint DEFAULT '1',
+  `weight` bigint DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `barcode` varchar(128) DEFAULT NULL,
-  `unit` varchar(64) DEFAULT '个',
-  `origin_place` varchar(128) DEFAULT NULL COMMENT '产地',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `audited_by` bigint DEFAULT NULL,
-  `audit_time` datetime DEFAULT NULL,
-  `audit_name` varchar(128) DEFAULT NULL,
-  `prohibit_by` bigint DEFAULT NULL,
-  `prohibit_time` datetime DEFAULT NULL,
-  `prohibit_name` varchar(128) DEFAULT NULL,
-  `allowed_by` bigint DEFAULT NULL,
-  `allow_time` datetime DEFAULT NULL,
-  `allow_name` varchar(128) DEFAULT NULL,
-  `onshelf_by` bigint DEFAULT NULL,
-  `onshelf_time` datetime DEFAULT NULL,
-  `onshelf_name` varchar(128) DEFAULT NULL,
-  `offshelf_by` bigint DEFAULT NULL,
-  `offshelf_time` datetime DEFAULT NULL,
-  `offshelf_name` varchar(128) DEFAULT NULL,
+  `detail` varchar(500) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_product_draft`
+-- Table structure for table `product_draft`
 --
 
-DROP TABLE IF EXISTS `oomall_product_draft`;
+DROP TABLE IF EXISTS `product_draft`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_product_draft` (
+CREATE TABLE `product_draft` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
   `product_id` bigint DEFAULT NULL,
   `goods_id` bigint DEFAULT NULL,
+  `brand_id` bigint DEFAULT NULL,
   `category_id` bigint DEFAULT NULL,
   `weight` bigint DEFAULT NULL,
   `freight_id` bigint DEFAULT NULL,
@@ -329,131 +282,104 @@ CREATE TABLE `oomall_product_draft` (
   `name` varchar(128) DEFAULT NULL,
   `original_price` bigint DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `barcode` varchar(128) DEFAULT NULL,
-  `unit` varchar(64) DEFAULT '个',
-  `origin_place` varchar(128) DEFAULT NULL COMMENT '产地',
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `detail` varchar(500) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品草稿';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_region`
+-- Table structure for table `region`
 --
 
-DROP TABLE IF EXISTS `oomall_region`;
+DROP TABLE IF EXISTS `region`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_region` (
+CREATE TABLE `region` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `pid` bigint DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
-  `obsoleted_by` bigint DEFAULT NULL,
-  `obsolete_time` datetime DEFAULT NULL,
-  `obsolete_name` varchar(128) DEFAULT NULL,
+  `state` tinyint DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='行政区划';
+) ENGINE=InnoDB AUTO_INCREMENT=4190 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_share_activity`
+-- Table structure for table `share_activity`
 --
 
-DROP TABLE IF EXISTS `oomall_share_activity`;
+DROP TABLE IF EXISTS `share_activity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_share_activity` (
+CREATE TABLE `share_activity` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
-  `shop_name` varchar(128) DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
   `strategy` varchar(500) DEFAULT NULL,
-  `begin_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分享活动';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_shop`
+-- Table structure for table `shop`
 --
 
-DROP TABLE IF EXISTS `oomall_shop`;
+DROP TABLE IF EXISTS `shop`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_shop` (
+CREATE TABLE `shop` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(128) DEFAULT NULL,
   `deposit` bigint DEFAULT NULL,
   `deposit_threshold` bigint DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `online_by` bigint DEFAULT NULL,
-  `online_time` datetime DEFAULT NULL,
-  `online_name` varchar(128) DEFAULT NULL,
-  `offline_by` bigint DEFAULT NULL,
-  `offline_time` datetime DEFAULT NULL,
-  `offline_name` varchar(128) DEFAULT NULL,
-  `closed_by` bigint DEFAULT NULL,
-  `close_time` datetime DEFAULT NULL,
-  `close_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_shop_account`
+-- Table structure for table `shop_account`
 --
 
-DROP TABLE IF EXISTS `oomall_shop_account`;
+DROP TABLE IF EXISTS `shop_account`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_shop_account` (
+CREATE TABLE `shop_account` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `shop_id` bigint DEFAULT NULL,
   `type` tinyint DEFAULT NULL,
-  `account` varchar(256) DEFAULT NULL,
+  `account` bigint DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
-  `priority` tinyint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺账号';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `oomall_weight_freight`
+-- Table structure for table `weight_freight_model`
 --
 
-DROP TABLE IF EXISTS `oomall_weight_freight`;
+DROP TABLE IF EXISTS `weight_freight_model`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `oomall_weight_freight` (
+CREATE TABLE `weight_freight_model` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `freight_model_id` bigint DEFAULT NULL,
   `first_weight` int DEFAULT NULL,
@@ -464,14 +390,12 @@ CREATE TABLE `oomall_weight_freight` (
   `trihun_price` bigint DEFAULT NULL,
   `above_price` bigint DEFAULT NULL,
   `region_id` bigint DEFAULT NULL,
-  `created_by` bigint DEFAULT NULL COMMENT '创建用户id',
-  `create_name` varchar(128) DEFAULT NULL,
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modified_by` bigint DEFAULT NULL,
-  `modify_time` datetime DEFAULT NULL,
-  `modify_name` varchar(128) DEFAULT NULL,
+  `creator_id`   bigint            DEFAULT NULL COMMENT '创建用户id',
+  `gmt_create`   datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modifier_id`  bigint            DEFAULT NULL COMMENT '修改用户id',
+  `gmt_modified` datetime          DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='计重运费';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -483,4 +407,4 @@ CREATE TABLE `oomall_weight_freight` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-10 20:13:11
+-- Dump completed on 2021-11-05 20:13:23
