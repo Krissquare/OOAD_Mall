@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.coupon.bo;
+package cn.edu.xmu.oomall.coupon.model.bo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,13 +11,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Shop {
+public class Customer {
 	private Long id;
-	private String name;
-	private String gmtCreateTime;
-	private String gmtModiTime;
+	private String userName;
+	private String realName;
 
-	public Shop(Long shopId) {
-		this.id = shopId;
+	public Customer(Long id) {
+		this.id = id;
 	}
 }

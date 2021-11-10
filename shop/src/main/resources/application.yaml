@@ -15,7 +15,7 @@ spring:
     # 解决Bean重复定义问题
     allow-bean-definition-overriding: true
   application:
-    name: goods-service
+    name: shop-service
   profiles:
     active: dev
   servlet:
@@ -26,7 +26,6 @@ spring:
       max-request-size: 10MB
 
   datasource:
-    url: jdbc:mysql://192.168.31.241：3306/oomall??serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     username: dbuser
@@ -47,7 +46,8 @@ spring:
           #慢SQL执行时间
           slow-sql-millis: 100
       validation-query: select 1
-
+      #filters: config
+      #connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIllnJkZcpZni1VS8uLjP9kwRyUVzRBhU0hH9T8fBBAs5t7sZt6XSnD07jsTwRPG110thU7HTMtrnWkgV9AfEqsCAwEAAQ==
 
   redis:
     # Redis数据库索引（默认为0）
@@ -69,7 +69,7 @@ spring:
       mode: always
       encoding: UTF-8
       username: dbuser
-      password: icJzHtqe9O7qGlIod91x0KFwPdL5hzDNNOTcx9xXSNcS6AN43jWRLIxFG3rdk/L+EFLZfcETeIg+RhA3ZbcE3Q==
+      password: 12345678
 
 mybatis:
   #po对象的包

@@ -1,7 +1,8 @@
 package cn.edu.xmu.oomall.coupon;
 
-import cn.edu.xmu.oomall.coupon.impl.PriceCouponDiscount;
-import cn.edu.xmu.oomall.coupon.impl.PriceCouponLimitation;
+import cn.edu.xmu.oomall.coupon.model.bo.strategy.BaseCouponDiscount;
+import cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponDiscount;
+import cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponLimitation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,7 +1,7 @@
-package cn.edu.xmu.oomall.coupon.impl;
+package cn.edu.xmu.oomall.coupon.model.bo.strategy.impl;
 
-import cn.edu.xmu.oomall.coupon.bo.OrderItem;
-import cn.edu.xmu.oomall.coupon.BaseCouponLimitation;
+import cn.edu.xmu.oomall.coupon.model.bo.OrderItem;
+import cn.edu.xmu.oomall.coupon.model.bo.strategy.BaseCouponLimitation;
 
 import java.util.List;
 

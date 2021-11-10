@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.coupon.bo;
+package cn.edu.xmu.oomall.coupon.model.bo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

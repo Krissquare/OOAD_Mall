@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.coupon;
+package cn.edu.xmu.oomall.coupon.model.bo.strategy;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
