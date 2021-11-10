@@ -20,23 +20,12 @@
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="origin_place" jdbcType="VARCHAR" property="originPlace" />
+    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
     <result column="create_name" jdbcType="VARCHAR" property="createName" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="audited_by" jdbcType="BIGINT" property="auditedBy" />
-    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
-    <result column="audit_name" jdbcType="VARCHAR" property="auditName" />
-    <result column="prohibit_by" jdbcType="BIGINT" property="prohibitBy" />
-    <result column="prohibit_time" jdbcType="TIMESTAMP" property="prohibitTime" />
-    <result column="prohibit_name" jdbcType="VARCHAR" property="prohibitName" />
-    <result column="allowed_by" jdbcType="BIGINT" property="allowedBy" />
-    <result column="allow_time" jdbcType="TIMESTAMP" property="allowTime" />
-    <result column="allow_name" jdbcType="VARCHAR" property="allowName" />
-    <result column="onshelf_by" jdbcType="BIGINT" property="onshelfBy" />
-    <result column="onshelf_time" jdbcType="TIMESTAMP" property="onshelfTime" />
-    <result column="onshelf_name" jdbcType="VARCHAR" property="onshelfName" />
-    <result column="offshelf_by" jdbcType="BIGINT" property="offshelfBy" />
-    <result column="offshelf_time" jdbcType="TIMESTAMP" property="offshelfTime" />
-    <result column="offshelf_name" jdbcType="VARCHAR" property="offshelfName" />
+    <result column="modified_by" jdbcType="BIGINT" property="modifiedBy" />
+    <result column="modi_name" jdbcType="VARCHAR" property="modiName" />
+    <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
+    <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -78,9 +67,7 @@
     -->
     `id`, `shop_id`, `shop_name`, `goods_id`, `category_id`, `freight_id`, `sku_sn`, 
     `name`, `original_price`, `weight`, `image_url`, `barcode`, `unit`, `origin_place`, 
-    `create_name`, `create_time`, `audited_by`, `audit_time`, `audit_name`, `prohibit_by`, 
-    `prohibit_time`, `prohibit_name`, `allowed_by`, `allow_time`, `allow_name`, `onshelf_by`, 
-    `onshelf_time`, `onshelf_name`, `offshelf_by`, `offshelf_time`, `offshelf_name`
+    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`
   </sql>
   <select id="selectByExample" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductPoExample" resultMap="BaseResultMap">
     <!--
@@ -131,24 +118,16 @@
       `category_id`, `freight_id`, `sku_sn`, 
       `name`, `original_price`, `weight`, 
       `image_url`, `barcode`, `unit`, 
-      `origin_place`, `create_name`, `create_time`, 
-      `audited_by`, `audit_time`, `audit_name`, 
-      `prohibit_by`, `prohibit_time`, `prohibit_name`, 
-      `allowed_by`, `allow_time`, `allow_name`, 
-      `onshelf_by`, `onshelf_time`, `onshelf_name`, 
-      `offshelf_by`, `offshelf_time`, `offshelf_name`
-      )
+      `origin_place`, `created_by`, `create_name`, 
+      `modified_by`, `modi_name`, `gmt_create`, 
+      `gmt_modified`)
     values (#{shopId,jdbcType=BIGINT}, #{shopName,jdbcType=VARCHAR}, #{goodsId,jdbcType=BIGINT}, 
       #{categoryId,jdbcType=BIGINT}, #{freightId,jdbcType=BIGINT}, #{skuSn,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{originalPrice,jdbcType=BIGINT}, #{weight,jdbcType=BIGINT}, 
       #{imageUrl,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
-      #{originPlace,jdbcType=VARCHAR}, #{createName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{auditedBy,jdbcType=BIGINT}, #{auditTime,jdbcType=TIMESTAMP}, #{auditName,jdbcType=VARCHAR}, 
-      #{prohibitBy,jdbcType=BIGINT}, #{prohibitTime,jdbcType=TIMESTAMP}, #{prohibitName,jdbcType=VARCHAR}, 
-      #{allowedBy,jdbcType=BIGINT}, #{allowTime,jdbcType=TIMESTAMP}, #{allowName,jdbcType=VARCHAR}, 
-      #{onshelfBy,jdbcType=BIGINT}, #{onshelfTime,jdbcType=TIMESTAMP}, #{onshelfName,jdbcType=VARCHAR}, 
-      #{offshelfBy,jdbcType=BIGINT}, #{offshelfTime,jdbcType=TIMESTAMP}, #{offshelfName,jdbcType=VARCHAR}
-      )
+      #{originPlace,jdbcType=VARCHAR}, #{createdBy,jdbcType=BIGINT}, #{createName,jdbcType=VARCHAR}, 
+      #{modifiedBy,jdbcType=BIGINT}, #{modiName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductPo">
     <!--
@@ -199,56 +178,23 @@
       <if test="originPlace != null">
         `origin_place`,
       </if>
+      <if test="createdBy != null">
+        `created_by`,
+      </if>
       <if test="createName != null">
         `create_name`,
       </if>
-      <if test="createTime != null">
-        `create_time`,
+      <if test="modifiedBy != null">
+        `modified_by`,
       </if>
-      <if test="auditedBy != null">
-        `audited_by`,
+      <if test="modiName != null">
+        `modi_name`,
       </if>
-      <if test="auditTime != null">
-        `audit_time`,
+      <if test="gmtCreate != null">
+        `gmt_create`,
       </if>
-      <if test="auditName != null">
-        `audit_name`,
-      </if>
-      <if test="prohibitBy != null">
-        `prohibit_by`,
-      </if>
-      <if test="prohibitTime != null">
-        `prohibit_time`,
-      </if>
-      <if test="prohibitName != null">
-        `prohibit_name`,
-      </if>
-      <if test="allowedBy != null">
-        `allowed_by`,
-      </if>
-      <if test="allowTime != null">
-        `allow_time`,
-      </if>
-      <if test="allowName != null">
-        `allow_name`,
-      </if>
-      <if test="onshelfBy != null">
-        `onshelf_by`,
-      </if>
-      <if test="onshelfTime != null">
-        `onshelf_time`,
-      </if>
-      <if test="onshelfName != null">
-        `onshelf_name`,
-      </if>
-      <if test="offshelfBy != null">
-        `offshelf_by`,
-      </if>
-      <if test="offshelfTime != null">
-        `offshelf_time`,
-      </if>
-      <if test="offshelfName != null">
-        `offshelf_name`,
+      <if test="gmtModified != null">
+        `gmt_modified`,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -291,56 +237,23 @@
       <if test="originPlace != null">
         #{originPlace,jdbcType=VARCHAR},
       </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=BIGINT},
+      </if>
       <if test="createName != null">
         #{createName,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
+      <if test="modifiedBy != null">
+        #{modifiedBy,jdbcType=BIGINT},
       </if>
-      <if test="auditedBy != null">
-        #{auditedBy,jdbcType=BIGINT},
+      <if test="modiName != null">
+        #{modiName,jdbcType=VARCHAR},
       </if>
-      <if test="auditTime != null">
-        #{auditTime,jdbcType=TIMESTAMP},
+      <if test="gmtCreate != null">
+        #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="auditName != null">
-        #{auditName,jdbcType=VARCHAR},
-      </if>
-      <if test="prohibitBy != null">
-        #{prohibitBy,jdbcType=BIGINT},
-      </if>
-      <if test="prohibitTime != null">
-        #{prohibitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="prohibitName != null">
-        #{prohibitName,jdbcType=VARCHAR},
-      </if>
-      <if test="allowedBy != null">
-        #{allowedBy,jdbcType=BIGINT},
-      </if>
-      <if test="allowTime != null">
-        #{allowTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="allowName != null">
-        #{allowName,jdbcType=VARCHAR},
-      </if>
-      <if test="onshelfBy != null">
-        #{onshelfBy,jdbcType=BIGINT},
-      </if>
-      <if test="onshelfTime != null">
-        #{onshelfTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="onshelfName != null">
-        #{onshelfName,jdbcType=VARCHAR},
-      </if>
-      <if test="offshelfBy != null">
-        #{offshelfBy,jdbcType=BIGINT},
-      </if>
-      <if test="offshelfTime != null">
-        #{offshelfTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="offshelfName != null">
-        #{offshelfName,jdbcType=VARCHAR},
+      <if test="gmtModified != null">
+        #{gmtModified,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -390,56 +303,23 @@
       <if test="originPlace != null">
         `origin_place` = #{originPlace,jdbcType=VARCHAR},
       </if>
+      <if test="createdBy != null">
+        `created_by` = #{createdBy,jdbcType=BIGINT},
+      </if>
       <if test="createName != null">
         `create_name` = #{createName,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        `create_time` = #{createTime,jdbcType=TIMESTAMP},
+      <if test="modifiedBy != null">
+        `modified_by` = #{modifiedBy,jdbcType=BIGINT},
       </if>
-      <if test="auditedBy != null">
-        `audited_by` = #{auditedBy,jdbcType=BIGINT},
+      <if test="modiName != null">
+        `modi_name` = #{modiName,jdbcType=VARCHAR},
       </if>
-      <if test="auditTime != null">
-        `audit_time` = #{auditTime,jdbcType=TIMESTAMP},
+      <if test="gmtCreate != null">
+        `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
       </if>
-      <if test="auditName != null">
-        `audit_name` = #{auditName,jdbcType=VARCHAR},
-      </if>
-      <if test="prohibitBy != null">
-        `prohibit_by` = #{prohibitBy,jdbcType=BIGINT},
-      </if>
-      <if test="prohibitTime != null">
-        `prohibit_time` = #{prohibitTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="prohibitName != null">
-        `prohibit_name` = #{prohibitName,jdbcType=VARCHAR},
-      </if>
-      <if test="allowedBy != null">
-        `allowed_by` = #{allowedBy,jdbcType=BIGINT},
-      </if>
-      <if test="allowTime != null">
-        `allow_time` = #{allowTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="allowName != null">
-        `allow_name` = #{allowName,jdbcType=VARCHAR},
-      </if>
-      <if test="onshelfBy != null">
-        `onshelf_by` = #{onshelfBy,jdbcType=BIGINT},
-      </if>
-      <if test="onshelfTime != null">
-        `onshelf_time` = #{onshelfTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="onshelfName != null">
-        `onshelf_name` = #{onshelfName,jdbcType=VARCHAR},
-      </if>
-      <if test="offshelfBy != null">
-        `offshelf_by` = #{offshelfBy,jdbcType=BIGINT},
-      </if>
-      <if test="offshelfTime != null">
-        `offshelf_time` = #{offshelfTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="offshelfName != null">
-        `offshelf_name` = #{offshelfName,jdbcType=VARCHAR},
+      <if test="gmtModified != null">
+        `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
@@ -463,23 +343,12 @@
       `barcode` = #{barcode,jdbcType=VARCHAR},
       `unit` = #{unit,jdbcType=VARCHAR},
       `origin_place` = #{originPlace,jdbcType=VARCHAR},
+      `created_by` = #{createdBy,jdbcType=BIGINT},
       `create_name` = #{createName,jdbcType=VARCHAR},
-      `create_time` = #{createTime,jdbcType=TIMESTAMP},
-      `audited_by` = #{auditedBy,jdbcType=BIGINT},
-      `audit_time` = #{auditTime,jdbcType=TIMESTAMP},
-      `audit_name` = #{auditName,jdbcType=VARCHAR},
-      `prohibit_by` = #{prohibitBy,jdbcType=BIGINT},
-      `prohibit_time` = #{prohibitTime,jdbcType=TIMESTAMP},
-      `prohibit_name` = #{prohibitName,jdbcType=VARCHAR},
-      `allowed_by` = #{allowedBy,jdbcType=BIGINT},
-      `allow_time` = #{allowTime,jdbcType=TIMESTAMP},
-      `allow_name` = #{allowName,jdbcType=VARCHAR},
-      `onshelf_by` = #{onshelfBy,jdbcType=BIGINT},
-      `onshelf_time` = #{onshelfTime,jdbcType=TIMESTAMP},
-      `onshelf_name` = #{onshelfName,jdbcType=VARCHAR},
-      `offshelf_by` = #{offshelfBy,jdbcType=BIGINT},
-      `offshelf_time` = #{offshelfTime,jdbcType=TIMESTAMP},
-      `offshelf_name` = #{offshelfName,jdbcType=VARCHAR}
+      `modified_by` = #{modifiedBy,jdbcType=BIGINT},
+      `modi_name` = #{modiName,jdbcType=VARCHAR},
+      `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
+      `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

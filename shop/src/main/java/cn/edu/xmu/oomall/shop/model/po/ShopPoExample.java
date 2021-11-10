@@ -635,633 +635,253 @@ public class ShopPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIsNull() {
-            addCriterion("`create_time` is null");
+        public Criteria andModifiedByIsNull() {
+            addCriterion("`modified_by` is null");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIsNotNull() {
-            addCriterion("`create_time` is not null");
+        public Criteria andModifiedByIsNotNull() {
+            addCriterion("`modified_by` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` =", value, "createTime");
+        public Criteria andModifiedByEqualTo(Long value) {
+            addCriterion("`modified_by` =", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` <>", value, "createTime");
+        public Criteria andModifiedByNotEqualTo(Long value) {
+            addCriterion("`modified_by` <>", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`create_time` >", value, "createTime");
+        public Criteria andModifiedByGreaterThan(Long value) {
+            addCriterion("`modified_by` >", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` >=", value, "createTime");
+        public Criteria andModifiedByGreaterThanOrEqualTo(Long value) {
+            addCriterion("`modified_by` >=", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThan(LocalDateTime value) {
-            addCriterion("`create_time` <", value, "createTime");
+        public Criteria andModifiedByLessThan(Long value) {
+            addCriterion("`modified_by` <", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` <=", value, "createTime");
+        public Criteria andModifiedByLessThanOrEqualTo(Long value) {
+            addCriterion("`modified_by` <=", value, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIn(List<LocalDateTime> values) {
-            addCriterion("`create_time` in", values, "createTime");
+        public Criteria andModifiedByIn(List<Long> values) {
+            addCriterion("`modified_by` in", values, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`create_time` not in", values, "createTime");
+        public Criteria andModifiedByNotIn(List<Long> values) {
+            addCriterion("`modified_by` not in", values, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`create_time` between", value1, value2, "createTime");
+        public Criteria andModifiedByBetween(Long value1, Long value2) {
+            addCriterion("`modified_by` between", value1, value2, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`create_time` not between", value1, value2, "createTime");
+        public Criteria andModifiedByNotBetween(Long value1, Long value2) {
+            addCriterion("`modified_by` not between", value1, value2, "modifiedBy");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByIsNull() {
-            addCriterion("`online_by` is null");
+        public Criteria andModiNameIsNull() {
+            addCriterion("`modi_name` is null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByIsNotNull() {
-            addCriterion("`online_by` is not null");
+        public Criteria andModiNameIsNotNull() {
+            addCriterion("`modi_name` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByEqualTo(Long value) {
-            addCriterion("`online_by` =", value, "onlineBy");
+        public Criteria andModiNameEqualTo(String value) {
+            addCriterion("`modi_name` =", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByNotEqualTo(Long value) {
-            addCriterion("`online_by` <>", value, "onlineBy");
+        public Criteria andModiNameNotEqualTo(String value) {
+            addCriterion("`modi_name` <>", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByGreaterThan(Long value) {
-            addCriterion("`online_by` >", value, "onlineBy");
+        public Criteria andModiNameGreaterThan(String value) {
+            addCriterion("`modi_name` >", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByGreaterThanOrEqualTo(Long value) {
-            addCriterion("`online_by` >=", value, "onlineBy");
+        public Criteria andModiNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`modi_name` >=", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByLessThan(Long value) {
-            addCriterion("`online_by` <", value, "onlineBy");
+        public Criteria andModiNameLessThan(String value) {
+            addCriterion("`modi_name` <", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByLessThanOrEqualTo(Long value) {
-            addCriterion("`online_by` <=", value, "onlineBy");
+        public Criteria andModiNameLessThanOrEqualTo(String value) {
+            addCriterion("`modi_name` <=", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByIn(List<Long> values) {
-            addCriterion("`online_by` in", values, "onlineBy");
+        public Criteria andModiNameLike(String value) {
+            addCriterion("`modi_name` like", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByNotIn(List<Long> values) {
-            addCriterion("`online_by` not in", values, "onlineBy");
+        public Criteria andModiNameNotLike(String value) {
+            addCriterion("`modi_name` not like", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByBetween(Long value1, Long value2) {
-            addCriterion("`online_by` between", value1, value2, "onlineBy");
+        public Criteria andModiNameIn(List<String> values) {
+            addCriterion("`modi_name` in", values, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineByNotBetween(Long value1, Long value2) {
-            addCriterion("`online_by` not between", value1, value2, "onlineBy");
+        public Criteria andModiNameNotIn(List<String> values) {
+            addCriterion("`modi_name` not in", values, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeIsNull() {
-            addCriterion("`online_time` is null");
+        public Criteria andModiNameBetween(String value1, String value2) {
+            addCriterion("`modi_name` between", value1, value2, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeIsNotNull() {
-            addCriterion("`online_time` is not null");
+        public Criteria andModiNameNotBetween(String value1, String value2) {
+            addCriterion("`modi_name` not between", value1, value2, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeEqualTo(LocalDateTime value) {
-            addCriterion("`online_time` =", value, "onlineTime");
+        public Criteria andGmtCreateIsNull() {
+            addCriterion("`gmt_create` is null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`online_time` <>", value, "onlineTime");
+        public Criteria andGmtCreateIsNotNull() {
+            addCriterion("`gmt_create` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`online_time` >", value, "onlineTime");
+        public Criteria andGmtCreateEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` =", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`online_time` >=", value, "onlineTime");
+        public Criteria andGmtCreateNotEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` <>", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeLessThan(LocalDateTime value) {
-            addCriterion("`online_time` <", value, "onlineTime");
+        public Criteria andGmtCreateGreaterThan(LocalDateTime value) {
+            addCriterion("`gmt_create` >", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`online_time` <=", value, "onlineTime");
+        public Criteria andGmtCreateGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` >=", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeIn(List<LocalDateTime> values) {
-            addCriterion("`online_time` in", values, "onlineTime");
+        public Criteria andGmtCreateLessThan(LocalDateTime value) {
+            addCriterion("`gmt_create` <", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`online_time` not in", values, "onlineTime");
+        public Criteria andGmtCreateLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` <=", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`online_time` between", value1, value2, "onlineTime");
+        public Criteria andGmtCreateIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_create` in", values, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`online_time` not between", value1, value2, "onlineTime");
+        public Criteria andGmtCreateNotIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_create` not in", values, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameIsNull() {
-            addCriterion("`online_name` is null");
+        public Criteria andGmtCreateBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_create` between", value1, value2, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameIsNotNull() {
-            addCriterion("`online_name` is not null");
+        public Criteria andGmtCreateNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_create` not between", value1, value2, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameEqualTo(String value) {
-            addCriterion("`online_name` =", value, "onlineName");
+        public Criteria andGmtModifiedIsNull() {
+            addCriterion("`gmt_modified` is null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameNotEqualTo(String value) {
-            addCriterion("`online_name` <>", value, "onlineName");
+        public Criteria andGmtModifiedIsNotNull() {
+            addCriterion("`gmt_modified` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameGreaterThan(String value) {
-            addCriterion("`online_name` >", value, "onlineName");
+        public Criteria andGmtModifiedEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` =", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`online_name` >=", value, "onlineName");
+        public Criteria andGmtModifiedNotEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` <>", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameLessThan(String value) {
-            addCriterion("`online_name` <", value, "onlineName");
+        public Criteria andGmtModifiedGreaterThan(LocalDateTime value) {
+            addCriterion("`gmt_modified` >", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameLessThanOrEqualTo(String value) {
-            addCriterion("`online_name` <=", value, "onlineName");
+        public Criteria andGmtModifiedGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` >=", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameLike(String value) {
-            addCriterion("`online_name` like", value, "onlineName");
+        public Criteria andGmtModifiedLessThan(LocalDateTime value) {
+            addCriterion("`gmt_modified` <", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameNotLike(String value) {
-            addCriterion("`online_name` not like", value, "onlineName");
+        public Criteria andGmtModifiedLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` <=", value, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameIn(List<String> values) {
-            addCriterion("`online_name` in", values, "onlineName");
+        public Criteria andGmtModifiedIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_modified` in", values, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameNotIn(List<String> values) {
-            addCriterion("`online_name` not in", values, "onlineName");
+        public Criteria andGmtModifiedNotIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_modified` not in", values, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameBetween(String value1, String value2) {
-            addCriterion("`online_name` between", value1, value2, "onlineName");
+        public Criteria andGmtModifiedBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_modified` between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
 
-        public Criteria andOnlineNameNotBetween(String value1, String value2) {
-            addCriterion("`online_name` not between", value1, value2, "onlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByIsNull() {
-            addCriterion("`offline_by` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByIsNotNull() {
-            addCriterion("`offline_by` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByEqualTo(Long value) {
-            addCriterion("`offline_by` =", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByNotEqualTo(Long value) {
-            addCriterion("`offline_by` <>", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByGreaterThan(Long value) {
-            addCriterion("`offline_by` >", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByGreaterThanOrEqualTo(Long value) {
-            addCriterion("`offline_by` >=", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByLessThan(Long value) {
-            addCriterion("`offline_by` <", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByLessThanOrEqualTo(Long value) {
-            addCriterion("`offline_by` <=", value, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByIn(List<Long> values) {
-            addCriterion("`offline_by` in", values, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByNotIn(List<Long> values) {
-            addCriterion("`offline_by` not in", values, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByBetween(Long value1, Long value2) {
-            addCriterion("`offline_by` between", value1, value2, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineByNotBetween(Long value1, Long value2) {
-            addCriterion("`offline_by` not between", value1, value2, "offlineBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeIsNull() {
-            addCriterion("`offline_time` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeIsNotNull() {
-            addCriterion("`offline_time` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeEqualTo(LocalDateTime value) {
-            addCriterion("`offline_time` =", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`offline_time` <>", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`offline_time` >", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`offline_time` >=", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeLessThan(LocalDateTime value) {
-            addCriterion("`offline_time` <", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`offline_time` <=", value, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeIn(List<LocalDateTime> values) {
-            addCriterion("`offline_time` in", values, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`offline_time` not in", values, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`offline_time` between", value1, value2, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`offline_time` not between", value1, value2, "offlineTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameIsNull() {
-            addCriterion("`offline_name` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameIsNotNull() {
-            addCriterion("`offline_name` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameEqualTo(String value) {
-            addCriterion("`offline_name` =", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameNotEqualTo(String value) {
-            addCriterion("`offline_name` <>", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameGreaterThan(String value) {
-            addCriterion("`offline_name` >", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`offline_name` >=", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameLessThan(String value) {
-            addCriterion("`offline_name` <", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameLessThanOrEqualTo(String value) {
-            addCriterion("`offline_name` <=", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameLike(String value) {
-            addCriterion("`offline_name` like", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameNotLike(String value) {
-            addCriterion("`offline_name` not like", value, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameIn(List<String> values) {
-            addCriterion("`offline_name` in", values, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameNotIn(List<String> values) {
-            addCriterion("`offline_name` not in", values, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameBetween(String value1, String value2) {
-            addCriterion("`offline_name` between", value1, value2, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andOfflineNameNotBetween(String value1, String value2) {
-            addCriterion("`offline_name` not between", value1, value2, "offlineName");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByIsNull() {
-            addCriterion("`closed_by` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByIsNotNull() {
-            addCriterion("`closed_by` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByEqualTo(Long value) {
-            addCriterion("`closed_by` =", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByNotEqualTo(Long value) {
-            addCriterion("`closed_by` <>", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByGreaterThan(Long value) {
-            addCriterion("`closed_by` >", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByGreaterThanOrEqualTo(Long value) {
-            addCriterion("`closed_by` >=", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByLessThan(Long value) {
-            addCriterion("`closed_by` <", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByLessThanOrEqualTo(Long value) {
-            addCriterion("`closed_by` <=", value, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByIn(List<Long> values) {
-            addCriterion("`closed_by` in", values, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByNotIn(List<Long> values) {
-            addCriterion("`closed_by` not in", values, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByBetween(Long value1, Long value2) {
-            addCriterion("`closed_by` between", value1, value2, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andClosedByNotBetween(Long value1, Long value2) {
-            addCriterion("`closed_by` not between", value1, value2, "closedBy");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeIsNull() {
-            addCriterion("`close_time` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeIsNotNull() {
-            addCriterion("`close_time` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeEqualTo(LocalDateTime value) {
-            addCriterion("`close_time` =", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`close_time` <>", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`close_time` >", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`close_time` >=", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeLessThan(LocalDateTime value) {
-            addCriterion("`close_time` <", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`close_time` <=", value, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeIn(List<LocalDateTime> values) {
-            addCriterion("`close_time` in", values, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`close_time` not in", values, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`close_time` between", value1, value2, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`close_time` not between", value1, value2, "closeTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameIsNull() {
-            addCriterion("`close_name` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameIsNotNull() {
-            addCriterion("`close_name` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameEqualTo(String value) {
-            addCriterion("`close_name` =", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameNotEqualTo(String value) {
-            addCriterion("`close_name` <>", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameGreaterThan(String value) {
-            addCriterion("`close_name` >", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`close_name` >=", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameLessThan(String value) {
-            addCriterion("`close_name` <", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameLessThanOrEqualTo(String value) {
-            addCriterion("`close_name` <=", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameLike(String value) {
-            addCriterion("`close_name` like", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameNotLike(String value) {
-            addCriterion("`close_name` not like", value, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameIn(List<String> values) {
-            addCriterion("`close_name` in", values, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameNotIn(List<String> values) {
-            addCriterion("`close_name` not in", values, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameBetween(String value1, String value2) {
-            addCriterion("`close_name` between", value1, value2, "closeName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCloseNameNotBetween(String value1, String value2) {
-            addCriterion("`close_name` not between", value1, value2, "closeName");
+        public Criteria andGmtModifiedNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_modified` not between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
     }

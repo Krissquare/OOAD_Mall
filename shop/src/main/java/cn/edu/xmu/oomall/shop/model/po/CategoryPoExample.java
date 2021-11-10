@@ -575,66 +575,6 @@ public class CategoryPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreateTimeIsNull() {
-            addCriterion("`create_time` is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIsNotNull() {
-            addCriterion("`create_time` is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` =", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` <>", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`create_time` >", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` >=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThan(LocalDateTime value) {
-            addCriterion("`create_time` <", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`create_time` <=", value, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeIn(List<LocalDateTime> values) {
-            addCriterion("`create_time` in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`create_time` not in", values, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`create_time` between", value1, value2, "createTime");
-            return (Criteria) this;
-        }
-
-        public Criteria andCreateTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`create_time` not between", value1, value2, "createTime");
-            return (Criteria) this;
-        }
-
         public Criteria andModifiedByIsNull() {
             addCriterion("`modified_by` is null");
             return (Criteria) this;
@@ -695,133 +635,193 @@ public class CategoryPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeIsNull() {
-            addCriterion("`modify_time` is null");
+        public Criteria andModiNameIsNull() {
+            addCriterion("`modi_name` is null");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeIsNotNull() {
-            addCriterion("`modify_time` is not null");
+        public Criteria andModiNameIsNotNull() {
+            addCriterion("`modi_name` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeEqualTo(LocalDateTime value) {
-            addCriterion("`modify_time` =", value, "modifyTime");
+        public Criteria andModiNameEqualTo(String value) {
+            addCriterion("`modi_name` =", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeNotEqualTo(LocalDateTime value) {
-            addCriterion("`modify_time` <>", value, "modifyTime");
+        public Criteria andModiNameNotEqualTo(String value) {
+            addCriterion("`modi_name` <>", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeGreaterThan(LocalDateTime value) {
-            addCriterion("`modify_time` >", value, "modifyTime");
+        public Criteria andModiNameGreaterThan(String value) {
+            addCriterion("`modi_name` >", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeGreaterThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`modify_time` >=", value, "modifyTime");
+        public Criteria andModiNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`modi_name` >=", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeLessThan(LocalDateTime value) {
-            addCriterion("`modify_time` <", value, "modifyTime");
+        public Criteria andModiNameLessThan(String value) {
+            addCriterion("`modi_name` <", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeLessThanOrEqualTo(LocalDateTime value) {
-            addCriterion("`modify_time` <=", value, "modifyTime");
+        public Criteria andModiNameLessThanOrEqualTo(String value) {
+            addCriterion("`modi_name` <=", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeIn(List<LocalDateTime> values) {
-            addCriterion("`modify_time` in", values, "modifyTime");
+        public Criteria andModiNameLike(String value) {
+            addCriterion("`modi_name` like", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeNotIn(List<LocalDateTime> values) {
-            addCriterion("`modify_time` not in", values, "modifyTime");
+        public Criteria andModiNameNotLike(String value) {
+            addCriterion("`modi_name` not like", value, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`modify_time` between", value1, value2, "modifyTime");
+        public Criteria andModiNameIn(List<String> values) {
+            addCriterion("`modi_name` in", values, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
-            addCriterion("`modify_time` not between", value1, value2, "modifyTime");
+        public Criteria andModiNameNotIn(List<String> values) {
+            addCriterion("`modi_name` not in", values, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameIsNull() {
-            addCriterion("`modify_name` is null");
+        public Criteria andModiNameBetween(String value1, String value2) {
+            addCriterion("`modi_name` between", value1, value2, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameIsNotNull() {
-            addCriterion("`modify_name` is not null");
+        public Criteria andModiNameNotBetween(String value1, String value2) {
+            addCriterion("`modi_name` not between", value1, value2, "modiName");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameEqualTo(String value) {
-            addCriterion("`modify_name` =", value, "modifyName");
+        public Criteria andGmtCreateIsNull() {
+            addCriterion("`gmt_create` is null");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameNotEqualTo(String value) {
-            addCriterion("`modify_name` <>", value, "modifyName");
+        public Criteria andGmtCreateIsNotNull() {
+            addCriterion("`gmt_create` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameGreaterThan(String value) {
-            addCriterion("`modify_name` >", value, "modifyName");
+        public Criteria andGmtCreateEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` =", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameGreaterThanOrEqualTo(String value) {
-            addCriterion("`modify_name` >=", value, "modifyName");
+        public Criteria andGmtCreateNotEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` <>", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameLessThan(String value) {
-            addCriterion("`modify_name` <", value, "modifyName");
+        public Criteria andGmtCreateGreaterThan(LocalDateTime value) {
+            addCriterion("`gmt_create` >", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameLessThanOrEqualTo(String value) {
-            addCriterion("`modify_name` <=", value, "modifyName");
+        public Criteria andGmtCreateGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` >=", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameLike(String value) {
-            addCriterion("`modify_name` like", value, "modifyName");
+        public Criteria andGmtCreateLessThan(LocalDateTime value) {
+            addCriterion("`gmt_create` <", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameNotLike(String value) {
-            addCriterion("`modify_name` not like", value, "modifyName");
+        public Criteria andGmtCreateLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_create` <=", value, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameIn(List<String> values) {
-            addCriterion("`modify_name` in", values, "modifyName");
+        public Criteria andGmtCreateIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_create` in", values, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameNotIn(List<String> values) {
-            addCriterion("`modify_name` not in", values, "modifyName");
+        public Criteria andGmtCreateNotIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_create` not in", values, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameBetween(String value1, String value2) {
-            addCriterion("`modify_name` between", value1, value2, "modifyName");
+        public Criteria andGmtCreateBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_create` between", value1, value2, "gmtCreate");
             return (Criteria) this;
         }
 
-        public Criteria andModifyNameNotBetween(String value1, String value2) {
-            addCriterion("`modify_name` not between", value1, value2, "modifyName");
+        public Criteria andGmtCreateNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_create` not between", value1, value2, "gmtCreate");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIsNull() {
+            addCriterion("`gmt_modified` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIsNotNull() {
+            addCriterion("`gmt_modified` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` =", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` <>", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedGreaterThan(LocalDateTime value) {
+            addCriterion("`gmt_modified` >", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` >=", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedLessThan(LocalDateTime value) {
+            addCriterion("`gmt_modified` <", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`gmt_modified` <=", value, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_modified` in", values, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotIn(List<LocalDateTime> values) {
+            addCriterion("`gmt_modified` not in", values, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_modified` between", value1, value2, "gmtModified");
+            return (Criteria) this;
+        }
+
+        public Criteria andGmtModifiedNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`gmt_modified` not between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
     }
