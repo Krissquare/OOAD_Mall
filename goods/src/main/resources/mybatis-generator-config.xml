@@ -158,7 +158,7 @@
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
-        <table tableName="oomall_onsale" domainObjectName="onSalePo"
+        <table tableName="oomall_onsale" domainObjectName="OnSalePo"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false" delimitAllColumns="true">
