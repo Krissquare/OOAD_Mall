@@ -29,6 +29,7 @@ CREATE TABLE `oomall_advance_sale` (
   `name` varchar(128) DEFAULT NULL,
   `pay_time` datetime DEFAULT NULL,
   `advance_pay_price` bigint DEFAULT NULL,
+  `state` tinyint DEFAULT NULL,
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
