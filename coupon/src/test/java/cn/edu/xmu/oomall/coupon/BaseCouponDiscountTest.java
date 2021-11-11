@@ -4,18 +4,22 @@ import cn.edu.xmu.oomall.coupon.model.bo.strategy.BaseCouponDiscount;
 import cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponDiscount;
 import cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponLimitation;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author xincong yao
  * @date 2020-11-23
+ * modified by: Ming Qiu
+ * date: 2021-11-11
  */
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 public class BaseCouponDiscountTest {
 
 	@Test
