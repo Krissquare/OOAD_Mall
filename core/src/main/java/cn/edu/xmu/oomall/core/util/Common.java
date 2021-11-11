@@ -235,18 +235,22 @@ public class Common {
      * 设置所有po对象的createdBy, createName和gmtCreate字段属性
      * @param userId 设置到createdBy
      * @param userName 设置到createName
+     * @return 是否成功设置
      */
-    public static void setPoCreatedFields(long userId, String userName){
+    public static boolean setPoCreatedFields(long userId, String userName){
 
+        return true;
     }
 
     /**
      * 设置所有po对象的modifiedBy, modiName和gmtModify字段属性
      * @param userId 设置到modifiedBy
      * @param userName 设置到modiName
+     * @return 是否成功设置
      */
-    public static void setPoModifiedFields(long userId, String userName){
+    public static boolean setPoModifiedFields(long userId, String userName){
 
+        return true;
     }
 
 }
