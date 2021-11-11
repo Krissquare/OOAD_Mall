@@ -231,4 +231,22 @@ public class Common {
         return timeout;
     }
 
+    /**
+     * 设置所有po对象的createdBy, createName和gmtCreate字段属性
+     * @param userId 设置到createdBy
+     * @param userName 设置到createName
+     */
+    public static void setPoCreatedFields(long userId, String userName){
+
+    }
+
+    /**
+     * 设置所有po对象的modifiedBy, modiName和gmtModify字段属性
+     * @param userId 设置到modifiedBy
+     * @param userName 设置到modiName
+     */
+    public static void setPoModifiedFields(long userId, String userName){
+
+    }
+
 }
