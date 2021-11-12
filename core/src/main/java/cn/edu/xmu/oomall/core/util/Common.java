@@ -215,6 +215,7 @@ public class Common {
                 }
             } catch (NoSuchFieldException e) {
                 logger.info(e.getMessage());
+                return null;
             }
         }
         return vo;
