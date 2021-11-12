@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.edu.xmu.ooad</groupId>
+    <groupId>cn.edu.xmu.oomall</groupId>
     <artifactId>goods</artifactId>
     <packaging>jar</packaging>
 
