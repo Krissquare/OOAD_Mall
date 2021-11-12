@@ -12,6 +12,7 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +31,10 @@ public class ShopController {
 
     @Autowired
     private ShopService shopService;
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "获得店铺的所有状态")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功") })
@@ -41,14 +45,16 @@ public class ShopController {
         return Common.decorateReturnObject(returnObject);
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "店家申请店铺")
     @ApiImplicitParam(name = "authorization", value = "shopToken", required = true, dataType = "String", paramType = "header")
     @ApiResponses(value = {
             @ApiResponse(code = 969, message = "用户已经有店铺"),
             @ApiResponse(code = 200, message = "成功") })
     @PostMapping(value = "/shops")
-//    @Audit
     public Object addShop(@Validated @RequestBody ShopVo shopvo, BindingResult bindingResult,Long shopid, Long loginUser,String loginUsername){
     //todo:
         loginUser=Long.valueOf(111);
@@ -73,7 +79,10 @@ public class ShopController {
 
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "店家修改店铺信息", nickname = "modifyShop", notes = "", tags={ "shop", })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "shopToken", required = true, dataType = "String", paramType = "header"),
@@ -98,7 +107,10 @@ public class ShopController {
         }
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "管理员或店家关闭店铺", nickname = "deleteShop", notes = "如果店铺从未上线则物理删除",  tags={ "shop", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功") ,
@@ -127,7 +139,10 @@ public class ShopController {
         }
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "平台管理员审核店铺信息", nickname = "shopsShopIdNewshopsIdAuditPut", notes = "",  tags={ "shop", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功") ,
@@ -153,7 +168,10 @@ public class ShopController {
         }
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "管理员上线店铺", nickname = "shopsIdOnshelvesPut", notes = "", tags={ "shop", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功"),
@@ -162,7 +180,7 @@ public class ShopController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "adminToken", required = true, dataType = "String", paramType = "header")
     })
-    @PutMapping(value = "/shops/{id}/onshelves")
+    @PutMapping(value = "/shops/{id}/online")
 //    @Audit
     public Object shopsIdOnshelvesPut(@PathVariable("id") long id,Long loginUser,String loginUsername){
         //todo:
@@ -173,7 +191,10 @@ public class ShopController {
         return Common.decorateReturnObject(ret);
     }
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @ApiOperation(value = "管理员下线店铺", nickname = "shopsIdOffshelvesPut", notes = "", tags={ "shop", })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功"),
@@ -181,7 +202,7 @@ public class ShopController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization", value = "adminToken", required = true, dataType = "String", paramType = "header")
     })
-    @PutMapping(value = "/shops/{id}/offshelves")
+    @PutMapping(value = "/shops/{id}/offline")
 //    @Audit
     public Object shopsIdOffshelvesPut(@PathVariable("id") long id,Long loginUser,String loginUsername){
         //todo:

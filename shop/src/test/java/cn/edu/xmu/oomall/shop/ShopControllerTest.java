@@ -16,7 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+/**
+ * @Author: 蒋欣雨
+ * @Sn: 22920192204219
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -156,11 +159,11 @@ public class ShopControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String responseString_onself = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString_onself = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String responseString_offself = this.mvc.perform(put("/shops/1/offshelves").header("authorization", adminToken))
+        String responseString_offself = this.mvc.perform(put("/shops/1/offline").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -201,7 +204,7 @@ public class ShopControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String responseString_onself = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString_onself = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -327,7 +330,7 @@ public class ShopControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String responseString = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -356,7 +359,7 @@ public class ShopControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String responseString = this.mvc.perform(put("/shops/1/offshelves").header("authorization", adminToken))
+        String responseString = this.mvc.perform(put("/shops/1/offline").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
