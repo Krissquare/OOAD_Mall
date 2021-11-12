@@ -192,27 +192,27 @@ public class Common {
 
         for (Field vf : voFs) {
             try {
-                Field bf=bo.getClass().getDeclaredField(vf.getName());
-                if (vf.getName().equals(bf.getName())) {
-                    vf.setAccessible(true);
-                    bf.setAccessible(true);
-                    if ((vf.getType().isPrimitive() || vf.getType().getTypeName().startsWith("java.lang")
-                            && vf.getType().equals(bf.getType()))) {
-                        try {
-                            vf.set(vo, bf.get(bo));
-                        } catch (IllegalAccessException e) {
-                            logger.info(e.getMessage());
-                            return null;
-                        }
-                    } else if (!vf.getType().isPrimitive() && !bf.getType().isPrimitive()) {
-                        try {
-                            vf.set(vo, cloneVo(bf.get(bo), vf.getType()));
-                        } catch (IllegalAccessException e) {
-                            logger.info(e.getMessage());
-                            return null;
-                        }
+                Field bf = bo.getClass().getDeclaredField(vf.getName());
+
+                vf.setAccessible(true);
+                bf.setAccessible(true);
+                if ((vf.getType().isPrimitive() || vf.getType().getTypeName().startsWith("java.lang")
+                        && vf.getType().equals(bf.getType()))) {
+                    try {
+                        vf.set(vo, bf.get(bo));
+                    } catch (IllegalAccessException e) {
+                        logger.info(e.getMessage());
+                        return null;
+                    }
+                } else if (!vf.getType().isPrimitive() && vf.getType().equals(bf.getType())) {
+                    try {
+                        vf.set(vo, cloneVo(bf.get(bo), vf.getType()));
+                    } catch (IllegalAccessException e) {
+                        logger.info(e.getMessage());
+                        return null;
                     }
                 }
+
             } catch (NoSuchFieldException e) {
                 logger.info(e.getMessage());
                 return null;
