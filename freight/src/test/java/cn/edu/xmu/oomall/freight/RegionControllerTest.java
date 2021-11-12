@@ -53,7 +53,7 @@ public class RegionControllerTest {
 
     @Test   //non-redis
     public void getParentRegionTest2() throws Exception {
-        String responseString = this.mvc.perform(get("/freight/region/1/ancestor"))
+        String responseString = this.mvc.perform(get("/freight/region/0/ancestor"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -151,6 +151,97 @@ public class RegionControllerTest {
         JSONAssert.assertEquals(expectedResponse, responseString, true);
 
     }
+
+    @Test
+    public void adminGetChildRegionTest() throws Exception {
+        String responseString = this.mvc.perform(get("/freight/shops/0/regions/14/subregions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":0,\"data\":[{\"id\":150,\"pid\":14,\"name\":\"福州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":151,\"pid\":14,\"name\":\"厦门市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":152,\"pid\":14,\"name\":\"莆田市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":153,\"pid\":14,\"name\":\"三明市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":154,\"pid\":14,\"name\":\"泉州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":155,\"pid\":14,\"name\":\"漳州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":156,\"pid\":14,\"name\":\"南平市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":157,\"pid\":14,\"name\":\"龙岩市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":158,\"pid\":14,\"name\":\"宁德市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}}],\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void adminGetChildRegionTest1() throws Exception {
+        String responseString = this.mvc.perform(get("/freight/shops/0/regions/0/subregions").contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void adminGetChildRegionTest2() throws Exception {
+        String responseString = this.mvc.perform(get("/freight/shops/1/regions/14/subregions"))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void getChildRegionTest() throws Exception {
+        String responseString = this.mvc.perform(get("/freight/regions/14/subregions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":0,\"data\":[{\"id\":150,\"pid\":14,\"name\":\"福州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":151,\"pid\":14,\"name\":\"厦门市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":152,\"pid\":14,\"name\":\"莆田市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":153,\"pid\":14,\"name\":\"三明市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":154,\"pid\":14,\"name\":\"泉州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":155,\"pid\":14,\"name\":\"漳州市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":156,\"pid\":14,\"name\":\"南平市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":157,\"pid\":14,\"name\":\"龙岩市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}},{\"id\":158,\"pid\":14,\"name\":\"宁德市\",\"state\":0,\"gmtCreate\":\"2020-12-15T13:29:49\",\"gmtModified\":null,\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"modifiedBy\":{\"id\":null,\"userName\":null}}],\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void getChildRegionTest1() throws Exception {
+        String responseString = this.mvc.perform(get("/freight/regions/0/subregions").contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":500,\"errmsg\":\"服务器内部错误\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void getChildRegionTest2() throws Exception {
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/1111/suspend"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+        responseString = this.mvc.perform(delete("/freight/shops/0/regions/1111"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+
+        responseString = this.mvc.perform(get("/freight/regions/1111/subregions"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
 
     @Test
     public void modifyRegionTest() throws Exception {

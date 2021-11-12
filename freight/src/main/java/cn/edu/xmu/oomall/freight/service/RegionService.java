@@ -41,11 +41,7 @@ public class RegionService {
         ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(regionPo);
 
         if (returnObject.getCode().equals(ReturnNo.OK)) {
-            if (returnObject.getData().size() == 0) {
-                retRegion = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-            }else{
-                retRegion = new ReturnObject<>(returnObject.getData());
-            }
+            retRegion = new ReturnObject<>(returnObject.getData());
         }else{
             retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
         }
@@ -69,6 +65,42 @@ public class RegionService {
             retRegion = new ReturnObject<>(retObj.getCode(), retObj.getErrmsg());
         }
 
+        return retRegion;
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
+
+        RegionPo regionPo = new RegionPo();
+        regionPo.setId(id);
+
+        ReturnObject<List<Region>> retRegion;
+
+        ReturnObject<List<Region>> returnObject = regionDao.adminGetChildRegion(regionPo);
+
+        if (returnObject.getCode().equals(ReturnNo.OK)) {
+            retRegion = new ReturnObject<>(returnObject.getData());
+        }else{
+            retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
+        }
+        return retRegion;
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public ReturnObject<List<Region>> getChildRegion(Long id) {
+
+        RegionPo regionPo = new RegionPo();
+        regionPo.setId(id);
+
+        ReturnObject<List<Region>> retRegion;
+
+        ReturnObject<List<Region>> returnObject = regionDao.getChildRegion(regionPo);
+
+        if (returnObject.getCode().equals(ReturnNo.OK)) {
+            retRegion = new ReturnObject<>(returnObject.getData());
+        }else{
+            retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
+        }
         return retRegion;
     }
 

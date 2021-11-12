@@ -65,6 +65,8 @@ public class RegionController {
         return Common.decorateReturnObject(returnObject);
     }
 
+
+
     @ApiOperation(value = "管理员在地区下新增子地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value ="用户token" ,required = true),
@@ -97,6 +99,77 @@ public class RegionController {
         return Common.decorateReturnObject(returnObject);
     }
 
+
+
+    @ApiOperation(value = "管理员查询在地区下的子地区",  produces="application/json;charset=UTF-8")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value ="用户token" ,required = true),
+            @ApiImplicitParam(paramType = "path", dataType = "Integer", name = "did", value ="商铺id" ,required = true),
+            @ApiImplicitParam(paramType = "path", dataType = "Integer", name = "id", value ="该地区id" ,required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code=0,message = "成功"),
+            @ApiResponse(code=500,message = "服务器内部错误"),
+            @ApiResponse(code=504,message = "操作的资源id不存在")
+    })
+    @GetMapping("/shops/{did}/regions/{id}/subregions")
+    public Object adminGetChildRegion(@PathVariable("did") Integer did, @PathVariable("id") Long id) {
+
+        if(did!=0){
+            return new ResponseEntity(ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE, "非管理员无权操作"), HttpStatus.FORBIDDEN);
+        }
+
+        ReturnObject<List<Region>> returnObject = regionService.adminGetChildRegion(id);
+
+        if(returnObject.getData()!=null) {
+            List<RegionRetVo> regionRetVos = new ArrayList<>();
+            for (Region regionItem : returnObject.getData()) {
+                regionRetVos.add(regionItem.createVo());
+            }
+            returnObject = new ReturnObject(regionRetVos);
+        }
+
+        return Common.decorateReturnObject(returnObject);
+    }
+
+
+
+    @ApiOperation(value = "查询在地区下的子地区",  produces="application/json;charset=UTF-8")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "path", dataType = "Integer", name = "id", value ="该地区id" ,required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code=0,message = "成功"),
+            @ApiResponse(code=500,message = "服务器内部错误"),
+            @ApiResponse(code=504,message = "操作的资源id不存在"),
+            @ApiResponse(code=995,message = "地区已废弃")
+    })
+    @GetMapping("/regions/{id}/subregions")
+    public Object getChildRegion(@PathVariable("id") Long id) {
+
+        ReturnObject<List<Region>> returnObject = regionService.getChildRegion(id);
+
+        if(returnObject.getData()!=null) {
+            List<RegionRetVo> regionRetVos = new ArrayList<>();
+            for (Region regionItem : returnObject.getData()) {
+                regionRetVos.add(regionItem.createVo());
+            }
+            returnObject = new ReturnObject(regionRetVos);
+        }
+
+        return Common.decorateReturnObject(returnObject);
+    }
+
+
+
+
+
+
+
+
+
+
+
     @ApiOperation(value = "管理员修改某个地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value ="用户token" ,required = true),
@@ -127,6 +200,7 @@ public class RegionController {
 
         return Common.decorateReturnObject(returnObject);
     }
+
 
     @ApiOperation(value = "管理员废弃某个地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
