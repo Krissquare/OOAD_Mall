@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -97,7 +98,9 @@ public class Common {
      * 处理返回对象
      * @param returnObject 返回的对象
      * @return
+     * TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
      */
+
     public static Object getListRetObject(ReturnObject<List> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
@@ -124,6 +127,7 @@ public class Common {
      * 处理分页返回对象
      * @param returnObject 返回的对象
      * @return
+     * TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
      */
     public static Object getPageRetObject(ReturnObject<PageInfo<VoObject>> returnObject) {
         ReturnNo code = returnObject.getCode();
@@ -153,7 +157,15 @@ public class Common {
         }
     }
 
-
+    /**
+     * 根据clazz实例化一个对象，并深度克隆bo中对应属性到这个新对象
+     * @param bo business object
+     * @param voClass vo对象类型
+     * @return 深度克隆的vo对象
+     */
+    private static Object cloneVo(Object bo, Class voClass){
+        return null;
+    }
 
 
     public static Object getNullRetObj(ReturnObject<Object> returnObject, HttpServletResponse httpServletResponse) {
@@ -233,23 +245,96 @@ public class Common {
 
     /**
      * 设置所有po对象的createdBy, createName和gmtCreate字段属性
-     * @param userId 设置到createdBy
+     *
+     * @param po       po对象
+     * @param userId   设置到createdBy
      * @param userName 设置到createName
-     * @return 是否成功设置
+     * @return 如果po对象没有这些属性或类型不对返回false，否则true
      */
-    public static boolean setPoCreatedFields(long userId, String userName){
+    public static boolean setPoCreatedFields(Object po, long userId, String userName) {
+        Class<?> aClass = po.getClass();
+        try {
+            Field createdBy = aClass.getDeclaredField("createdBy");
+            createdBy.setAccessible(true);
+            createdBy.set(po, userId);
 
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
+
+        try {
+            Field createName = aClass.getDeclaredField("createName");
+            createName.setAccessible(true);
+            createName.set(po, userName);
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
+        try {
+            Field createName = aClass.getDeclaredField("gmtCreate");
+            createName.setAccessible(true);
+            createName.set(po,LocalDateTime.now());
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
         return true;
     }
 
     /**
      * 设置所有po对象的modifiedBy, modiName和gmtModify字段属性
-     * @param userId 设置到modifiedBy
+     *
+     * @param po       po对象
+     * @param userId   设置到modifiedBy
      * @param userName 设置到modiName
-     * @return 是否成功设置
+     * @return 如果po对象没有这些属性或类型不对返回false，否则true
      */
-    public static boolean setPoModifiedFields(long userId, String userName){
+    public static boolean setPoModifiedFields(Object po, long userId, String userName) {
+        Class<?> aClass = po.getClass();
+        try {
+            Field modifiedBy = aClass.getDeclaredField("modifiedBy");
+            modifiedBy.setAccessible(true);
+            modifiedBy.set(po, userId);
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
 
+        try {
+            Field modiName = aClass.getDeclaredField("modiName");
+            modiName.setAccessible(true);
+            modiName.set(po, userName);
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
+        try {
+            Field createName = aClass.getDeclaredField("gmtCreate");
+            createName.setAccessible(true);
+            createName.set(po,LocalDateTime.now());
+        } catch (NoSuchFieldException e) {
+            logger.info(e.getMessage());
+            return false;
+        } catch (IllegalAccessException ex) {
+            logger.info(ex.getMessage());
+            return false;
+        }
         return true;
     }
 

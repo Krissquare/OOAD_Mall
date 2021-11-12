@@ -78,6 +78,7 @@ public enum ReturnNo {
     ACT_EARLY_PAYTIME(949, "尾款支付时间早于活动开始时间"),
     COUPON_LATE_COUPONTIME(950,"优惠卷领卷时间晚于活动开始时间"),
 
+    SHOP_HASDEPOSIT(966,"店铺仍有保证金未结算"),
     SHOP_CATEGORY_NOTPERMIT(967, "不允许增加新的下级分类"),
     SHOP_NOT_RECON(968,"店铺尚有支付未清算完毕"),
     SHOP_USER_HASSHOP(969,"用户已经有店铺"),

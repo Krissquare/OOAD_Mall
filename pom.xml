@@ -25,7 +25,6 @@
         <logback.version>1.2.6</logback.version>
         <alibaba.version>2021.1</alibaba.version>
         <swagger2.version>3.0.0</swagger2.version>
-        <mapstruct.version>1.4.2.Final</mapstruct.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -223,26 +222,6 @@
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
                 <version>3.0.5</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-processor</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.mapstruct</groupId>
-                <artifactId>mapstruct-jdk8</artifactId>
-                <version>${mapstruct.version}</version>
-            </dependency>
-
-
         </dependencies>
     </dependencyManagement>
 
@@ -305,7 +284,6 @@
                     </includes>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>

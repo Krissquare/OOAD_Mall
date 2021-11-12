@@ -33,7 +33,7 @@ public class CategoryDao {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${shop.category.expiretime}")
+    @Value("${oomall.shop.category.expiretime}")
     private long categoryTimeout;
 
     /**
