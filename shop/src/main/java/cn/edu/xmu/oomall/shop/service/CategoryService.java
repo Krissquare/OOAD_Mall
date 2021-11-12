@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.shop.service;
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.dao.CategoryDao;
@@ -60,7 +61,7 @@ public class CategoryService {
             return new ReturnObject(ReturnNo.GOODS_CATEGORY_SAME);
         }
         CategoryPo categoryPo = category.createCategoryPo();
-        setCreateUser(categoryPo,createId,createName,LocalDateTime.now());
+        Common.setPoCreatedFields(categoryPo,createId,createName);
         categoryPo.setPid(id.longValue());
         ReturnObject ret = categoryDao.insertCategory(categoryPo);
         return ret;
@@ -81,7 +82,7 @@ public class CategoryService {
             return new ReturnObject<>(ReturnNo.GOODS_CATEGORY_SAME);
         }
         CategoryPo po = category.createCategoryPo();
-        setModifiUser(po,modifyId,modiName,LocalDateTime.now());
+        Common.setPoModifiedFields(po,modifyId,modiName);
         po.setId(id.longValue());
 
         ReturnObject ret = categoryDao.updateCategory(po);
@@ -107,17 +108,5 @@ public class CategoryService {
         }
         ReturnObject ret = categoryDao.deleteCategoryById(id.longValue());
         return ret;
-    }
-
-    private void setCreateUser(CategoryPo categoryPo, Long id, String name, LocalDateTime time){
-        categoryPo.setCreateName(name);
-        categoryPo.setId(id);
-        categoryPo.setGmtCreate(time);
-    }
-
-    private void setModifiUser(CategoryPo categoryPo, Long id, String name, LocalDateTime time){
-        categoryPo.setModifiedBy(id);
-        categoryPo.setModiName(name);
-        categoryPo.setGmtModified(time);
     }
 }
