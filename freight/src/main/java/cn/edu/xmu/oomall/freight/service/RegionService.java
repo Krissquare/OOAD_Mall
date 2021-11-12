@@ -34,12 +34,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getParentRegion(Long id) {
 
-        RegionPo regionPo = new RegionPo();
-        regionPo.setId(id);
-
         ReturnObject<List<Region>> retRegion;
 
-        ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(regionPo);
+        ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(id);
 
         if (returnObject.getCode().equals(ReturnNo.OK)) {
             retRegion = new ReturnObject<>(returnObject.getData());
@@ -55,9 +52,8 @@ public class RegionService {
         Region region = regionVo.createRegion();
         region.setPid(pid);
         region.setState(STATE_EFFCTIVE);
-        Common.setPoCreatedFields(region.gotRegionPo(), userId, userName);
 
-        ReturnObject<Region> retObj = regionDao.createRegion(region);
+        ReturnObject<Region> retObj = regionDao.createRegion(region,userId,userName);
         
         ReturnObject<VoObject> retRegion;
         if (retObj.getCode().equals(ReturnNo.OK)) {
@@ -72,12 +68,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
 
-        RegionPo regionPo = new RegionPo();
-        regionPo.setId(id);
-
         ReturnObject<List<Region>> retRegion;
 
-        ReturnObject<List<Region>> returnObject = regionDao.adminGetChildRegion(regionPo);
+        ReturnObject<List<Region>> returnObject = regionDao.adminGetChildRegion(id);
 
         if (returnObject.getCode().equals(ReturnNo.OK)) {
             retRegion = new ReturnObject<>(returnObject.getData());
@@ -90,12 +83,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getChildRegion(Long id) {
 
-        RegionPo regionPo = new RegionPo();
-        regionPo.setId(id);
-
         ReturnObject<List<Region>> retRegion;
 
-        ReturnObject<List<Region>> returnObject = regionDao.getChildRegion(regionPo);
+        ReturnObject<List<Region>> returnObject = regionDao.getChildRegion(id);
 
         if (returnObject.getCode().equals(ReturnNo.OK)) {
             retRegion = new ReturnObject<>(returnObject.getData());
@@ -110,9 +100,8 @@ public class RegionService {
 
         Region region = regionVo.createRegion();
         region.setId(id);
-        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
-        return regionDao.modiRegion(region);
+        return regionDao.modiRegion(region,userId,userName);
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -121,9 +110,8 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_ABANDONED);
-        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
-        return regionDao.abandonRegion(region);
+        return regionDao.abandonRegion(region,userId,userName);
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -132,9 +120,8 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_SUSPENDED);
-        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
-        return regionDao.suspendRegion(region);
+        return regionDao.suspendRegion(region,userId,userName);
     }
 
     @Transactional(rollbackFor=Exception.class)
@@ -143,9 +130,8 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_EFFCTIVE);
-        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
-        return regionDao.resumeRegion(region);
+        return regionDao.resumeRegion(region,userId,userName);
     }
 
 }

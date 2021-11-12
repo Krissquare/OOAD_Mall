@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.freight.dao;
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.mapper.RegionPoMapper;
@@ -33,8 +34,11 @@ public class RegionDao {
     @Autowired
     private RedisUtil redisUtil;
 
-    public ReturnObject<List<Region>> getParentRegion(RegionPo regionPo) {
+    public ReturnObject<List<Region>> getParentRegion(Long id) {
         try {
+            RegionPo regionPo = new RegionPo();
+            regionPo.setId(id);
+
             String key = null;
             if (regionPo.getId() != null) {
                 key = "parent_region_" + regionPo.getId();
@@ -70,10 +74,11 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<Region> createRegion(Region region){
+    public ReturnObject<Region> createRegion(Region region, Long userId, String userName){
 
         try {
             RegionPo regionPo = region.gotRegionPo();
+            Common.setPoCreatedFields(regionPo, userId, userName);
 
             RegionPo parentRegionPo = regionPoMapper.selectByPrimaryKey(regionPo.getPid());
             if (parentRegionPo == null) {
@@ -95,8 +100,10 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<List<Region>> adminGetChildRegion(RegionPo regionPo) {
+    public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
         try {
+            RegionPo regionPo = new RegionPo();
+            regionPo.setId(id);
             List<Region> retRegions = new ArrayList<>();
             regionPo = regionPoMapper.selectByPrimaryKey(regionPo.getId());
 
@@ -123,8 +130,10 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<List<Region>> getChildRegion(RegionPo regionPo) {
+    public ReturnObject<List<Region>> getChildRegion(Long id) {
         try {
+            RegionPo regionPo = new RegionPo();
+            regionPo.setId(id);
             List<Region> retRegions = new ArrayList<>();
             regionPo = regionPoMapper.selectByPrimaryKey(regionPo.getId());
             String key="child_region_"+regionPo.getId();
@@ -168,10 +177,11 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<Object> modiRegion(Region region){
+    public ReturnObject<Object> modiRegion(Region region, Long userId, String userName){
 
         try {
             RegionPo regionPo = region.gotRegionPo();
+            Common.setPoModifiedFields(regionPo,userId,userName);
 
             RegionPo rp = regionPoMapper.selectByPrimaryKey(region.getId());
             if (rp == null) {
@@ -190,11 +200,12 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<Object> abandonRegion(Region region) {
+    public ReturnObject<Object> abandonRegion(Region region, Long userId, String userName) {
 
         try {
             ReturnObject<Object> retObj;
             RegionPo regionPo = region.gotRegionPo();
+            Common.setPoModifiedFields(regionPo,userId,userName);
 
             RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
             if (rp == null) {
@@ -217,11 +228,12 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<Object> suspendRegion(Region region) {
+    public ReturnObject<Object> suspendRegion(Region region, Long userId, String userName) {
 
         try {
             ReturnObject<Object> retObj;
             RegionPo regionPo = region.gotRegionPo();
+            Common.setPoModifiedFields(regionPo,userId,userName);
 
             RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
             if (rp == null) {
@@ -243,11 +255,12 @@ public class RegionDao {
         }
     }
 
-    public ReturnObject<Object> resumeRegion(Region region) {
+    public ReturnObject<Object> resumeRegion(Region region, Long userId, String userName) {
 
         try {
             ReturnObject<Object> retObj;
             RegionPo regionPo = region.gotRegionPo();
+            Common.setPoModifiedFields(regionPo,userId,userName);
 
             RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
             if (rp == null) {
