@@ -6,8 +6,6 @@ import cn.edu.xmu.oomall.freight.mapper.RegionPoMapper;
 import cn.edu.xmu.oomall.freight.util.RedisUtil;
 import cn.edu.xmu.oomall.goods.model.bo.Region;
 import cn.edu.xmu.oomall.goods.model.po.RegionPo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -22,13 +20,11 @@ import java.util.List;
 @Repository
 public class RegionDao {
 
-    private final Byte STATE_EFFCTIVE=0;
+    private static final Byte STATE_EFFCTIVE=0;
 
-    private final Byte STATE_SUSPENDED=1;
+    private static final Byte STATE_SUSPENDED=1;
 
-    private final Byte STATE_ABANDONED=2;
-
-    private Logger logger = LoggerFactory.getLogger(RegionDao.class);
+    private static final Byte STATE_ABANDONED=2;
 
     @Autowired
     private RegionPoMapper regionPoMapper;
@@ -36,124 +32,155 @@ public class RegionDao {
     @Autowired
     private RedisUtil redisUtil;
 
-    public ReturnObject<List<Region>> getParentRegion(RegionPo regionPo){
-
-        logger.info("findParentRegion: RegionPo =" + regionPo);
-
-        String key = null;
-        if (regionPo.getId() != null ){
-            key = "region_"+regionPo.getId();
-            List<Region> redisRegions = (List<Region>) redisUtil.get(key);
-            if (redisRegions!=null){
-                logger.info("findParentRegion: hit redis cache, key = "+key);
-                return new ReturnObject<>(redisRegions);
+    public ReturnObject<List<Region>> getParentRegion(RegionPo regionPo) {
+        try {
+            String key = null;
+            if (regionPo.getId() != null) {
+                key = "region_" + regionPo.getId();
+                List<Region> redisRegions = (List<Region>) redisUtil.get(key);
+                if (redisRegions != null) {
+                    return new ReturnObject<>(redisRegions);
+                }
             }
-        }
 
-        List<Region> retRegions = new ArrayList<>();
-        regionPo=regionPoMapper.selectById(regionPo.getId());
-        while(true)
-        {
-            if(regionPo.getPid()==0) {
-                break;
+            List<Region> retRegions = new ArrayList<>(5);
+            regionPo = regionPoMapper.selectByPrimaryKey(regionPo.getId());
+            while (regionPo != null && regionPo.getPid() != 0) {
+                regionPo = regionPoMapper.selectByPrimaryKey(regionPo.getPid());
+                if (regionPo != null) {
+                    retRegions.add(0, new Region(regionPo));
+                }
             }
-            regionPo=regionPoMapper.selectParent(regionPo);
-            retRegions.add(0,new Region(regionPo));
-        }
-        logger.info("findParentRegion: retRegions =" + retRegions);
 
-        if (retRegions.size()!=0){
-            logger.info("findParentRegion: put into redis cache, key = "+key);
-            redisUtil.set(key, (Serializable) retRegions, 600);
-        }
+            if (retRegions.size() != 0) {
+                redisUtil.set(key, (Serializable) retRegions, 600);
+            }
 
-        return new ReturnObject<>(retRegions);
+            return new ReturnObject<>(retRegions);
+        } catch (Exception e) {
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+        }
     }
 
     public ReturnObject<Region> createRegion(Region region){
 
-        RegionPo regionPo = region.gotRegionPo();
-        Byte state=regionPoMapper.getStateById(region.getPid());
-        if(state.equals(STATE_ABANDONED))
-        {
-            ReturnObject<Region> retObj = new ReturnObject<>(ReturnNo.FREIGHT_REGIONOBSOLETE);
-            return retObj;
+        try {
+            RegionPo regionPo = region.gotRegionPo();
+
+            RegionPo parentRegionPo = regionPoMapper.selectByPrimaryKey(regionPo.getPid());
+            if (parentRegionPo == null) {
+                ReturnObject<Region> retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+                return retObj;
+            }
+
+            if (parentRegionPo.getState().equals(STATE_ABANDONED)) {
+                ReturnObject<Region> retObj = new ReturnObject<>(ReturnNo.FREIGHT_REGIONOBSOLETE);
+                return retObj;
+            }
+
+            regionPoMapper.insertSelective(regionPo);
+
+            return new ReturnObject<>();
+
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        Long ret = regionPoMapper.createRegion(regionPo);
-        ReturnObject<Region> retObj = null;
-        if (ret == 0 ){
-            retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-        } else {
-            retObj = new ReturnObject<>();
-        }
-        return retObj;
     }
 
     public ReturnObject<Object> modiRegion(Region region){
-        RegionPo regionPo = region.gotRegionPo();
-        ReturnObject<Object> retObj = null;
-        int ret = regionPoMapper.updateRegion(regionPo);
-        if (ret == 0 ){
-            retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-        } else {
-            retObj = new ReturnObject<>();
+
+        try {
+            RegionPo regionPo = region.gotRegionPo();
+
+            RegionPo rp = regionPoMapper.selectByPrimaryKey(region.getId());
+            if (rp == null) {
+                ReturnObject<Object> retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+                return retObj;
+            }
+
+            regionPoMapper.insertSelective(regionPo);
+
+            return new ReturnObject<>();
+
+        } catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        return retObj;
     }
 
     public ReturnObject<Object> abandonRegion(Region region) {
-        ReturnObject<Object> retObj = null;
-        RegionPo regionPo = region.gotRegionPo();
-        Byte state=regionPoMapper.getStateById(region.getId());
-        if(state==0)
-        {
-            retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
-            return retObj;
+
+        try {
+            ReturnObject<Object> retObj;
+            RegionPo regionPo = region.gotRegionPo();
+
+            RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
+            if (rp == null) {
+                retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+                return retObj;
+            }
+            if (rp.getState().equals(STATE_EFFCTIVE)) {
+                retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
+                return retObj;
+            }
+
+            regionPoMapper.updateByPrimaryKeySelective(regionPo);
+            redisUtil.del("region_" + region.getId());
+
+            return new ReturnObject<>();
+
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        int ret = regionPoMapper.abandonRegion(regionPo);
-        if (ret == 0) {
-            retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-        } else {
-            redisUtil.del("region_"+region.getId());
-            retObj = new ReturnObject<>();
-        }
-        return retObj;
     }
 
     public ReturnObject<Object> suspendRegion(Region region) {
-        ReturnObject<Object> retObj;
-        RegionPo regionPo = region.gotRegionPo();
-        Byte state=regionPoMapper.getStateById(region.getId());
-        if(state.equals(STATE_ABANDONED))
-        {
-            retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
-            return retObj;
+
+        try {
+            ReturnObject<Object> retObj;
+            RegionPo regionPo = region.gotRegionPo();
+
+            RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
+            if (rp == null) {
+                retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+                return retObj;
+            }
+            if (rp.getState().equals(STATE_ABANDONED)) {
+                retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
+                return retObj;
+            }
+
+            regionPoMapper.updateByPrimaryKeySelective(regionPo);
+            redisUtil.del("region_" + region.getId());
+
+            return new ReturnObject<>();
+
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        int ret = regionPoMapper.suspendRegion(regionPo);
-        if (ret == 0) {
-            retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-        } else {
-            redisUtil.del("region_"+region.getId());
-            retObj = new ReturnObject<>();
-        }
-        return retObj;
     }
 
     public ReturnObject<Object> resumeRegion(Region region) {
-        ReturnObject<Object> retObj = null;
-        RegionPo regionPo = region.gotRegionPo();
-        Byte state=regionPoMapper.getStateById(region.getId());
-        if(state.equals(STATE_ABANDONED))
-        {
-            retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
-            return retObj;
+
+        try {
+            ReturnObject<Object> retObj;
+            RegionPo regionPo = region.gotRegionPo();
+
+            RegionPo rp=regionPoMapper.selectByPrimaryKey(region.getId());
+            if (rp == null) {
+                retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+                return retObj;
+            }
+            if (rp.getState().equals(STATE_ABANDONED)) {
+                retObj = new ReturnObject<>(ReturnNo.STATENOTALLOW);
+                return retObj;
+            }
+
+            regionPoMapper.updateByPrimaryKeySelective(regionPo);
+
+            return new ReturnObject<>();
+
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        int ret = regionPoMapper.resumeRegion(regionPo);
-        if (ret == 0) {
-            retObj = new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
-        } else {
-            retObj = new ReturnObject<>();
-        }
-        return retObj;
     }
 }

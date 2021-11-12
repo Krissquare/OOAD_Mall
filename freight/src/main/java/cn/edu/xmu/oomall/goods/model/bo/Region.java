@@ -115,18 +115,4 @@ public class Region implements VoObject {
         regionPo.setGmtModified(gmtModified);
     }
 
-    @Override
-    public int hashCode() {
-        return regionPo.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return regionPo.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        return regionPo.equals(((Region)o).regionPo);
-    }
 }

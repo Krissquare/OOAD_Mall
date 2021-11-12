@@ -71,7 +71,7 @@ public class RegionControllerTest {
         String goodJson = JacksonUtil.toJson(r);
 
         String responseString = this.mvc.perform(post("/freight/shops/0/regions/4191/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
@@ -107,13 +107,49 @@ public class RegionControllerTest {
         String goodJson = JacksonUtil.toJson(r);
 
         responseString = this.mvc.perform(post("/freight/shops/0/regions/1/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
-                .andExpect(status().isNotAcceptable())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
         expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void addRegionTest2() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(post("/freight/shops/1/regions/4191/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void addRegionTest3() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(post("/freight/shops/0/regions/0/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
     }
 
     @Test
@@ -128,6 +164,42 @@ public class RegionControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void modifyRegionTest1() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/1/regions/4191").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void modifyRegionTest2() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/0").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
 
@@ -164,6 +236,42 @@ public class RegionControllerTest {
         String expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    @Test
+    public void abandonRegionTest2() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(delete("/freight/shops/1/regions/4191").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void abandonRegionTest3() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(delete("/freight/shops/0/regions/0").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
     }
 
     @Test   //标识此方法为测试方法
@@ -208,6 +316,42 @@ public class RegionControllerTest {
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
 
+    @Test
+    public void suspendRegionTest2() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/1/regions/4191/suspend").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void suspendRegionTest3() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/0/suspend").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
     @Test   //标识此方法为测试方法
     public void resumeRegionTest() throws Exception {
         String responseString = this.mvc.perform(put("/freight/shops/0/regions/6/resume"))
@@ -248,6 +392,42 @@ public class RegionControllerTest {
         expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
+
+    @Test
+    public void resumeRegionTest2() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/1/regions/4191/resume").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"非管理员无权操作\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+    }
+
+    @Test
+    public void resumeRegionTest3() throws Exception {
+        RegionVo r =  new RegionVo();
+        r.setName("test");
+
+        String goodJson = JacksonUtil.toJson(r);
+
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/0/resume").contentType("application/json;charset=UTF-8").content(goodJson))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
     }
 
 }
