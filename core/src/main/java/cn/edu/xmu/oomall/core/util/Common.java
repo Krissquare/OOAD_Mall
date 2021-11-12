@@ -207,6 +207,8 @@ public class Common {
 
 
     /**
+     * @author xucangbai
+     * @date 2021/11/13
      * 根据clazz实例化一个对象，并深度克隆bo中对应属性到这个新对象
      * @param bo business object
      * @param voClass vo对象类型
