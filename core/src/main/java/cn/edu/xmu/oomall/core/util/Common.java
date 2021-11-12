@@ -191,7 +191,8 @@ public class Common {
         Field[] voFs = vo.getClass().getDeclaredFields();
 
         for (Field vf : voFs) {
-            for (Field bf : boFs) {
+            try {
+                Field bf=bo.getClass().getDeclaredField(vf.getName());
                 if (vf.getName().equals(bf.getName())) {
                     vf.setAccessible(true);
                     bf.setAccessible(true);
@@ -212,6 +213,8 @@ public class Common {
                         }
                     }
                 }
+            } catch (NoSuchFieldException e) {
+                logger.info(e.getMessage());
             }
         }
         return vo;
