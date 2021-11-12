@@ -50,14 +50,15 @@ public class ShopController {
     @PostMapping(value = "/shops")
 //    @Audit
     public Object addShop(@Validated @RequestBody ShopVo shopvo, BindingResult bindingResult,Long shopid, Long loginUser,String loginUsername){
+    //todo:
+        loginUser=Long.valueOf(111);
+        loginUsername="hhhhh";
+        shopid=Long.valueOf(-1);
 
         Object obj = Common.processFieldErrors(bindingResult,httpServletResponse);
         if (null != obj) {
             return obj;
         }
-        loginUser=Long.valueOf(111);
-        loginUsername="hhhhh";
-        shopid=Long.valueOf(-1);
 
         if(shopid == -1)
         {
@@ -83,9 +84,10 @@ public class ShopController {
             @ApiResponse(code = 507, message = "该店铺无法修改")})
     @PutMapping(value = "/shops/{id}")
     public Object modifyShop(@Validated @RequestBody ShopVo shopVo,BindingResult bindingResult,@PathVariable Long id,Long loginUser,String loginUsername){
-        Object obj = Common.processFieldErrors(bindingResult,httpServletResponse);
+        //todo:
         loginUser=Long.valueOf(111);
         loginUsername="hhhhh";
+        Object obj = Common.processFieldErrors(bindingResult,httpServletResponse);
         if (null != obj) {
             return obj;
         }
@@ -108,13 +110,11 @@ public class ShopController {
     })
     @DeleteMapping(value = "/shops/{id}")
     public Object deleteShop(@ApiParam(value = "shop ID",required=true) @PathVariable("id") Long id,Long loginUser,String loginUsername){
-        var shop = shopService.getShopByShopId(id).getData();
-//        if(shop == null) {
-//            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST, "店铺不存在"));
-//        }
-
+        //todo:
         loginUser=Long.valueOf(111);
         loginUsername="hhhhh";
+
+        var shop = shopService.getShopByShopId(id).getData();
         if(shop.getState() == Shop.State.OFFLINE.getCode().byteValue())
         {
 
@@ -138,12 +138,10 @@ public class ShopController {
     })
     @PutMapping(value = "/shops/{shopId}/newshops/{id}/audit")
     public Object auditShop(@PathVariable("shopId") Long shopId,@ApiParam(value = "新店 ID",required=true) @PathVariable("id") Long id,@ApiParam(value = "" ,required=true )   @RequestBody ShopConclusionVo conclusion,Long loginUser,String loginUsername){
-        var shop = shopService.getShopByShopId(id).getData();
-//        if(shop == null) {
-//            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST, "店铺不存在"));
-//        }
+        //todo:
         loginUser=Long.valueOf(111);
         loginUsername="hhhhh";
+        var shop = shopService.getShopByShopId(id).getData();
         if(shop.getState() == Shop.State.EXAME.getCode().byteValue())
         {
             ReturnObject ret=shopService.passShop(id,conclusion,loginUser,loginUsername);
@@ -167,8 +165,10 @@ public class ShopController {
     @PutMapping(value = "/shops/{id}/onshelves")
 //    @Audit
     public Object shopsIdOnshelvesPut(@PathVariable("id") long id,Long loginUser,String loginUsername){
+        //todo:
         loginUser=Long.valueOf(111);
         loginUsername="hhhhh";
+
         ReturnObject ret= shopService.onShelfShop(id, loginUser,loginUsername);
         return Common.decorateReturnObject(ret);
     }
@@ -184,8 +184,10 @@ public class ShopController {
     @PutMapping(value = "/shops/{id}/offshelves")
 //    @Audit
     public Object shopsIdOffshelvesPut(@PathVariable("id") long id,Long loginUser,String loginUsername){
+        //todo:
         loginUser=Long.valueOf(111);
         loginUsername="hhhhh";
+
         ReturnObject ret= shopService.offShelfShop(id,loginUser,loginUsername);
         return Common.decorateReturnObject(ret);
     }

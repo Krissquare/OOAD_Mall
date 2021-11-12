@@ -7,8 +7,6 @@ import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.po.ShopPo;
 import cn.edu.xmu.oomall.shop.model.vo.*;
 import cn.edu.xmu.oomall.shop.openfeign.PayApi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,6 @@ import javax.annotation.Resource;
 @Service
 @Component
 public class ShopService {
-    private static final Logger logger = LoggerFactory.getLogger(ShopService.class);
     @Autowired
     private ShopDao shopDao;
     @Resource
@@ -63,9 +60,8 @@ public class ShopService {
         if (!payApi.isSettled(id)) {
             return new ReturnObject(ReturnNo.SHOP_NOT_RECON);
         } else {
-//            if (payApi.paybackDeposit(id))//退还保证金
-//            {
-            payApi.paybackDeposit(id);
+            if (payApi.paybackDeposit(id))//退还保证金
+            {
             Shop shop = new Shop();
             shop.setId(id.longValue());
             shop.setState(Shop.State.FORBID.getCode().byteValue());
@@ -73,7 +69,11 @@ public class ShopService {
             shop.setModiName(loginUsername);
             ReturnObject ret = shopDao.updateShopState(shop);
             return ret;
-//            }
+            }
+            else
+            {
+                return new ReturnObject(ReturnNo.SHOP_HASDEPOSIT);
+            }
         }
 
 
@@ -98,9 +98,6 @@ public class ShopService {
         shop.setModiName(loginUsername);
         shop.setState(Shop.State.ONLINE.getCode().byteValue());
         var x = getShopByShopId(id).getData();
-//        if (x == null) {
-//            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
-//        }
         if (x.getState() == Shop.State.OFFLINE.getCode().byteValue()) {
             ReturnObject ret = shopDao.updateShopState(shop);
             return ret;
@@ -115,9 +112,6 @@ public class ShopService {
         shop.setModiName(loginUsername);
         shop.setState(Shop.State.OFFLINE.getCode().byteValue());
         var x = getShopByShopId(id).getData();
-//        if (x == null) {
-//            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
-//        }
         if (x.getState() == Shop.State.ONLINE.getCode().byteValue()) {
             ReturnObject ret = shopDao.updateShopState(shop);
             return ret;
