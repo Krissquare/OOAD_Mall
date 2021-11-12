@@ -89,6 +89,11 @@ pagehelper:
   helper-dialect: mysql
 
 
+oomall:
+  shop:
+    category:
+      expiretime: 10000
+
 
 
 
