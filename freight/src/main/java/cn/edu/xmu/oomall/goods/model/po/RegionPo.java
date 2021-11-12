@@ -1,7 +1,12 @@
 package cn.edu.xmu.oomall.goods.model.po;
 
+import lombok.Data;
+import org.apache.ibatis.type.Alias;
+
 import java.time.LocalDateTime;
 
+@Data
+@Alias("RegionPo")
 public class RegionPo {
     /**
      *
