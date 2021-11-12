@@ -122,6 +122,27 @@ public class Common {
         }
     }
 
+    private static Object getListRetVo(ReturnObject<List> returnObject,Class voClass)
+    {
+        ReturnNo code = returnObject.getCode();
+        switch (code){
+            case OK:
+                List objs = returnObject.getData();
+                if (objs != null){
+                    List<Object> ret = new ArrayList<>(objs.size());
+                    for (Object data : objs) {
+                        if (data instanceof VoObject) {
+                            ret.add(cloneVo(data,voClass));
+                        }
+                    }
+                    return ResponseUtil.ok(ret);
+                }else{
+                    return ResponseUtil.ok();
+                }
+            default:
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+        }
+    }
 
     /**
      * 处理分页返回对象
@@ -157,14 +178,58 @@ public class Common {
         }
     }
 
+    private static Object getPageRetVo(ReturnObject<PageInfo<VoObject>> returnObject,Class voClass){
+        ReturnNo code = returnObject.getCode();
+        switch (code){
+            case OK:
+                PageInfo<VoObject> objs = returnObject.getData();
+                if (objs != null){
+                    List<Object> voObjs = new ArrayList<>(objs.getList().size());
+                    for (Object data : objs.getList()) {
+                        if (data instanceof VoObject) {
+                            voObjs.add(cloneVo(data,voClass));
+                        }
+                    }
+                    Map<String, Object> ret = new HashMap<>();
+                    ret.put("list", voObjs);
+                    ret.put("total", objs.getTotal());
+                    ret.put("page", objs.getPageNum());
+                    ret.put("pageSize", objs.getPageSize());
+                    ret.put("pages", objs.getPages());
+                    return ResponseUtil.ok(ret);
+                }else{
+                    return ResponseUtil.ok();
+                }
+            default:
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+        }
+    }
+
+
     /**
      * 根据clazz实例化一个对象，并深度克隆bo中对应属性到这个新对象
      * @param bo business object
      * @param voClass vo对象类型
      * @return 深度克隆的vo对象
      */
-    private static Object cloneVo(Object bo, Class voClass){
-        return null;
+    public static Object cloneVo(Object bo, Class voClass) {
+        Class boClass = bo.getClass();
+        Object newVo = null;
+        try {
+            newVo = voClass.getDeclaredConstructor().newInstance();
+            Field[] voFields = voClass.getDeclaredFields();
+            for (Field voField : voFields) {
+                voField.setAccessible(true);
+                Field boField = boClass.getDeclaredField(voField.getName());
+                boField.setAccessible(true);
+                Class<?> type = boField.getType();
+                Object newObject = boField.get(bo);
+                voField.set(newVo, newObject);
+            }
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+        return newVo;
     }
 
 
