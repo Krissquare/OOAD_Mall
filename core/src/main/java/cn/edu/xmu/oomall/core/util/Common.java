@@ -193,32 +193,92 @@ public class Common {
         for (Field vf : voFs) {
             try {
                 Field bf = bo.getClass().getDeclaredField(vf.getName());
-
-                vf.setAccessible(true);
-                bf.setAccessible(true);
-                if ((vf.getType().isPrimitive() || vf.getType().getTypeName().startsWith("java.lang")
-                        && vf.getType().equals(bf.getType()))) {
-                    try {
-                        vf.set(vo, bf.get(bo));
-                    } catch (IllegalAccessException e) {
-                        logger.info(e.getMessage());
-                        return null;
+                if (vf.getName().equals(bf.getName())) {
+                    vf.setAccessible(true);
+                    bf.setAccessible(true);
+                    if ((vf.getType().isPrimitive() || vf.getType().getTypeName().startsWith("java.lang"))
+                            && vf.getType().equals(bf.getType())) {
+                        try {
+                            vf.set(vo, bf.get(bo));
+                        } catch (IllegalAccessException e) {
+                            logger.info(e.getMessage());
+                            return null;
+                        }
                     }
-                } else if (!vf.getType().isPrimitive() && vf.getType().equals(bf.getType())) {
-                    try {
-                        vf.set(vo, cloneVo(bf.get(bo), vf.getType()));
-                    } catch (IllegalAccessException e) {
-                        logger.info(e.getMessage());
-                        return null;
+                    else if (!vf.getType().isPrimitive() && !bf.getType().isPrimitive()&&vf.getType().equals(bf.getType()) ) {
+                        try {
+                            vf.set(vo, cloneVo(bf.get(bo), vf.getType()));
+                        } catch (IllegalAccessException e) {
+                            logger.info(e.getMessage());
+                            return null;
+                        }
                     }
                 }
-
             } catch (NoSuchFieldException e) {
                 logger.info(e.getMessage());
                 return null;
             }
         }
         return vo;
+    }
+
+    /**
+     * 处理返回对象
+     *
+     * @param returnObject 返回的对象
+     * @return TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
+     */
+
+    public static Object getListRetVo(ReturnObject<List> returnObject,Class voClass) {
+        ReturnNo code = returnObject.getCode();
+        switch (code) {
+            case OK:
+                List objs = returnObject.getData();
+                if (objs != null) {
+                    List<Object> ret = new ArrayList<>(objs.size());
+                    for (Object data : objs) {
+                        ret.add(cloneVo(data,voClass));
+                    }
+                    return ResponseUtil.ok(ret);
+                } else {
+                    return ResponseUtil.ok();
+                }
+            default:
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+        }
+    }
+
+
+    /**
+     * 处理分页返回对象
+     *
+     * @param returnObject 返回的对象
+     * @return TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
+     */
+    public static Object getPageRetVo(ReturnObject<PageInfo<VoObject>> returnObject,Class voClass) {
+        ReturnNo code = returnObject.getCode();
+        switch (code) {
+            case OK:
+                PageInfo<VoObject> objs = returnObject.getData();
+                if (objs != null) {
+                    List<Object> voObjs = new ArrayList<>(objs.getList().size());
+                    for (Object data : objs.getList()) {
+                        voObjs.add(cloneVo(data,voClass));
+                    }
+
+                    Map<String, Object> ret = new HashMap<>();
+                    ret.put("list", voObjs);
+                    ret.put("total", objs.getTotal());
+                    ret.put("page", objs.getPageNum());
+                    ret.put("pageSize", objs.getPageSize());
+                    ret.put("pages", objs.getPages());
+                    return ResponseUtil.ok(ret);
+                } else {
+                    return ResponseUtil.ok();
+                }
+            default:
+                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+        }
     }
 
 
