@@ -3,8 +3,7 @@ package cn.edu.xmu.oomall.core.util;
 import cn.edu.xmu.oomall.core.util.po.CouponActivityPo;
 import cn.edu.xmu.oomall.core.util.po.Nonepo;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 public class SetPrototypeTest {
 
-    private static Logger logger = LoggerFactory.getLogger(SetPrototypeTest.class);
 
     @Test
     public void test() {
