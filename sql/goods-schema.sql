@@ -37,7 +37,7 @@ CREATE TABLE `oomall_advance_sale` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='预售';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='预售';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -59,7 +59,7 @@ CREATE TABLE `oomall_category` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=186 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分类';
+) ENGINE=InnoDB AUTO_INCREMENT=314 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分类';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -106,7 +106,7 @@ CREATE TABLE `oomall_coupon_activity` (
   `valid_term` tinyint DEFAULT NULL,
   `image_url` varchar(255) DEFAULT NULL,
   `strategy` varchar(500) DEFAULT NULL,
-  `state` tinyint default 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE `oomall_coupon_activity` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -134,9 +134,8 @@ CREATE TABLE `oomall_coupon_onsale` (
   `modi_name` varchar(128) DEFAULT NULL,
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
-
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动商品';
+) ENGINE=InnoDB AUTO_INCREMENT=3308 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='优惠活动商品';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -159,7 +158,7 @@ CREATE TABLE `oomall_freight_model` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='运费模板';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='运费模板';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +179,7 @@ CREATE TABLE `oomall_goods` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品集合';
+) ENGINE=InnoDB AUTO_INCREMENT=501 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品集合';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -198,7 +197,7 @@ CREATE TABLE `oomall_groupon_activity` (
   `strategy` varchar(500) DEFAULT NULL,
   `begin_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `state` tinyint default 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -206,7 +205,7 @@ CREATE TABLE `oomall_groupon_activity` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='团购活动';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='团购活动';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +226,7 @@ CREATE TABLE `oomall_onsale` (
   `type` tinyint DEFAULT NULL,
   `activity_id` bigint DEFAULT NULL,
   `share_act_id` bigint DEFAULT NULL,
-  `state` tinyint default 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -235,7 +234,7 @@ CREATE TABLE `oomall_onsale` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='价格与数量';
+) ENGINE=InnoDB AUTO_INCREMENT=3913 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='价格与数量';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -291,8 +290,9 @@ CREATE TABLE `oomall_product` (
   `modi_name` varchar(128) DEFAULT NULL,
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
+  `state` tinyint DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品';
+) ENGINE=InnoDB AUTO_INCREMENT=5462 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,7 +338,7 @@ CREATE TABLE `oomall_region` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `pid` bigint DEFAULT NULL,
   `name` varchar(128) DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -346,7 +346,7 @@ CREATE TABLE `oomall_region` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4190 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='行政区划';
+) ENGINE=InnoDB AUTO_INCREMENT=4192 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='行政区划';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -364,7 +364,7 @@ CREATE TABLE `oomall_share_activity` (
   `strategy` varchar(500) DEFAULT NULL,
   `begin_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -372,7 +372,7 @@ CREATE TABLE `oomall_share_activity` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分享活动';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='分享活动';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -387,7 +387,7 @@ CREATE TABLE `oomall_shop` (
   `name` varchar(128) DEFAULT NULL,
   `deposit` bigint DEFAULT NULL,
   `deposit_threshold` bigint DEFAULT NULL,
-  `state` tinyint DEFAULT 0,
+  `state` tinyint DEFAULT '0',
   `created_by` bigint DEFAULT NULL,
   `create_name` varchar(128) DEFAULT NULL,
   `modified_by` bigint DEFAULT NULL,
@@ -395,7 +395,7 @@ CREATE TABLE `oomall_shop` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺';
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -419,7 +419,7 @@ CREATE TABLE `oomall_shop_account` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺账号';
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺账号';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -447,7 +447,7 @@ CREATE TABLE `oomall_weight_freight` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='计重运费';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='计重运费';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -459,4 +459,4 @@ CREATE TABLE `oomall_weight_freight` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-10 20:13:11
+-- Dump completed on 2021-11-12 21:25:12
