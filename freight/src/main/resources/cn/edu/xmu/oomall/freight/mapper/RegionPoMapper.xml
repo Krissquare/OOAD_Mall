@@ -104,13 +104,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into oomall_region (`pid`, `name`, `state`,
-    `created_by`, `create_name`, `modified_by`,
-    `modi_name`, `gmt_create`, `gmt_modified`
-    )
+      `created_by`, `create_name`, `modified_by`,
+      `modi_name`, `gmt_create`, `gmt_modified`
+      )
     values (#{pid,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT},
-    #{createdBy,jdbcType=BIGINT}, #{createName,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=BIGINT},
-    #{modiName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
-    )
+      #{createdBy,jdbcType=BIGINT}, #{createName,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=BIGINT},
+      #{modiName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.xmu.oomall.goods.model.po.RegionPo">
     <!--
@@ -224,14 +224,14 @@
     -->
     update oomall_region
     set `pid` = #{pid,jdbcType=BIGINT},
-    `name` = #{name,jdbcType=VARCHAR},
-    `state` = #{state,jdbcType=TINYINT},
-    `created_by` = #{createdBy,jdbcType=BIGINT},
-    `create_name` = #{createName,jdbcType=VARCHAR},
-    `modified_by` = #{modifiedBy,jdbcType=BIGINT},
-    `modi_name` = #{modiName,jdbcType=VARCHAR},
-    `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
-    `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP}
+      `name` = #{name,jdbcType=VARCHAR},
+      `state` = #{state,jdbcType=TINYINT},
+      `created_by` = #{createdBy,jdbcType=BIGINT},
+      `create_name` = #{createName,jdbcType=VARCHAR},
+      `modified_by` = #{modifiedBy,jdbcType=BIGINT},
+      `modi_name` = #{modiName,jdbcType=VARCHAR},
+      `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
+      `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -66,7 +66,6 @@ public class RegionController {
     }
 
 
-
     @ApiOperation(value = "管理员在地区下新增子地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value ="用户token" ,required = true),
@@ -98,7 +97,6 @@ public class RegionController {
 
         return Common.decorateReturnObject(returnObject);
     }
-
 
 
     @ApiOperation(value = "管理员查询在地区下的子地区",  produces="application/json;charset=UTF-8")
@@ -133,7 +131,6 @@ public class RegionController {
     }
 
 
-
     @ApiOperation(value = "查询在地区下的子地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "path", dataType = "Integer", name = "id", value ="该地区id" ,required = true)
@@ -159,15 +156,6 @@ public class RegionController {
 
         return Common.decorateReturnObject(returnObject);
     }
-
-
-
-
-
-
-
-
-
 
 
     @ApiOperation(value = "管理员修改某个地区",  produces="application/json;charset=UTF-8")
@@ -228,6 +216,7 @@ public class RegionController {
         return Common.decorateReturnObject(returnObject);
     }
 
+
     @ApiOperation(value = "管理员停用某个地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value ="用户token" ,required = true),
@@ -253,6 +242,7 @@ public class RegionController {
 
         return Common.decorateReturnObject(returnObject);
     }
+
 
     @ApiOperation(value = "管理员恢复某个地区",  produces="application/json;charset=UTF-8")
     @ApiImplicitParams({

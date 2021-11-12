@@ -3,13 +3,8 @@ package cn.edu.xmu.oomall.freight.mapper;
 import cn.edu.xmu.oomall.goods.model.po.RegionPo;
 import cn.edu.xmu.oomall.goods.model.po.RegionPoExample;
 import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
 
-/**
- * @author ziyi guo
- * @date 2021/11/10
- */
 @Mapper
 public interface RegionPoMapper {
     /**

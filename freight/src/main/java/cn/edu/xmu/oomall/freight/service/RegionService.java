@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.freight.service;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.dao.RegionDao;
@@ -54,7 +55,7 @@ public class RegionService {
         Region region = regionVo.createRegion();
         region.setPid(pid);
         region.setState(STATE_EFFCTIVE);
-        setPoCreatedFields(region.gotRegionPo(),userId,userName,LocalDateTime.now());
+        Common.setPoCreatedFields(region.gotRegionPo(), userId, userName);
 
         ReturnObject<Region> retObj = regionDao.createRegion(region);
         
@@ -109,7 +110,7 @@ public class RegionService {
 
         Region region = regionVo.createRegion();
         region.setId(id);
-        setPoModifiedFields(region.gotRegionPo(),userId,userName,LocalDateTime.now());
+        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
         return regionDao.modiRegion(region);
     }
@@ -120,7 +121,7 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_ABANDONED);
-        setPoModifiedFields(region.gotRegionPo(),userId,userName,LocalDateTime.now());
+        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
         return regionDao.abandonRegion(region);
     }
@@ -131,7 +132,7 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_SUSPENDED);
-        setPoModifiedFields(region.gotRegionPo(),userId,userName,LocalDateTime.now());
+        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
         return regionDao.suspendRegion(region);
     }
@@ -142,25 +143,9 @@ public class RegionService {
         Region region=new Region();
         region.setId(id);
         region.setState(STATE_EFFCTIVE);
-        setPoModifiedFields(region.gotRegionPo(),userId,userName,LocalDateTime.now());
+        Common.setPoModifiedFields(region.gotRegionPo(),userId,userName);
 
         return regionDao.resumeRegion(region);
-    }
-
-    public static boolean setPoCreatedFields(RegionPo regionPo, long userId, String userName, LocalDateTime time){
-
-        regionPo.setCreatedBy(userId);
-        regionPo.setCreateName(userName);
-        regionPo.setGmtCreate(time);
-        return true;
-    }
-
-    public static boolean setPoModifiedFields(RegionPo regionPo, long userId, String userName, LocalDateTime time){
-
-        regionPo.setModifiedBy(userId);
-        regionPo.setModiName(userName);
-        regionPo.setGmtModified(time);
-        return true;
     }
 
 }
