@@ -18,6 +18,12 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 商品分类Controller
+ *
+ * @author Zhiliang Li 22920192204235
+ * @date 2021/11/12
+ */
 @Api(value = "商品类别API", tags = "商品类别API")
 @RestController
 @RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
@@ -39,22 +45,34 @@ public class CategoryController {
     })
     @GetMapping("/categories/{id}/subcategories")
     public Object selectCategories(@PathVariable Long id){
-        ReturnObject ret=categoryService.getSubCategories(id);
-        if(ret.getData()!=null){
-            List<Category> categories=(List<Category>)ret.getData();
-            List<CategoryRetVo> categoryRetVos=new ArrayList<>();
-            for(Category category:categories){
-                CategoryRetVo categoryRetVo=new CategoryRetVo(category);
-                categoryRetVos.add(categoryRetVo);
-            }
-            ret = new ReturnObject(categoryRetVos);
+        if(id <= 0){
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
-        return Common.decorateReturnObject(ret);
+
+        return selectSubCategories(id);
     }
+
+
+    @ApiOperation(value = "查询没有一级分类的二级分类")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="id", value = "种类id",required = true, dataType="Integer", paramType="path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 504, message = "资源不存在"),
+            @ApiResponse(code = 500, message = "服务器内部错误")
+    })
+    @GetMapping("/orphoncategories")
+    public Object selectOrphoncategories(){
+        return selectSubCategories(-1L);
+    }
+
 
     @ApiOperation(value = "管理员新增商品类目")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="id", value = "父类别id",required = true, dataType="Integer", paramType="path")
+            @ApiImplicitParam(name="authorization ", value = "token",required = true, dataType="String", paramType="header"),
+            @ApiImplicitParam(name="id", value = "父类别id",required = true, dataType="Integer", paramType="path"),
+            @ApiImplicitParam(name="shopId", value = "商户id",required = true, dataType="Integer", paramType="path")
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
@@ -65,17 +83,20 @@ public class CategoryController {
     })
     @PostMapping("/shops/{shopId}/categories/{id}/subcategories")
     public Object addCategories(@PathVariable("id") Long id, @Valid @RequestBody CategoryVo vo, BindingResult bindingResult){
+        String createName="admin";
+        Long createId=1L;
+
         // 非法输入
-        if(id<-1){
+        if(id < 0){
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST));
         }
-
+        // vo合法性检查
         var res = Common.processFieldErrors(bindingResult, httpServletResponse);
         if(res != null){
             return res;
         }
 
-        ReturnObject ret=categoryService.newCategory(id,vo.createCategory(),1L,"admin");
+        ReturnObject ret=categoryService.newCategory(id,vo.createCategory(),createId,createName);
 
         if (ret.getCode() == ReturnNo.OK){
             httpServletResponse.setStatus(HttpStatus.CREATED.value());
@@ -87,10 +108,12 @@ public class CategoryController {
         return Common.decorateReturnObject(ret);
     }
 
+
     @ApiOperation(value = "管理员修改商品类目")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="authorization", value="Token", required = true, dataType="String", paramType="header"),
-            @ApiImplicitParam(name="id", value = "种类id",required = true, dataType="Integer", paramType="path")
+            @ApiImplicitParam(name="authorization ", value = "token",required = true, dataType="String", paramType="header"),
+            @ApiImplicitParam(name="id", value = "类别id",required = true, dataType="Integer", paramType="path"),
+            @ApiImplicitParam(name="shopId", value = "商户id",required = true, dataType="Integer", paramType="path")
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
@@ -100,17 +123,21 @@ public class CategoryController {
     })
     @PutMapping("/shops/{shopId}/categories/{id}")
     public Object changeCategories(@PathVariable("id") Long id, @Valid @RequestBody CategoryVo vo, BindingResult bindingResult){
+        String modiName="admin";
+        Long modifyId=1L;
+        // vo合法性检查
         var res = Common.processFieldErrors(bindingResult, httpServletResponse);
         if(res != null){
             return res;
         }
 
-        ReturnObject ret=categoryService.changeCategory(id,vo.createCategory(),1L,"admin");
+        ReturnObject ret=categoryService.changeCategory(id,vo.createCategory(),modifyId,modiName);
         return Common.decorateReturnObject(ret);
     }
 
     @ApiOperation(value = "管理员删除商品类目")
     @ApiImplicitParams({
+            @ApiImplicitParam(name="shopId", value = "商户id",required = true, dataType="Integer", paramType="path"),
             @ApiImplicitParam(name="authorization", value="Token", required = true, dataType="String", paramType="header"),
             @ApiImplicitParam(name="id", value = "种类id",required = true, dataType="Integer", paramType="path")
     })
@@ -127,6 +154,20 @@ public class CategoryController {
         }
 
         ReturnObject ret=categoryService.deleteCategoryById(id);
+        return Common.decorateReturnObject(ret);
+    }
+
+    private Object selectSubCategories(Long id){
+        ReturnObject ret=categoryService.getSubCategories(id);
+        if(ret.getData()!=null){
+            List<Category> categories = (List<Category>)ret.getData();
+            List<CategoryRetVo> categoryRetVos = new ArrayList<>();
+            for(Category category:categories){
+                CategoryRetVo categoryRetVo=new CategoryRetVo(category);
+                categoryRetVos.add(categoryRetVo);
+            }
+            ret = new ReturnObject(categoryRetVos);
+        }
         return Common.decorateReturnObject(ret);
     }
 

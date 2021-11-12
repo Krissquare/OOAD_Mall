@@ -8,12 +8,18 @@ import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * 商品分类Bo
+ * pid为0表示一级类，大于0表示二级类，为-1表示单独类
+ * @author Zhiliang Li 22920192204235
+ * @date 2021/11/12
+ */
 @Data
 public class Category implements VoObject, Serializable {
     private Long id;
     private String name;
     private Integer commissionRatio;
-    private Long pid;   //pid为0表示一级类，大于0表示二级类，为-1表示单独类
+    private Long pid;
     private Long createdBy;
     private String createName;
     private LocalDateTime gmtCreate;
@@ -44,8 +50,7 @@ public class Category implements VoObject, Serializable {
         return new CategoryRetVo(this);
     }
 
-
-    public CategoryPo getCategoryPo() {
+    public CategoryPo createCategoryPo() {
         CategoryPo po = new CategoryPo();
         po.setId(this.id);
         po.setName(this.name);
