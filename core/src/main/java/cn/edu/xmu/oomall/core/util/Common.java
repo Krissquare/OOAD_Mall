@@ -246,6 +246,10 @@ public class Common {
     /**
      * 设置所有po对象的createdBy, createName和gmtCreate字段属性
      *
+     * @author : Wangzixia 32420182202938
+     * @date： 2021/11/12 11:12
+     * @version: 1.0
+     *
      * @param po       po对象
      * @param userId   设置到createdBy
      * @param userName 设置到createName
@@ -293,6 +297,11 @@ public class Common {
 
     /**
      * 设置所有po对象的modifiedBy, modiName和gmtModify字段属性
+     *
+     * @author : Wangzixia 32420182202938
+     * @date： 2021/11/12 11:12
+     * @version: 1.0
+     *
      *
      * @param po       po对象
      * @param userId   设置到modifiedBy
