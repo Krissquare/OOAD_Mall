@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.shop.dao;
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.shop.mapper.ShopAccountPoMapper;
 import cn.edu.xmu.oomall.shop.model.po.ShopAccountPo;
 import cn.edu.xmu.oomall.shop.model.po.ShopAccountPoExample;
@@ -52,7 +53,9 @@ public class ShopAccountDao {
      * @studentId 34520192201587
      */
     public boolean addShopAccount(ShopAccountPo shopAccountPo,Long shopId,Long loginUserId,String loginUserName) {
-        setShopAccountPo(shopAccountPo,shopId,loginUserId,loginUserName);//Po添加设置基本信息
+        //Po添加设置基本信息
+        shopAccountPo.setShopId(shopId);
+        Common.setPoCreatedFields(shopAccountPo,loginUserId,loginUserName);
         ShopAccountPoExample shopAccountPoExample=new ShopAccountPoExample();
         ShopAccountPoExample.Criteria criteria=shopAccountPoExample.createCriteria();
         criteria.andPriorityEqualTo(shopAccountPo.getPriority());
@@ -125,9 +128,4 @@ public class ShopAccountDao {
         shopAccountPo.setGmtCreate(LocalDateTime.now());
     }
 
-//    private void modifyShopAccountPo(ShopAccountPo shopAccountPo,Long loginUserId, String loginUserName){
-//        shopAccountPo.setModifiedBy(loginUserId);
-//        shopAccountPo.setModiName(loginUserName);
-//        shopAccountPo.setGmtModified(LocalDateTime.now());
-//    }
 }
