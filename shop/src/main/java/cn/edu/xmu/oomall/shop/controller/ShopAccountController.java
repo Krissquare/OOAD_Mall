@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * @author  Xusheng Wang
  * @date  2021-11-11
+ * @studentId 34520192201587
  */
 
 
@@ -31,6 +32,11 @@ public class ShopAccountController {
     @Autowired
     private ShopAccountService shopAccountService;
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @ApiOperation(value = "管理员增加店铺的账户" ,tags = "shop")
     @PostMapping(value = "/{id}/accounts")
     public Object addShopAccount(@ApiParam(value = "店铺id", required = true) @PathVariable("id") Long shopId,
@@ -49,12 +55,22 @@ public class ShopAccountController {
 
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @ApiOperation(value = "管理员获得店铺的账户" ,tags = "shop")
     @GetMapping(value = "/{id}/accounts")
     public ReturnObject<List<ShopAccountVo>> getShopAccounts(@ApiParam(value = "店铺id",required=true) @PathVariable("id") Long shopId){
         return shopAccountService.getShopAccounts(shopId);
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @ApiOperation(value = "管理员删除店铺的账户" ,tags = "shop")
     @DeleteMapping(value = "/{shopId}/accounts/{id}")
     public Object deleteShopAccount(@ApiParam(value = "店铺id",required=true) @PathVariable("shopId") Long shopId,

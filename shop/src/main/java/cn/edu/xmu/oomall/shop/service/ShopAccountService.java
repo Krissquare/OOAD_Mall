@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 /**
  * @author  Xusheng Wang
  * @date  2021-11-11
+ * @studentId 34520192201587
  */
 
 @Service
@@ -23,6 +24,11 @@ public class ShopAccountService {
     @Autowired
     private ShopAccountDao shopAccountDao;
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public ReturnObject<ShopAccountVo> addShopAccount(ShopAccountVo shopAccountVo, Long shopId,Long loginUserId,String loginUserName) {
         ShopAccountPo shopAccountPo = shopAccountVo.createPo();
         if(shopAccountDao.addShopAccount(shopAccountPo,shopId,loginUserId,loginUserName)){
@@ -35,6 +41,11 @@ public class ShopAccountService {
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,"添加失败！");
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public ReturnObject<List<ShopAccountVo>> getShopAccounts(Long shopId) {
         List<ShopAccountPo> shopAccountPoList=shopAccountDao.getShopAccounts(shopId);
         List<ShopAccountVo> ret =shopAccountPoList.stream().map(ShopAccountVo::new).collect(Collectors.toList());
@@ -45,6 +56,11 @@ public class ShopAccountService {
             return new ReturnObject<>(ret);
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public ReturnObject deleteAccount(Long shopId, Long accountId) {
         if(!shopAccountDao.checkShopAccount(shopId,accountId)){
             return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST,"账户信息有误！");

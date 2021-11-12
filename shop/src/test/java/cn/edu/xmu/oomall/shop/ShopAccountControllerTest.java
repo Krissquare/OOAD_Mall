@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * @author  Xusheng Wang
  * @date  2021-11-11
+ * @studentId 34520192201587
  */
 
 @SpringBootTest
@@ -27,6 +28,11 @@ public class ShopAccountControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @Test
     public void addShopAccountTest() throws Exception {
 
@@ -52,6 +58,11 @@ public class ShopAccountControllerTest {
                 .andReturn().getResponse().getContentAsString();
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @Test
     public void getShopAccountsTest() throws Exception{
         mvc.perform(get("/shops/2/accounts"))
@@ -60,6 +71,11 @@ public class ShopAccountControllerTest {
                 .andDo(MockMvcResultHandlers.print());
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @Test
     public void deleteShopAccountTest() throws Exception{
         //测试正确删除

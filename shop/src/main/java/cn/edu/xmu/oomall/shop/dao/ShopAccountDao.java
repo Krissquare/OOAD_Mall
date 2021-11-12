@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * @author  Xusheng Wang
  * @date  2021-11-11
+ * @studentId 34520192201587
  */
 
 @Repository
@@ -21,6 +22,11 @@ public class ShopAccountDao {
     @Autowired(required = false)
     public ShopAccountPoMapper shopAccountPoMapper;
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public  List<ShopAccountPo> getShopAccounts(Long shopId) {
         List<ShopAccountPo> accountPoList= new ArrayList<>();
         ShopAccountPoExample shopAccountPoExample=new ShopAccountPoExample();
@@ -40,6 +46,11 @@ public class ShopAccountDao {
         }
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public boolean addShopAccount(ShopAccountPo shopAccountPo,Long shopId,Long loginUserId,String loginUserName) {
         setShopAccountPo(shopAccountPo,shopId,loginUserId,loginUserName);//Po添加设置基本信息
         ShopAccountPoExample shopAccountPoExample=new ShopAccountPoExample();
@@ -74,6 +85,11 @@ public class ShopAccountDao {
         }
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public boolean deleteAccount(Long accountId) {
         try {
             return shopAccountPoMapper.deleteByPrimaryKey(accountId)==1;
@@ -83,6 +99,11 @@ public class ShopAccountDao {
         }
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public boolean checkShopAccount(Long shopId, Long accountId) {
         try {
             return shopId==shopAccountPoMapper.selectByPrimaryKey(accountId).getShopId();
@@ -92,6 +113,11 @@ public class ShopAccountDao {
         }
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     private void setShopAccountPo(ShopAccountPo shopAccountPo,Long shopId, Long loginUserId, String loginUserName) {
         shopAccountPo.setShopId(shopId);
         shopAccountPo.setCreatedBy(loginUserId);
