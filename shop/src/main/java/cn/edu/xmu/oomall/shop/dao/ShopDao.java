@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.shop.dao;
 
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.ShopPoMapper;
@@ -28,7 +29,7 @@ public class ShopDao {
         } catch (Exception e) {
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        Shop shop = new Shop(shopPo);
+        Shop shop = (Shop) Common.cloneVo(shopPo, Shop.class);
         return new ReturnObject<>(shop);
     }
 
@@ -88,7 +89,7 @@ public class ShopDao {
 
 
     public ReturnObject updateShopState(Shop shop) {
-        ShopPo shopPo = shop.createPo();
+        ShopPo shopPo = (ShopPo) Common.cloneVo(shop, ShopPo.class);
         int ret;
         try {
             ret = shopPoMapper.updateByPrimaryKeySelective(shopPo);

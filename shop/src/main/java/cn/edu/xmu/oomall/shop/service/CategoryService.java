@@ -30,7 +30,7 @@ public class CategoryService {
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnObject getSubCategories(Long id) {
         if (categoryDao.getCategoryById(id).getData() == null && id > 0) {
             return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
@@ -47,7 +47,7 @@ public class CategoryService {
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnObject newCategory(Long id, Category category, Long createId, String createName) {
         Category pCategory = (Category) categoryDao.getCategoryById(id).getData();
         if (pCategory == null && id > 0) {
@@ -60,8 +60,8 @@ public class CategoryService {
         if (categoryDao.hasSameName(category.getName())) {
             return new ReturnObject(ReturnNo.GOODS_CATEGORY_SAME);
         }
-        CategoryPo categoryPo = category.createCategoryPo();
-        Common.setPoCreatedFields(categoryPo,createId,createName);
+        CategoryPo categoryPo = (CategoryPo) Common.cloneVo(category, CategoryPo.class);
+        Common.setPoCreatedFields(categoryPo, createId, createName);
         categoryPo.setPid(id.longValue());
         ReturnObject ret = categoryDao.insertCategory(categoryPo);
         return ret;
@@ -73,7 +73,7 @@ public class CategoryService {
      * @param id,category,modifyId,modiName
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnObject changeCategory(Long id, Category category, Long modifyId, String modiName) {
         if (categoryDao.getCategoryById(id).getData() == null) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
@@ -81,8 +81,8 @@ public class CategoryService {
         if (categoryDao.hasSameName(category.getName())) {
             return new ReturnObject<>(ReturnNo.GOODS_CATEGORY_SAME);
         }
-        CategoryPo po = category.createCategoryPo();
-        Common.setPoModifiedFields(po,modifyId,modiName);
+        CategoryPo po = (CategoryPo) Common.cloneVo(category, CategoryPo.class);
+        Common.setPoModifiedFields(po, modifyId, modiName);
         po.setId(id.longValue());
 
         ReturnObject ret = categoryDao.updateCategory(po);
@@ -95,14 +95,14 @@ public class CategoryService {
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor = Exception.class)
     public ReturnObject deleteCategoryById(Long id) {
         /** 若有子类别，将子类别设为单独分类（pid=-1）**/
         var sub = categoryDao.getSubCategories(id);
         if (sub.getCode().equals(ReturnNo.OK)) {
             for (Category category : sub.getData()) {
                 category.setPid(-1L);
-                CategoryPo categoryPo = category.createCategoryPo();
+                CategoryPo categoryPo = (CategoryPo) Common.cloneVo(category, CategoryPo.class);
                 categoryDao.updateCategory(categoryPo);
             }
         }
