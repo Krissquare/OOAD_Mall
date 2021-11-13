@@ -11,6 +11,8 @@ import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -205,14 +207,14 @@ public class Common {
         }
     }
 
-
     /**
      * @author xucangbai
      * @date 2021/11/13
      * 根据clazz实例化一个对象，并深度克隆bo中对应属性到这个新对象
+     * 其中会自动实现modifiedBy和createdBy两字段的类型转换
      * @param bo business object
      * @param voClass vo对象类型
-     * @return 深度克隆的vo对象
+     * @return 浅克隆的vo对象
      */
     public static Object cloneVo(Object bo, Class voClass) {
         Class boClass = bo.getClass();
@@ -222,6 +224,12 @@ public class Common {
             newVo = voClass.getDeclaredConstructor().newInstance();
             Field[] voFields = voClass.getDeclaredFields();
             for (Field voField : voFields) {
+
+                //静态和Final不能拷贝
+                int mod = voField.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
                 voField.setAccessible(true);
                 Field boField=null;
                 try {
@@ -314,11 +322,36 @@ public class Common {
                 return new ResponseEntity(
                         ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.NOT_FOUND);
+
+            case AUTH_INVALID_JWT:
+            case AUTH_JWT_EXPIRED:
+                // 401
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.UNAUTHORIZED);
+
             case INTERNAL_SERVER_ERR:
                 // 500：数据库或其他严重错误
                 return new ResponseEntity(
                         ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.INTERNAL_SERVER_ERROR);
+
+            case FIELD_NOTVALID:
+            case RESOURCE_FALSIFY:
+            case IMG_FORMAT_ERROR:
+            case IMG_SIZE_EXCEED:
+                // 400
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.BAD_REQUEST);
+
+            case RESOURCE_ID_OUTSCOPE:
+            case  FILE_NO_WRITE_PERMISSION:
+                // 403
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.FORBIDDEN);
+
             case OK:
                 // 200: 无错误
                 Object data = returnObject.getData();
@@ -327,6 +360,7 @@ public class Common {
                 }else{
                     return ResponseUtil.ok();
                 }
+
             default:
                 return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
