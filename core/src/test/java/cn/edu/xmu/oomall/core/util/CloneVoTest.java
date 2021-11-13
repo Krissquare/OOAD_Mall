@@ -21,7 +21,7 @@ class CloneVoTest {
      * @date 2021/11/13
      */
     @Test
-    void CloneVo1() {
+    void test() {
         List<Integer> integerList = new ArrayList<>(3);
         integerList.add(1);
         integerList.add(2);
