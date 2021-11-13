@@ -242,6 +242,10 @@ public class Common {
                     voField.set(newVo, null);
                     continue;
                 }
+                if (!voField.getType().equals(boField.getType()) && !voField.getName().equals("createdBy") && !voField.getName().equals("modifiedBy")) {
+                    voField.set(newVo, null);
+                    continue;
+                }
 
                 Class<?> boFieldType = boField.getType();
                 //属性名相同，类型相同，直接克隆
