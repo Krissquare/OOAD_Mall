@@ -25,6 +25,7 @@ import static cn.edu.xmu.oomall.core.util.Common.*;
 
 
 /**
+ * RegionController
  * @author ziyi guo
  * @date 2021/11/10
  */
@@ -52,11 +53,12 @@ public class RegionController {
     @GetMapping("/region/{id}/ancestor")
     public Object getParentRegion(@PathVariable("id") Long id) {
 
-        ReturnObject<List<Region>> returnObject = regionService.getParentRegion(id);
+        ReturnObject returnObject = regionService.getParentRegion(id);
 
         if(returnObject.getData()!=null) {
+            List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
-            for (Region regionItem : returnObject.getData()) {
+            for (Region regionItem : retRegions) {
                 regionRetVos.add(regionItem.createVo());
             }
             returnObject = new ReturnObject(regionRetVos);
@@ -117,11 +119,12 @@ public class RegionController {
             return new ResponseEntity(ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE, "非管理员无权操作"), HttpStatus.FORBIDDEN);
         }
 
-        ReturnObject<List<Region>> returnObject = regionService.adminGetChildRegion(id);
+        ReturnObject returnObject = regionService.adminGetChildRegion(id);
 
         if(returnObject.getData()!=null) {
-            List<RegionRetVo> regionRetVos = new ArrayList<>();
-            for (Region regionItem : returnObject.getData()) {
+            List<Region> retRegions = (List<Region>)returnObject.getData();
+            List<RegionRetVo> regionRetVos = new ArrayList<>(5);
+            for (Region regionItem : retRegions) {
                 regionRetVos.add(regionItem.createVo());
             }
             returnObject = new ReturnObject(regionRetVos);
@@ -147,8 +150,9 @@ public class RegionController {
         ReturnObject<List<Region>> returnObject = regionService.getChildRegion(id);
 
         if(returnObject.getData()!=null) {
-            List<RegionRetVo> regionRetVos = new ArrayList<>();
-            for (Region regionItem : returnObject.getData()) {
+            List<Region> retRegions = (List<Region>)returnObject.getData();
+            List<RegionRetVo> regionRetVos = new ArrayList<>(5);
+            for (Region regionItem : retRegions) {
                 regionRetVos.add(regionItem.createVo());
             }
             returnObject = new ReturnObject(regionRetVos);
@@ -184,7 +188,7 @@ public class RegionController {
             return object;
         }
 
-        ReturnObject<Object> returnObject = regionService.modifyRegion(id, regionVo, userId, userName);
+        ReturnObject<Object> returnObject = regionService.modifyRegion(regionVo, id, userId, userName);
 
         return Common.decorateReturnObject(returnObject);
     }

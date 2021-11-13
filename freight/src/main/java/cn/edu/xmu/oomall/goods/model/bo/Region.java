@@ -69,7 +69,6 @@ public class Region implements VoObject {
         regionPo.setState(state);
     }
 
-
     public Long getCreatedBy() {
         return regionPo.getCreatedBy();
     }
@@ -91,7 +90,6 @@ public class Region implements VoObject {
     public void setGmtCreate(LocalDateTime gmtCreate) {
         regionPo.setGmtCreate(gmtCreate);
     }
-
 
     public Long getModifiedBy() {
         return regionPo.getModifiedBy();

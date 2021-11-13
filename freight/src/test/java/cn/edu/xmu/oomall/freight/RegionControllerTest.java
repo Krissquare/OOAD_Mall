@@ -203,11 +203,11 @@ public class RegionControllerTest {
     @Test
     public void getChildRegionTest1() throws Exception {
         String responseString = this.mvc.perform(get("/freight/regions/0/subregions").contentType("application/json;charset=UTF-8"))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":500,\"errmsg\":\"服务器内部错误\"}";
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
@@ -445,12 +445,21 @@ public class RegionControllerTest {
 
     @Test   //标识此方法为测试方法
     public void resumeRegionTest() throws Exception {
-        String responseString = this.mvc.perform(put("/freight/shops/0/regions/6/resume"))
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/6/suspend"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+
+        responseString = this.mvc.perform(put("/freight/shops/0/regions/6/resume"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+
+        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }

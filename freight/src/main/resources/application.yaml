@@ -88,8 +88,7 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
-
-
-
-
-
+oomall:
+  freight:
+    region:
+      expiretime: 10000

@@ -1,18 +1,15 @@
 package cn.edu.xmu.oomall.freight.service;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.dao.RegionDao;
 import cn.edu.xmu.oomall.goods.model.bo.Region;
-import cn.edu.xmu.oomall.goods.model.po.RegionPo;
 import cn.edu.xmu.oomall.goods.model.vo.RegionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -31,6 +28,11 @@ public class RegionService {
     @Autowired
     private RegionDao regionDao;
 
+    /**
+     * 通过id查找所有上级地区
+     * @param id
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getParentRegion(Long id) {
 
@@ -46,14 +48,19 @@ public class RegionService {
         return retRegion;
     }
 
+    /**
+     * 创建地区
+     * @param regionVo,userId,userName
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<VoObject> createRegion(RegionVo regionVo, Long pid, Long userId, String userName) {
 
-        Region region = regionVo.createRegion();
+        Region region=regionVo.createRegion();
         region.setPid(pid);
         region.setState(STATE_EFFCTIVE);
 
-        ReturnObject<Region> retObj = regionDao.createRegion(region,userId,userName);
+        ReturnObject<Region> retObj = regionDao.createRegion(region.gotRegionPo(),userId,userName);
         
         ReturnObject<VoObject> retRegion;
         if (retObj.getCode().equals(ReturnNo.OK)) {
@@ -65,6 +72,11 @@ public class RegionService {
         return retRegion;
     }
 
+    /**
+     * 管理员根据id查询子地区
+     * @param id
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
 
@@ -80,6 +92,11 @@ public class RegionService {
         return retRegion;
     }
 
+    /**
+     * 根据id查询子地区(只返回有效地区)
+     * @param id
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getChildRegion(Long id) {
 
@@ -95,15 +112,25 @@ public class RegionService {
         return retRegion;
     }
 
+    /**
+     * 管理员修改地区
+     * @param regionVo,userId,userName
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> modifyRegion(Long id, RegionVo regionVo, Long userId, String userName) {
+    public ReturnObject<Object> modifyRegion(RegionVo regionVo, Long id, Long userId, String userName) {
 
-        Region region = regionVo.createRegion();
+        Region region=regionVo.createRegion();
         region.setId(id);
 
-        return regionDao.modiRegion(region,userId,userName);
+        return regionDao.modiRegion(region.gotRegionPo(),userId,userName);
     }
 
+    /**
+     * 管理员废弃地区
+     * @param id,userId,userName
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<Object> abandonRegion(Long id, Long userId, String userName) {
 
@@ -111,9 +138,14 @@ public class RegionService {
         region.setId(id);
         region.setState(STATE_ABANDONED);
 
-        return regionDao.abandonRegion(region,userId,userName);
+        return regionDao.abandonRegion(region.gotRegionPo(),userId,userName);
     }
 
+    /**
+     * 管理员停用地区
+     * @param id,userId,userName
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<Object> suspendRegion(Long id, Long userId, String userName) {
 
@@ -121,9 +153,14 @@ public class RegionService {
         region.setId(id);
         region.setState(STATE_SUSPENDED);
 
-        return regionDao.suspendRegion(region,userId,userName);
+        return regionDao.suspendRegion(region.gotRegionPo(),userId,userName);
     }
 
+    /**
+     * 管理员恢复地区
+     * @param id,userId,userName
+     * @return ReturnObject
+     */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<Object> resumeRegion(Long id, Long userId, String userName) {
 
@@ -131,7 +168,7 @@ public class RegionService {
         region.setId(id);
         region.setState(STATE_EFFCTIVE);
 
-        return regionDao.resumeRegion(region,userId,userName);
+        return regionDao.resumeRegion(region.gotRegionPo(),userId,userName);
     }
 
 }
