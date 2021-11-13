@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.shop.service;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.dao.ShopDao;
@@ -84,9 +83,8 @@ public class ShopService {
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject newShop(ShopVo shopVo, Long loginUser, String loginUsername) {
         ShopPo po = new ShopPo();
-        Common.setPoCreatedFields(po,loginUser,loginUsername);
         po.setName(shopVo.getName());
-        ReturnObject ret = shopDao.newShop(po);
+        ReturnObject ret = shopDao.newShop(po,loginUser,loginUsername);
         Shop shop = new Shop((ShopPo) ret.getData());
         ShopSimpleRetVo vo = (ShopSimpleRetVo)shop.createSimpleVo();
         return new ReturnObject(vo);
@@ -110,8 +108,7 @@ public class ShopService {
         Shop shop = new Shop();
         shop.setId(id);
         shop.setName(shopVo.getName());
-        Common.setPoModifiedFields(shop,loginUser,loginUsername);
-        ReturnObject ret = shopDao.UpdateShop(shop.getId(), shop);
+        ReturnObject ret = shopDao.UpdateShop(shop.getId(), shop,loginUser,loginUsername);
         return ret;
     }
 
@@ -129,8 +126,7 @@ public class ShopService {
             Shop shop = new Shop();
             shop.setId(id.longValue());
             shop.setState(Shop.State.FORBID.getCode().byteValue());
-            Common.setPoModifiedFields(shop,loginUser,loginUsername);
-            ReturnObject ret = shopDao.updateShopState(shop);
+            ReturnObject ret = shopDao.updateShopState(shop,loginUser,loginUsername);
             return ret;
             }
             else
@@ -150,9 +146,8 @@ public class ShopService {
     public ReturnObject passShop(Long id, ShopConclusionVo conclusion,Long loginUser, String loginUsername) {
         Shop shop = new Shop();
         shop.setId(id.longValue());
-        Common.setPoModifiedFields(shop,loginUser,loginUsername);
         shop.setState(conclusion.getConclusion() == true ? Shop.State.OFFLINE.getCode().byteValue() : Shop.State.EXAME.getCode().byteValue());
-        ReturnObject ret = shopDao.updateShopState(shop);
+        ReturnObject ret = shopDao.updateShopState(shop,loginUser, loginUsername);
         return ret;
     }
 
@@ -164,11 +159,10 @@ public class ShopService {
     public ReturnObject onShelfShop(Long id,Long loginUser, String loginUsername) {
         Shop shop = new Shop();
         shop.setId(id);
-        Common.setPoModifiedFields(shop,loginUser,loginUsername);
         shop.setState(Shop.State.ONLINE.getCode().byteValue());
         var x = getShopByShopId(id).getData();
         if (x.getState() == Shop.State.OFFLINE.getCode().byteValue()) {
-            ReturnObject ret = shopDao.updateShopState(shop);
+            ReturnObject ret = shopDao.updateShopState(shop,loginUser,loginUsername);
             return ret;
         } else return new ReturnObject(ReturnNo.STATENOTALLOW);
     }
@@ -181,11 +175,10 @@ public class ShopService {
     public ReturnObject offShelfShop(Long id,Long loginUser, String loginUsername) {
         Shop shop = new Shop();
         shop.setId(id.longValue());
-        Common.setPoModifiedFields(shop,loginUser,loginUsername);
         shop.setState(Shop.State.OFFLINE.getCode().byteValue());
         var x = getShopByShopId(id).getData();
         if (x.getState() == Shop.State.ONLINE.getCode().byteValue()) {
-            ReturnObject ret = shopDao.updateShopState(shop);
+            ReturnObject ret = shopDao.updateShopState(shop,loginUser,loginUsername);
             return ret;
         } else return new ReturnObject(ReturnNo.STATENOTALLOW);
     }

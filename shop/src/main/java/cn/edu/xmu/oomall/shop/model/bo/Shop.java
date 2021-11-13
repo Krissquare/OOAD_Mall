@@ -58,8 +58,8 @@ public class Shop implements VoObject {
     private Long deposit;
     private Long depositThreshold;
     private Byte state;
-    private SimpleUserRetVo createdBy;
-    private SimpleUserRetVo modifiedBy;
+    private SimpleUserRetVo createdBy=new SimpleUserRetVo();
+    private SimpleUserRetVo modifiedBy=new SimpleUserRetVo();
     private LocalDateTime gmtCreated;
     private LocalDateTime gmtModified;
 

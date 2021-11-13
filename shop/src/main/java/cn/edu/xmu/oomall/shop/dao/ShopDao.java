@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.shop.dao;
 
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.ShopPoMapper;
@@ -55,11 +56,12 @@ public class ShopDao {
     }
 
 
-    public ReturnObject newShop(ShopPo po) {
+    public ReturnObject newShop(ShopPo po,Long loginUser, String loginUsername) {
         int ret;
         po.setDeposit(Long.valueOf(0));
         po.setGmtCreate(LocalDateTime.now());
         po.setState(Shop.State.EXAME.getCode().byteValue());
+        Common.setPoCreatedFields(po,loginUser,loginUsername);
         ret = shopPoMapper.insertSelective(po);
         if (ret == 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
@@ -74,11 +76,12 @@ public class ShopDao {
      *
      * @Param: [po]
      */
-    public ReturnObject UpdateShop(Long id, Shop shop) {
+    public ReturnObject UpdateShop(Long id, Shop shop,Long loginUser, String loginUsername) {
         int ret;
         try {
             ShopPo shopPo = shopPoMapper.selectByPrimaryKey(id);
             shopPo.setName(shop.getName());
+            Common.setPoModifiedFields(shopPo,loginUser,loginUsername);
             if (shopPo.getState() == Shop.State.FORBID.getCode().byteValue()) {
                 return new ReturnObject(ReturnNo.STATENOTALLOW, "商铺处于关闭态");
             } else {
@@ -97,12 +100,13 @@ public class ShopDao {
     }
 
 
-    public ReturnObject updateShopState(Shop shop) {
+    public ReturnObject updateShopState(Shop shop,Long loginUser, String loginUsername) {
         ShopPo shopPo = shop.createPo();
         int ret;
         try {
             ret = shopPoMapper.updateByPrimaryKeySelective(shopPo);
             shopPo.setGmtModified(LocalDateTime.now());
+            Common.setPoModifiedFields(shopPo,loginUser,loginUsername);
         } catch (Exception e) {
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }

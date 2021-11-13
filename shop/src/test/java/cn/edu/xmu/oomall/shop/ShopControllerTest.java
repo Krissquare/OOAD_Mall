@@ -56,6 +56,32 @@ public class ShopControllerTest {
                 .andReturn().getResponse().getContentAsString();
         System.out.println(responseString);
     }
+    /**
+     * 获取所有店铺信息
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getAllShop() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/0/shops"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(responseString);
+    }
+    /**
+     * 获取所有店铺信息,id不为0
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getAllShopIdErro() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/1/shops"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(responseString);
+    }
 
     /**
      * 新建店铺（正常流程）
