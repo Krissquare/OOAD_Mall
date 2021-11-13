@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "简单团购活动视图")
 public class SimpleGroupOnActivityVo {
     private Long id;
     private String name;

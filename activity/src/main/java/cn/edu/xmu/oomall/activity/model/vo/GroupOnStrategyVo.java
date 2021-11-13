@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +17,7 @@ import javax.validation.constraints.Min;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "团购策略视图")
 public class GroupOnStrategyVo{
     @Min(-1)
     Integer quantity;

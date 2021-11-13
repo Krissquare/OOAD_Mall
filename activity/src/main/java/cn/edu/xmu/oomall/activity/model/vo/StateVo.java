@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "状态视图")
 public class StateVo {
     private Integer code;
     private String name;

@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ApiModel(value = "分页视图")
 public class PageInfoVo<T> {
     List<T> list;
     Long total;

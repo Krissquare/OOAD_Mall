@@ -19,6 +19,7 @@ import java.time.format.DateTimeParseException;
  * @author Gao Yanfeng
  * @date 2021/11/11
  */
+@Api(value = "团购活动API")
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
 public class GroupOnActivityController {
