@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.shop.util;
+package cn.edu.xmu.oomall.core.util;
 
 import java.io.Serializable;
 import java.util.*;

@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.core.util.vo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * SimpleUserRetVo
@@ -9,10 +10,9 @@ import lombok.Data;
  * @date 2021/11/12
  */
 @Data
+@NoArgsConstructor
 public class SimpleUserRetVo {
     private Long id;
     private String name;
 
-    public SimpleUserRetVo(){
-    }
 }

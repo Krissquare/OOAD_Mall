@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Shop implements VoObject {
+public class Shop {
     public enum State {
         EXAME(0,"未审核"),
         OFFLINE(1,"下线"),
@@ -59,60 +59,6 @@ public class Shop implements VoObject {
     private String modiName;
     private LocalDateTime gmtCreated;
     private LocalDateTime gmtModified;
-
-
-    @Override
-    public ShopSimpleRetVo createVo() {
-        return null;
-    }
-
-    @Override
-    public ShopSimpleRetVo createSimpleVo() {
-        ShopSimpleRetVo ret= new ShopSimpleRetVo();
-        ret.setId(this.getId());
-        ret.setName(this.getName());
-        return ret;
-    }
-
-    public Shop(ShopPo shopPo){
-        this.setId(shopPo.getId());
-        this.setName(shopPo.getName());
-        this.setState(shopPo.getState());
-        this.setDeposit(shopPo.getDeposit());
-        this.setDepositThreshold(shopPo.getDepositThreshold());
-        this.setCreatedBy(shopPo.getCreatedBy());
-        this.setCreateName(shopPo.getCreateName());
-        this.setModifiedBy(shopPo.getModifiedBy());
-        this.setModiName(shopPo.getModiName());
-        this.setGmtCreated(shopPo.getGmtCreate());
-        this.setGmtModified(shopPo.getGmtModified());
-    }
-
-//    public ShopDTO createDTO(){
-//        ShopDTO dto = new ShopDTO();
-//        dto.setId(id);
-//        dto.setName(name);
-//        dto.setGmtCreateTime(gmtCreated);
-//        dto.setGmtModiTime(gmtModified);
-//        dto.setState(state);
-//        return dto;
-//    }
-
-    public ShopPo createPo(){
-        ShopPo shopPo=new ShopPo();
-        shopPo.setId(this.getId());
-        shopPo.setName(this.getName());
-        shopPo.setState(this.getState());
-        shopPo.setDeposit(this.getDeposit());
-        shopPo.setDepositThreshold(this.getDepositThreshold());
-        shopPo.setCreatedBy(this.getCreatedBy());
-        shopPo.setCreateName(this.getCreateName());
-        shopPo.setModifiedBy(this.getModifiedBy());
-        shopPo.setModiName(this.getModiName());
-        shopPo.setGmtCreate(this.getGmtCreated());
-        shopPo.setGmtModified(this.getGmtModified());
-        return shopPo;
-    }
 
 }
 

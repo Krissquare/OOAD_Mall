@@ -1,9 +1,10 @@
 package cn.edu.xmu.oomall.core.util.bo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.po.CategoryPo;
+import cn.edu.xmu.oomall.shop.model.po.CategoryPo;
 import cn.edu.xmu.oomall.core.util.vo.CategoryRetVo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * @date 2021/11/12
  */
 @Data
+@NoArgsConstructor
 public class Category implements VoObject, Serializable {
     private Long id;
     private String name;
@@ -27,8 +29,6 @@ public class Category implements VoObject, Serializable {
     private LocalDateTime gmtModified;
     private String modiName;
 
-    public Category(){
-    }
     public Category(CategoryPo po){
         this.id = po.getId();
         this.pid = po.getPid();
