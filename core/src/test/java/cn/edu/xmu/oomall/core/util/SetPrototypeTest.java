@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @date： 2021/11/12 11:12
  * @version: 1.0
+ * @author: Wangzixia 32420182202938
  */
 public class SetPrototypeTest {
 
