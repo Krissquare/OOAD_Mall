@@ -38,8 +38,7 @@ public class ShopService {
         Common.setPoCreatedFields(po, loginUser, loginUsername);
         ReturnObject ret = shopDao.newShop(po);
         if (ret.getCode().equals(0)) {
-            Shop shop = new Shop((ShopPo) ret.getData());
-            ShopSimpleRetVo vo = shop.createSimpleVo();
+            ShopSimpleRetVo vo = (ShopSimpleRetVo)  Common.cloneVo(ret.getData(), ShopSimpleRetVo.class);
             ret = new ReturnObject(vo);
         }
         return ret;

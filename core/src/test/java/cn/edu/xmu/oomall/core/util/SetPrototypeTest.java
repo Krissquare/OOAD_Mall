@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.core.util;
 
-import cn.edu.xmu.oomall.core.util.po.CouponActivityPo;
-import cn.edu.xmu.oomall.core.util.po.Nonepo;
+import cn.edu.xmu.oomall.shop.model.po.CouponActivityPo;
+import cn.edu.xmu.oomall.shop.model.po.Nonepo;
 import org.junit.jupiter.api.Test;
 
 

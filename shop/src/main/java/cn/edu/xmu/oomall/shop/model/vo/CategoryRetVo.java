@@ -15,7 +15,7 @@ public class CategoryRetVo {
     @ApiModelProperty(value = "分类id")
     private Long id;
     @ApiModelProperty(value = "佣金率")
-    private Integer commissionRate;
+    private Integer commissionRatio;
     @ApiModelProperty(value = "分类名")
     private String name;
     @ApiModelProperty(value = "创建人")
@@ -29,7 +29,7 @@ public class CategoryRetVo {
     public CategoryRetVo(Category category) {
         this.id = category.getId();
         this.name = category.getName();
-        this.commissionRate= category.getCommissionRatio();
+        this.commissionRatio = category.getCommissionRatio();
         this.createdBy=new SimpleUserRetVo();
         this.createdBy.setName(category.getCreateName());
         this.createdBy.setId(category.getCreatedBy());

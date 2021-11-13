@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.shop.dao;
 
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.CategoryPoMapper;
@@ -58,7 +59,7 @@ public class CategoryDao {
             }
 
             // 数据库找到就插入redis
-            category=new Category(categoryPo);
+            category = (Category) Common.cloneVo(categoryPo, Category.class);
             redisUtil.set(key,category,categoryTimeout);
 
             return new ReturnObject(category);
@@ -99,7 +100,7 @@ public class CategoryDao {
             for(CategoryPo categoryPo:categoryPos){
                 subKey="s_"+categoryPo.getId();
                 redisUtil.set(subKey,id,categoryTimeout);
-                Category c=new Category(categoryPo);
+                Category c= (Category) Common.cloneVo(categoryPo, Category.class);
                 categories.add(c);
             }
 
@@ -141,7 +142,7 @@ public class CategoryDao {
             if (ret == 0) {
                 return new ReturnObject(ReturnNo.FIELD_NOTVALID);
             }
-            Category category=new Category(categoryPo);
+            Category category= (Category) Common.cloneVo(categoryPo, Category.class);
             return new ReturnObject(category);
         }catch (Exception e){
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
