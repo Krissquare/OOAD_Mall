@@ -8,8 +8,6 @@ import cn.edu.xmu.oomall.shop.model.bo.CategoryList;
 import cn.edu.xmu.oomall.shop.model.po.CategoryPo;
 import cn.edu.xmu.oomall.shop.model.po.CategoryPoExample;
 import cn.edu.xmu.oomall.core.util.RedisUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -25,7 +23,6 @@ import java.util.List;
  */
 @Repository
 public class CategoryDao {
-    private  static  final Logger logger = LoggerFactory.getLogger(CategoryDao.class);
 
     @Autowired
     private CategoryPoMapper categoryPoMapper;

@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 /**
  * @author Ming Qiu
  **/
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"cn.edu.xmu.oomall"})
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.shop.mapper")
 @EnableFeignClients(basePackages = "cn.edu.xmu.oomall.shop.openfeign")
@@ -18,11 +18,8 @@ public class Application {
 
     public static void main(String[] args) {
 
-        try{SpringApplication.run(Application.class, args);}
-        catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
+       SpringApplication.run(Application.class, args);
+
 
     }
 

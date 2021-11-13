@@ -77,7 +77,7 @@ public class ShopControllerTest {
     @Transactional
     public void getAllShopIdErro() throws Exception {
         String responseString = this.mvc.perform(get("/shops/1/shops"))
-                .andExpect(status().isOk())
+                .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         System.out.println(responseString);
