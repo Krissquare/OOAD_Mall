@@ -1,6 +1,5 @@
-package cn.edu.xmu.oomall.activity.model.vo;
+package cn.edu.xmu.oomall.activity.microservice.vo;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

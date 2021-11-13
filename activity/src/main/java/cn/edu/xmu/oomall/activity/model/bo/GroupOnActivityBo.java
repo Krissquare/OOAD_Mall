@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.activity.model.bo;
 import cn.edu.xmu.oomall.activity.enums.GroupOnState;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.vo.*;
+import cn.edu.xmu.oomall.activity.model.vo.SimpleAdminUserVo;
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import lombok.AllArgsConstructor;

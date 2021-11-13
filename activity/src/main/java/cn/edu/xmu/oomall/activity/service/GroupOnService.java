@@ -5,10 +5,11 @@ import cn.edu.xmu.oomall.activity.enums.GroupOnState;
 import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivityBo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;
-import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
-import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
+import cn.edu.xmu.oomall.activity.microservice.GoodsService;
+import cn.edu.xmu.oomall.activity.microservice.ShopService;
+import cn.edu.xmu.oomall.activity.microservice.vo.OnSaleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.SimpleShopVo;
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Gao Yanfeng
@@ -31,10 +30,10 @@ public class GroupOnService {
     private GroupOnActivityDao dao;
 
     @Resource
-    private ShopApi shopApi;
+    private ShopService shopService;
 
     @Resource
-    private GoodsApi goodsApi;
+    private GoodsService goodsService;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -98,27 +97,23 @@ public class GroupOnService {
     }
 
     private String getShopName(Long shopId) {
-        Object shopInfoObj = shopApi.getShopInfo(shopId);
-        SimpleShopVo simpleShopVo = JacksonUtil.parseObject(JacksonUtil.toJson(shopInfoObj), "data", SimpleShopVo.class);
-        return simpleShopVo.getName();
+        var ret = shopService.getShopInfo(shopId);
+        return ret.getData().getName();
     }
 
     private Long getGroupOnActivityIdOfProduct(Long productId) {
         int page = 1;
         int pages = -1;
         do {
-            Object onSalesOfProductObj = goodsApi.getOnsSlesOfProduct(productId, page, 10);
-            PageInfoVo pageInfo = JacksonUtil.parseObject(JacksonUtil.toJson(onSalesOfProductObj), "data", PageInfoVo.class);
-            for (var obj : pageInfo.getList()) {
-                Long id = JacksonUtil.parseInteger(JacksonUtil.toJson(obj), "id").longValue();
-                Object onSaleObj = goodsApi.getOnSale(id);
-                OnSaleVo onSaleVo = JacksonUtil.parseObject(JacksonUtil.toJson(onSaleObj), "data", OnSaleVo.class);
-                if (onSaleVo.getType() == 2) {
-                    return onSaleVo.getActivityId();
+            var ret = goodsService.getOnsSlesOfProduct(productId, page, 10);
+            for (var simpleOnSale : ret.getData().getList()) {
+                var onSale = goodsService.getOnSale(simpleOnSale.getId());
+                if (onSale.getData().getType() == 2) {
+                    return onSale.getData().getActivityId();
                 }
             }
             if (pages == -1) {
-                pages = pageInfo.getPages();
+                pages = ret.getData().getPages();
             }
         } while (page <= pages);
         return null;

@@ -1,12 +1,9 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
-import cn.edu.xmu.oomall.activity.enums.GroupOnState;
-import cn.edu.xmu.oomall.core.model.VoObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**

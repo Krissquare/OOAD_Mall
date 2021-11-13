@@ -1,5 +1,6 @@
-package cn.edu.xmu.oomall.activity.model.vo;
+package cn.edu.xmu.oomall.activity.microservice.vo;
 
+import cn.edu.xmu.oomall.activity.model.vo.SimpleAdminUserVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class OnSaleVo {
     String beginTime;
     String endTime;
     Long quantity;
-    Integer type; /* 0为无活动，1为秒杀，2为团购，3为预售 */
+    Integer type; // 0为无活动，1为秒杀，2为团购，3为预售
     Long activityId;
     Object shareAct;
     SimpleAdminUserVo createdBy;

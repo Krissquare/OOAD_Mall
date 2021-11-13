@@ -28,8 +28,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8
     username: dbuser
-    password: 123456789
+    password: 12345678
     druid:
       #初始化时建立物理连接的个数
       initial-size: 3
@@ -52,6 +53,12 @@ spring:
   redis:
     # Redis数据库索引（默认为0）
     database: 0
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码
+    password:
     #连接池最大连接数（使用负值表示没有限制）
     lettuce:
       pool:
@@ -64,20 +71,20 @@ spring:
         max-wait: -1
     # 连接超时时间（毫秒）
     timeout: 5000
-  sql:
-    init:
-      mode: always
-      encoding: UTF-8
-      schema-locations: classpath:coupon.sql
-      data-locations: classpath:coupondata.sql
-      username: dbuser
-      password: icJzHtqe9O7qGlIod91x0KFwPdL5hzDNNOTcx9xXSNcS6AN43jWRLIxFG3rdk/L+EFLZfcETeIg+RhA3ZbcE3Q==
+#  sql:
+#    init:
+#      mode: always
+#      encoding: UTF-8
+#      schema-locations: classpath:coupon.sql
+#      data-locations: classpath:coupondata.sql
+#      username: dbuser
+#      password: icJzHtqe9O7qGlIod91x0KFwPdL5hzDNNOTcx9xXSNcS6AN43jWRLIxFG3rdk/L+EFLZfcETeIg+RhA3ZbcE3Q==
 
 mybatis:
   #po对象的包
-  type-aliases-package: cn.edu.xmu.privilege.model
+  type-aliases-package: cn.edu.xmu.oomall.activity.model
   #mapper.xml所在的位置
-  mapper-locations: classpath*:cn.edu.xmu.privilege.mapper/*.xml
+  mapper-locations: classpath*:cn.edu.xmu.oomall.activity.mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
   configuration:
     #输出产生的SQL
@@ -88,8 +95,7 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
-
-
-
-
-
+redispara:
+  groupon:
+    expiretime:
+      10000
