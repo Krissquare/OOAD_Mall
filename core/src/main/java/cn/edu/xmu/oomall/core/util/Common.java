@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -222,6 +223,12 @@ public class Common {
             newVo = voClass.getDeclaredConstructor().newInstance();
             Field[] voFields = voClass.getDeclaredFields();
             for (Field voField : voFields) {
+
+                //静态和Final不能拷贝
+                int mod = voField.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
                 voField.setAccessible(true);
                 Field boField=null;
                 try {
