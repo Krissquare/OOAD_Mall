@@ -59,7 +59,7 @@ public class RegionController {
             List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
             for (Region regionItem : retRegions) {
-                regionRetVos.add(regionItem.createVo());
+                regionRetVos.add(new RegionRetVo(regionItem));
             }
             returnObject = new ReturnObject(regionRetVos);
         }
@@ -125,7 +125,7 @@ public class RegionController {
             List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
             for (Region regionItem : retRegions) {
-                regionRetVos.add(regionItem.createVo());
+                regionRetVos.add(new RegionRetVo(regionItem));
             }
             returnObject = new ReturnObject(regionRetVos);
         }
@@ -153,7 +153,7 @@ public class RegionController {
             List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
             for (Region regionItem : retRegions) {
-                regionRetVos.add(regionItem.createVo());
+                regionRetVos.add(new RegionRetVo(regionItem));
             }
             returnObject = new ReturnObject(regionRetVos);
         }

@@ -66,7 +66,7 @@ public class RegionDao {
             while (null != regionPo && regionPo.getPid() != 0) {
                 regionPo = regionPoMapper.selectByPrimaryKey(regionPo.getPid());
                 if (null != regionPo) {
-                    retRegions.add(0, new Region(regionPo));
+                    retRegions.add(0, (Region) Common.cloneVo(regionPo,Region.class) );
                 }
             }
 
@@ -134,7 +134,7 @@ public class RegionDao {
 
             List<RegionPo> regionPos=regionPoMapper.selectByExample(example);
             for(RegionPo rp:regionPos){
-                Region r=new Region(rp);
+                Region r = (Region) Common.cloneVo(rp,Region.class);
                 retRegions.add(r);
             }
 
@@ -183,7 +183,7 @@ public class RegionDao {
             for(RegionPo rp:regionPos){
                 subKey="sub_"+rp.getId();
                 redisUtil.set(subKey,id,regionRedisTimeout);
-                Region r=new Region(rp);
+                Region r = (Region) Common.cloneVo(rp,Region.class);
                 retRegions.add(r);
             }
             redisUtil.set(key, (Serializable)retRegions,regionRedisTimeout);

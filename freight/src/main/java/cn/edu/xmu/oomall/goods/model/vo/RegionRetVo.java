@@ -40,7 +40,6 @@ public class RegionRetVo {
     @ApiModelProperty(value = "修改者id")
     private SimpleUserRetVo modifiedBy;
 
-
     public RegionRetVo(Region region) {
         this.id=region.getId();
         this.pid= region.getPid();
