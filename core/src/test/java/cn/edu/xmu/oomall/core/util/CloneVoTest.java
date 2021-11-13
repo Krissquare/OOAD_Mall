@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 //@SpringBootTest(classes = CoreApplication.class)
 
-class CommonTest {
+class CloneVoTest {
 
     /**
      * @author xucangbai
