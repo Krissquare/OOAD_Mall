@@ -50,6 +50,7 @@ public class ShopAccountControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
+
         //测试新增记录不需要移动优先级的情况
         String response2=mvc.perform(post("/shops/5/accounts").contentType("application/json;charset=UTF-8")
                 .content(requestJson))
