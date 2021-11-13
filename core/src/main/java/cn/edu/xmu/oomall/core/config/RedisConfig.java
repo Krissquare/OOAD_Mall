@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.shop.config;
+package cn.edu.xmu.oomall.core.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
