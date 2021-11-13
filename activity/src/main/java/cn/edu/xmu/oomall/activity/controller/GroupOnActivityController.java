@@ -21,7 +21,7 @@ import java.time.format.DateTimeParseException;
  */
 @RestController
 @RequestMapping(produces = "application/json;charset=UTF-8")
-public class ActivityController {
+public class GroupOnActivityController {
 
     @Autowired
     private GroupOnService groupOnService;

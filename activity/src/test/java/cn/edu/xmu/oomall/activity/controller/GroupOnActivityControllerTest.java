@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity;
+package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.activity.microservice.GoodsService;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GroupOnActivityTest {
+public class GroupOnActivityControllerTest {
     private static String adminToken = "0";
     private static String shopToken = "0";
 
@@ -66,7 +68,7 @@ public class GroupOnActivityTest {
     @Test
     @Transactional
     public void getOnlineGroupOnActivitiesTest1() throws Exception {
-        Mockito.when(goodsService.getOnsSlesOfProduct(1578L, 1, 10)).thenReturn(new ReturnObject<>(new PageInfoVo<>(Arrays.asList(new SimpleOnSaleVo(29L, 17931L, "2021-11-11 14:38:20", "2022-02-19 14:38:20", 39L)), 1L, 1, 10, 1)));
+        Mockito.when(goodsService.getOnsSlesOfProduct(1578L, 1, 10)).thenReturn(new ReturnObject<>(new PageInfoVo<>(Collections.singletonList(new SimpleOnSaleVo(29L, 17931L, "2021-11-11 14:38:20", "2022-02-19 14:38:20", 39L)), 1L, 1, 10, 1)));
         Mockito.when(goodsService.getOnSale(29L)).thenReturn(new ReturnObject<>(new OnSaleVo(29L, null, null, 17931L, "2021-11-11 14:38:20", "2022-02-19 14:38:20", 39L, 2, 3L, null, null, "2021-11-11 14:38:20", null, null)));
 
         this.mvc.perform(get("/groupons")
@@ -152,19 +154,22 @@ public class GroupOnActivityTest {
                 .queryParam("beginTime", "2021-11-11T00:00:00")
                 .queryParam("endTime", "2023-11-11T00:00:00"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
 
         this.mvc.perform(get("/shops/2/groupons")
                 .queryParam("beginTime", "2021-11-11T00:00:00"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
 
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
     }
 
     /**
@@ -177,7 +182,8 @@ public class GroupOnActivityTest {
     public void getOnlineGroupOnActivityTest2() throws Exception {
         this.mvc.perform(get("/groupons/0"))
                 .andExpect(status().is(404))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":504,\"errmsg\":\"未找到指定ID对应的团购活动\"}"));
     }
 
     /**
@@ -198,7 +204,8 @@ public class GroupOnActivityTest {
         var id = JacksonUtil.parseObject(responseString, "data", GroupOnActivityVo.class).getId();
         this.mvc.perform(get("/groupons/" + id))
                 .andExpect(status().is(403))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":0,\"errmsg\":\"没有权限访问未上线的团购活动\"}"));
     }
 
     /**
@@ -211,7 +218,8 @@ public class GroupOnActivityTest {
     public void getGroupOnActivityInShopTest2() throws Exception {
         this.mvc.perform(get("/shops/1/groupons/0"))
                 .andExpect(status().is(404))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":504,\"errmsg\":\"未找到指定ID对应的团购活动\"}"));
     }
 
 
@@ -225,7 +233,8 @@ public class GroupOnActivityTest {
     public void getGroupOnActivityInShopTest3() throws Exception {
         this.mvc.perform(get("/shops/1/groupons/1"))
                 .andExpect(status().is(404))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":504,\"errmsg\":\"指定店铺中不存在指定ID对应的团购活动\"}"));
     }
 
     /**
@@ -239,20 +248,22 @@ public class GroupOnActivityTest {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
+                .content("{\"name\":\"\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must not be blank;length must be between 1 and 128;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be greater than or equal to -1;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500000}]}"))
                 .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
-
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be less than or equal to 1000;\"}"));
     }
 
     /**
@@ -264,13 +275,12 @@ public class GroupOnActivityTest {
     @Transactional
     public void addGroupOnActivityTest3() throws Exception {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
-        var responseStr = this.mvc.perform(post("/shops/1/groupons")
+         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2022-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-//        Assert.assertEquals(Integer.valueOf(947), JacksonUtil.parseInteger(responseStr, "errno"));
+                .andExpect(content().json("{\"errno\":947,\"errmsg\":\"开始时间不能晚于结束时间\"}"));
     }
 
 }
