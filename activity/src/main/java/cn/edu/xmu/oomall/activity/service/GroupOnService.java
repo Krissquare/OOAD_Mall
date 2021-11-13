@@ -2,11 +2,13 @@ package cn.edu.xmu.oomall.activity.service;
 
 import cn.edu.xmu.oomall.activity.dao.GroupOnActivityDao;
 import cn.edu.xmu.oomall.activity.enums.GroupOnState;
+import cn.edu.xmu.oomall.activity.microservice.vo.OnSaleVo;
 import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.activity.microservice.GoodsService;
 import cn.edu.xmu.oomall.activity.microservice.ShopService;
+import cn.edu.xmu.oomall.core.util.Common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +36,11 @@ public class GroupOnService {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    /**
+     * 获得团购的所有状态
+     *
+     * @return 团购的状态列表
+     */
     public List<StateVo> getGroupOnStates() {
         var res = new ArrayList<StateVo>();
         for (var v : GroupOnState.values()) {
@@ -42,34 +49,50 @@ public class GroupOnService {
         return res;
     }
 
+    /**
+     * 添加活动
+     *
+     * @param shopId 店铺id
+     * @param vo     添加活动的提交信息
+     * @return 成功添加的活动的BO
+     */
     public GroupOnActivity addActivity(Long shopId, GroupOnActivityPostVo vo) {
         LocalDateTime begin = LocalDateTime.parse(vo.getBeginTime(), FORMATTER);
         LocalDateTime end = LocalDateTime.parse(vo.getEndTime(), FORMATTER);
         if (begin.isAfter(end)) {
             return null;
         } else {
-            var bo = new GroupOnActivity();
-            bo.setName(vo.getName());
+            var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
             bo.setShopId(shopId);
-            bo.setStrategy(vo.getStrategy());
+            bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
             bo.setBeginTime(begin);
             bo.setEndTime(end);
             bo.setState(GroupOnState.DRAFT);
-            dao.insertActivity(bo, getShopName(shopId));
+            dao.insertActivity(bo);
             return bo;
         }
     }
 
+    /**
+     * 根据条件查询符合条件的团购活动
+     *
+     * @param productId 货品id
+     * @param shopId    商铺id
+     * @param beginTime 不早于此开始时间
+     * @param endTime   不晚于此结束时间
+     * @param state     状态
+     * @param page      页码
+     * @param pageSize  每页大小
+     * @return 符合条件的团购活动的VO的列表（分页）
+     */
     public PageInfoVo<SimpleGroupOnActivityVo> getGroupOnActivities(Long productId, Long shopId, String beginTime,
                                                                     String endTime, GroupOnState state,
                                                                     Integer page, Integer pageSize) {
         var example = new GroupOnActivityPoExample();
         var criteria = example.createCriteria();
         if (productId != null) {
-            Long activityId = getGroupOnActivityIdOfProduct(productId);
-            if (activityId != null) {
-                criteria.andIdEqualTo(activityId);
-            }
+            var ids = getGroupOnActivitiesOfProduct(productId);
+            criteria.andIdIn(ids);
         }
         if (shopId != null) {
             criteria.andShopIdEqualTo(shopId);
@@ -89,30 +112,34 @@ public class GroupOnService {
         return new PageInfoVo<>(pageInfo);
     }
 
+    /**
+     * 根据id获得团购活动BO
+     *
+     * @param id 团购活动id
+     * @return 团购活动BO
+     */
     public GroupOnActivity getGroupOnActivity(Long id) {
         return dao.getGroupOnActivity(id);
     }
 
-    private String getShopName(Long shopId) {
-        var ret = shopService.getShopInfo(shopId);
-        return ret.getData().getName();
-    }
 
-    private Long getGroupOnActivityIdOfProduct(Long productId) {
+    private List<Long> getGroupOnActivitiesOfProduct(Long productId) {
         int page = 1;
         int pages = -1;
+        var list = new ArrayList<Long>();
         do {
             var ret = goodsService.getOnsSlesOfProduct(productId, page, 10);
             for (var simpleOnSale : ret.getData().getList()) {
                 var onSale = goodsService.getOnSale(simpleOnSale.getId());
                 if (onSale.getData().getType() == 2) {
-                    return onSale.getData().getActivityId();
+                    list.add(onSale.getData().getActivityId());
                 }
             }
             if (pages == -1) {
                 pages = ret.getData().getPages();
             }
+            page++;
         } while (page <= pages);
-        return null;
+        return list;
     }
 }

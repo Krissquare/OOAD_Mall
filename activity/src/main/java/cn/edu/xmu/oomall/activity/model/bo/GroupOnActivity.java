@@ -28,6 +28,7 @@ public class GroupOnActivity implements VoObject {
     private Long id;
     private String name;
     private Long shopId;
+    private String shopName;
     private List<GroupOnStrategyVo> strategy;
     private LocalDateTime beginTime;
     private LocalDateTime endTime;

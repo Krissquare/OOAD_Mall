@@ -32,9 +32,8 @@ public class GroupOnActivityDao {
     @Value("${redispara.groupon.expiretime}")
     private long timeout;
 
-    public void insertActivity(GroupOnActivity bo, String shopName) {
+    public void insertActivity(GroupOnActivity bo) {
         GroupOnActivityPo po = bo.createPo();
-        po.setShopName(shopName);
         Common.setPoCreatedFields(po, 1L, "admin");
         mapper.insert(po);
         redisUtil.set("groupon_" + po.getId().toString(), po, timeout);
