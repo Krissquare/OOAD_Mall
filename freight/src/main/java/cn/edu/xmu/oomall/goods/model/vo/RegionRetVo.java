@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.goods.model.vo;
 
 import cn.edu.xmu.oomall.goods.model.bo.Region;
-import cn.edu.xmu.oomall.goods.model.bo.SimpleAdminUser;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -36,10 +35,10 @@ public class RegionRetVo {
     private LocalDateTime gmtModified;
 
     @ApiModelProperty(value = "创建者id")
-    private SimpleAdminUser createdBy;
+    private SimpleUserRetVo createdBy;
 
     @ApiModelProperty(value = "修改者id")
-    private SimpleAdminUser modifiedBy;
+    private SimpleUserRetVo modifiedBy;
 
 
     public RegionRetVo(Region region) {
@@ -49,7 +48,11 @@ public class RegionRetVo {
         this.state= region.getState();
         this.gmtCreate=region.getGmtCreate();
         this.gmtModified=region.getGmtModified();
-        this.createdBy=new SimpleAdminUser(region.getCreatedBy(),region.getCreateName());
-        this.modifiedBy=new SimpleAdminUser(region.getModifiedBy(),region.getModiName());
+        this.createdBy=new SimpleUserRetVo();
+        this.createdBy.setId(region.getCreatedBy());
+        this.createdBy.setUserName(region.getCreateName());
+        this.modifiedBy=new SimpleUserRetVo();
+        this.modifiedBy.setId(region.getModifiedBy());
+        this.modifiedBy.setUserName(region.getModiName());
     }
 }

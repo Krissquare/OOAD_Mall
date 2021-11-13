@@ -1,10 +1,10 @@
 package cn.edu.xmu.oomall.freight.dao;
 
-import cn.edu.xmu.oomall.core.util.Common;
+import cn.edu.xmu.oomall.core.util.*;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.mapper.RegionPoMapper;
-import cn.edu.xmu.oomall.freight.util.RedisUtil;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.goods.model.bo.Region;
 import cn.edu.xmu.oomall.goods.model.po.RegionPo;
 import cn.edu.xmu.oomall.goods.model.po.RegionPoExample;
