@@ -20,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
@@ -118,12 +119,17 @@ public class GroupOnActivityControllerTest {
     @Transactional
     public void addGroupOnActivityTest1() throws Exception {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
-        this.mvc.perform(post("/shops/1/groupons")
+        var responseString = this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
-
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        var id = JacksonUtil.parseObject(responseString, "data", GroupOnActivityVo.class).getId();
+        this.mvc.perform(get("/shops/1/groupons/" + id))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andDo(MockMvcResultHandlers.print());
     }
 
 
@@ -138,7 +144,7 @@ public class GroupOnActivityControllerTest {
         this.mvc.perform(get("/shops/1/groupons/16"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":16,\"name\":\"测试\",\"shopId\":1,\"strategy\":[{\"quantity\":10,\"percentage\":500}],\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"createdBy\":{\"id\":1,\"userName\":\"admin\"},\"gmtCreate\":\"2021-11-12 16:35:18\",\"gmtModified\":null,\"modifiedBy\":null,\"state\":0},\"errmsg\":\"成功\"}"));
+                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":16,\"name\":\"测试\",\"shopId\":1,\"strategy\":[{\"quantity\":10,\"percentage\":500}],\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-12 16:35:18\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"state\":0},\"errmsg\":\"成功\"}"));
     }
 
     /**
@@ -251,7 +257,7 @@ public class GroupOnActivityControllerTest {
                 .content("{\"name\":\"\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must not be blank;length must be between 1 and 128;\"}"));
+                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"length must be between 1 and 128;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
@@ -275,7 +281,7 @@ public class GroupOnActivityControllerTest {
     @Transactional
     public void addGroupOnActivityTest3() throws Exception {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
-         this.mvc.perform(post("/shops/1/groupons")
+        this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2022-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())

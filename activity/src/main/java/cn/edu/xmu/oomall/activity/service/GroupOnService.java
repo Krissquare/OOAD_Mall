@@ -2,14 +2,11 @@ package cn.edu.xmu.oomall.activity.service;
 
 import cn.edu.xmu.oomall.activity.dao.GroupOnActivityDao;
 import cn.edu.xmu.oomall.activity.enums.GroupOnState;
-import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivityBo;
+import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.activity.microservice.GoodsService;
 import cn.edu.xmu.oomall.activity.microservice.ShopService;
-import cn.edu.xmu.oomall.activity.microservice.vo.OnSaleVo;
-import cn.edu.xmu.oomall.activity.microservice.vo.SimpleShopVo;
-import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +42,13 @@ public class GroupOnService {
         return res;
     }
 
-    public GroupOnActivityBo addActivity(Long shopId, GroupOnActivityPostVo vo) {
+    public GroupOnActivity addActivity(Long shopId, GroupOnActivityPostVo vo) {
         LocalDateTime begin = LocalDateTime.parse(vo.getBeginTime(), FORMATTER);
         LocalDateTime end = LocalDateTime.parse(vo.getEndTime(), FORMATTER);
         if (begin.isAfter(end)) {
             return null;
         } else {
-            var bo = new GroupOnActivityBo();
+            var bo = new GroupOnActivity();
             bo.setName(vo.getName());
             bo.setShopId(shopId);
             bo.setStrategy(vo.getStrategy());
@@ -92,7 +89,7 @@ public class GroupOnService {
         return new PageInfoVo<>(pageInfo);
     }
 
-    public GroupOnActivityBo getGroupOnActivity(Long id) {
+    public GroupOnActivity getGroupOnActivity(Long id) {
         return dao.getGroupOnActivity(id);
     }
 

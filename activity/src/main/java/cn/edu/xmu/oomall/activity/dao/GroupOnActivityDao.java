@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.activity.dao;
 
 import cn.edu.xmu.oomall.activity.mapper.GroupOnActivityPoMapper;
-import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivityBo;
+import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.SimpleGroupOnActivityVo;
@@ -32,7 +32,7 @@ public class GroupOnActivityDao {
     @Value("${redispara.groupon.expiretime}")
     private long timeout;
 
-    public void insertActivity(GroupOnActivityBo bo, String shopName) {
+    public void insertActivity(GroupOnActivity bo, String shopName) {
         GroupOnActivityPo po = bo.createPo();
         po.setShopName(shopName);
         Common.setPoCreatedFields(po, 1L, "admin");
@@ -46,7 +46,7 @@ public class GroupOnActivityDao {
         List<GroupOnActivityPo> poList = mapper.selectByExample(example);
         var voList = new ArrayList<SimpleGroupOnActivityVo>();
         for (var po : poList) {
-            voList.add(new GroupOnActivityBo(po).createSimpleVo());
+            voList.add(GroupOnActivity.fromPo(po).createSimpleVo());
         }
         var pageInfo = new PageInfo<>(voList);
         pageInfo.setPages(PageInfo.of(poList).getPages());
@@ -56,7 +56,7 @@ public class GroupOnActivityDao {
         return pageInfo;
     }
 
-    public GroupOnActivityBo getGroupOnActivity(Long id) {
+    public GroupOnActivity getGroupOnActivity(Long id) {
         var po = (GroupOnActivityPo) redisUtil.get("groupon_" + id.toString());
         if (po == null) {
             po = mapper.selectByPrimaryKey(id);
@@ -64,6 +64,6 @@ public class GroupOnActivityDao {
         if (po == null) {
             return null;
         }
-        return new GroupOnActivityBo(po);
+        return GroupOnActivity.fromPo(po);
     }
 }

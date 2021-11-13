@@ -1,16 +1,13 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
-import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivityBo;
-import cn.edu.xmu.oomall.core.model.VoObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
-import javax.annotation.Nullable;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -23,7 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 public class GroupOnActivityPostVo {
     @Length(min = 1, max = 128)
-    @NotBlank
+    @NotNull
     private String name;
 
     @NotBlank

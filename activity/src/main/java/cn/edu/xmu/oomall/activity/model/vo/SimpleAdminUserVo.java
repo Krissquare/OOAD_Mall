@@ -13,5 +13,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SimpleAdminUserVo {
     private Long id;
-    private String userName;
+    private String name;
 }
