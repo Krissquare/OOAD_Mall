@@ -35,7 +35,7 @@ public class BaseCouponDiscountTest {
 
 		BaseCouponDiscount d = discount1.getInstance(s);
 
-		Assert.assertEquals(("{\"value\":1,\"className\":\"cn.edu.xmu.ooad.order.discount.impl.PriceCouponDiscount\",\"couponLimitation\":{\"value\":10,\"className\":\"cn.edu.xmu.ooad.order." +
-				"discount.impl.PriceCouponLimitation\"}}"), d.toJsonString());
+		Assert.assertEquals(("{\"value\":1,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponDiscount\",\"couponLimitation\":{\"value\":10,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo." +
+				"strategy.impl.PriceCouponLimitation\"}}"), d.toJsonString());
 	}
 }

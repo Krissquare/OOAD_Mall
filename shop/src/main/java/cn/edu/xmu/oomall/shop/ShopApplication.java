@@ -12,11 +12,10 @@ import org.springframework.context.annotation.ComponentScan;
 /**
  * @author Ming Qiu
  **/
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"cn.edu.xmu.oomall.core.*", "cn.edu.xmu.oomall.shop.*"})
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.shop.mapper")
 @EnableFeignClients(basePackages = "cn.edu.xmu.oomall.shop.microservice")
-@ComponentScan({"cn.edu.xmu.oomall.core", "cn.edu.xmu.oomall.shop"})
 @EnableDiscoveryClient
 public class ShopApplication {
 
