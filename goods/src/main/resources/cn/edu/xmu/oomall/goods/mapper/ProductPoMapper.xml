@@ -26,6 +26,7 @@
     <result column="modi_name" jdbcType="VARCHAR" property="modiName" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
+    <result column="state" jdbcType="TINYINT" property="state" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -67,7 +68,8 @@
     -->
     `id`, `shop_id`, `shop_name`, `goods_id`, `category_id`, `freight_id`, `sku_sn`, 
     `name`, `original_price`, `weight`, `image_url`, `barcode`, `unit`, `origin_place`, 
-    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`
+    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`, 
+    `state`
   </sql>
   <select id="selectByExample" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductPoExample" resultMap="BaseResultMap">
     <!--
@@ -120,14 +122,14 @@
       `image_url`, `barcode`, `unit`, 
       `origin_place`, `created_by`, `create_name`, 
       `modified_by`, `modi_name`, `gmt_create`, 
-      `gmt_modified`)
+      `gmt_modified`, `state`)
     values (#{shopId,jdbcType=BIGINT}, #{shopName,jdbcType=VARCHAR}, #{goodsId,jdbcType=BIGINT}, 
       #{categoryId,jdbcType=BIGINT}, #{freightId,jdbcType=BIGINT}, #{skuSn,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{originalPrice,jdbcType=BIGINT}, #{weight,jdbcType=BIGINT}, 
       #{imageUrl,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
       #{originPlace,jdbcType=VARCHAR}, #{createdBy,jdbcType=BIGINT}, #{createName,jdbcType=VARCHAR}, 
       #{modifiedBy,jdbcType=BIGINT}, #{modiName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
-      #{gmtModified,jdbcType=TIMESTAMP})
+      #{gmtModified,jdbcType=TIMESTAMP}, #{state,jdbcType=TINYINT})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductPo">
     <!--
@@ -196,6 +198,9 @@
       <if test="gmtModified != null">
         `gmt_modified`,
       </if>
+      <if test="state != null">
+        `state`,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="shopId != null">
@@ -254,6 +259,9 @@
       </if>
       <if test="gmtModified != null">
         #{gmtModified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=TINYINT},
       </if>
     </trim>
   </insert>
@@ -321,6 +329,9 @@
       <if test="gmtModified != null">
         `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP},
       </if>
+      <if test="state != null">
+        `state` = #{state,jdbcType=TINYINT},
+      </if>
     </set>
     where `id` = #{id,jdbcType=BIGINT}
   </update>
@@ -348,7 +359,8 @@
       `modified_by` = #{modifiedBy,jdbcType=BIGINT},
       `modi_name` = #{modiName,jdbcType=VARCHAR},
       `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
-      `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP}
+      `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP},
+      `state` = #{state,jdbcType=TINYINT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
