@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.shop;
+package cn.edu.xmu.oomall.shop.controller;
 
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -44,14 +45,13 @@ public class ShopAccountControllerTest {
         String requestJson= JacksonUtil.toJson(shopAccountVo);
 
         //测试新增记录需要移动优先级的情况
-        mvc.perform(post("/shops/2/accounts").contentType("application/json;charset=UTF-8")
+        String response1=mvc.perform(post("/shops/2/accounts").contentType("application/json;charset=UTF-8")
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-
         //测试新增记录不需要移动优先级的情况
-        mvc.perform(post("/shops/5/accounts").contentType("application/json;charset=UTF-8")
+        String response2=mvc.perform(post("/shops/5/accounts").contentType("application/json;charset=UTF-8")
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -79,16 +79,18 @@ public class ShopAccountControllerTest {
     @Test
     public void deleteShopAccountTest() throws Exception{
         //测试正确删除
-        mvc.perform(delete("/shops/2/accounts/2"))
+        String response1=mvc.perform(delete("/shops/2/accounts/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andDo(MockMvcResultHandlers.print());
+                .andReturn().getResponse().getContentAsString();
+        assertEquals("{\"errno\":0,\"errmsg\":\"成功\"}",response1);
+
         //测试accountId和shopId无法对应的情况
-        mvc.perform(delete("/shops/2/accounts/5"))
+        String response2=mvc.perform(delete("/shops/2/accounts/5"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(jsonPath("$.errno").value(ReturnNo.RESOURCE_ID_NOTEXIST.getCode()))
-                .andDo(MockMvcResultHandlers.print());
-
+                .andReturn().getResponse().getContentAsString();
+        assertEquals("{\"errno\":504,\"errmsg\":\"账户信息有误！\"}",response2);
     }
 }
