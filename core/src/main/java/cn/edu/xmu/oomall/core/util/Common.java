@@ -187,7 +187,7 @@ public class Common {
             return null;
         }
         Class boClass = bo.getClass();
-        Field[] boFs = boClass.getDeclaredFields();
+
         Field[] voFs = vo.getClass().getDeclaredFields();
 
         for (Field vf : voFs) {
