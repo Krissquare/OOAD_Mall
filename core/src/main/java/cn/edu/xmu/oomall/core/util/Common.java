@@ -211,9 +211,10 @@ public class Common {
      * @author xucangbai
      * @date 2021/11/13
      * 根据clazz实例化一个对象，并深度克隆bo中对应属性到这个新对象
+     * 其中会自动实现modifiedBy和createdBy两字段的类型转换
      * @param bo business object
      * @param voClass vo对象类型
-     * @return 深度克隆的vo对象
+     * @return 浅克隆的vo对象
      */
     public static Object cloneVo(Object bo, Class voClass) {
         Class boClass = bo.getClass();
