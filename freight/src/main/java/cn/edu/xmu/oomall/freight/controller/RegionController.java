@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.freight.controller;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ResponseUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
@@ -59,7 +58,7 @@ public class RegionController {
             List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
             for (Region regionItem : retRegions) {
-                regionRetVos.add(new RegionRetVo(regionItem));
+                regionRetVos.add( (RegionRetVo) regionItem.createVo() );
             }
             returnObject = new ReturnObject(regionRetVos);
         }
@@ -95,7 +94,7 @@ public class RegionController {
             return object;
         }
 
-        ReturnObject<VoObject> returnObject = regionService.createRegion(regionVo,id,userId,userName);
+        ReturnObject returnObject = regionService.createRegion(regionVo,id,userId,userName);
 
         return Common.decorateReturnObject(returnObject);
     }

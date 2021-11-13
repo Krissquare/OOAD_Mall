@@ -38,16 +38,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getParentRegion(Long id) {
 
-        ReturnObject<List<Region>> retRegion;
-
         ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(id);
 
-        if (returnObject.getCode().equals(ReturnNo.OK)) {
-            retRegion = new ReturnObject<>(returnObject.getData());
-        }else{
-            retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
-        }
-        return retRegion;
+        return returnObject;
     }
 
     /**
@@ -56,22 +49,15 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<VoObject> createRegion(RegionVo regionVo, Long pid, Long userId, String userName) {
+    public ReturnObject<Object> createRegion(RegionVo regionVo, Long pid, Long userId, String userName) {
 
         Region region = (Region) Common.cloneVo(regionVo,Region.class);
         region.setPid(pid);
         region.setState(STATE_EFFCTIVE);
 
-        ReturnObject<Region> retObj = regionDao.createRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
-        
-        ReturnObject<VoObject> retRegion;
-        if (retObj.getCode().equals(ReturnNo.OK)) {
-            retRegion = new ReturnObject<>(retObj.getData());
-        }else{
-            retRegion = new ReturnObject<>(retObj.getCode(), retObj.getErrmsg());
-        }
+        ReturnObject<Object> retObj = regionDao.createRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
 
-        return retRegion;
+        return retObj;
     }
 
     /**
@@ -82,16 +68,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
 
-        ReturnObject<List<Region>> retRegion;
-
         ReturnObject<List<Region>> returnObject = regionDao.adminGetChildRegion(id);
 
-        if (returnObject.getCode().equals(ReturnNo.OK)) {
-            retRegion = new ReturnObject<>(returnObject.getData());
-        }else{
-            retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
-        }
-        return retRegion;
+        return returnObject;
     }
 
     /**
@@ -102,16 +81,9 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject<List<Region>> getChildRegion(Long id) {
 
-        ReturnObject<List<Region>> retRegion;
-
         ReturnObject<List<Region>> returnObject = regionDao.getChildRegion(id);
 
-        if (returnObject.getCode().equals(ReturnNo.OK)) {
-            retRegion = new ReturnObject<>(returnObject.getData());
-        }else{
-            retRegion = new ReturnObject<>(returnObject.getCode(), returnObject.getErrmsg());
-        }
-        return retRegion;
+        return returnObject;
     }
 
     /**
