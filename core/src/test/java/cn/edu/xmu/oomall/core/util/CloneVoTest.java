@@ -1,8 +1,9 @@
 package cn.edu.xmu.oomall.core.util;
 
 
-import cn.edu.xmu.oomall.core.util.bo.ComplexBo;
-import cn.edu.xmu.oomall.core.util.vo.ComplexVo;
+
+import cn.edu.xmu.oomall.core.util.bo.Category;
+import cn.edu.xmu.oomall.core.util.vo.CategoryRetVo;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -20,25 +21,31 @@ class CloneVoTest {
      */
     @Test
     void test() {
-        List<Integer> integerList = new ArrayList<>(3);
-        integerList.add(1);
-        integerList.add(2);
-        integerList.add(3);
-        LocalDateTime localDateTime= LocalDateTime.now();
-        ComplexBo complexBo = new ComplexBo(1,"a", (short) 1,1.1,1.1F,'a',true,localDateTime,integerList, 3, 4);
-        ComplexVo complexVo = (ComplexVo) Common.cloneVo(complexBo, ComplexVo.class);
+        Category categoryBo=new Category();
+        categoryBo.setId(1L);
+        categoryBo.setCommissionRatio(1);
+        categoryBo.setCreatedBy(2L);
+        categoryBo.setCreateName("CreateName");
+        categoryBo.setModifiedBy(3L);
+        categoryBo.setModiName("ModiName");
+        LocalDateTime gmtCreate=LocalDateTime.now().minusDays(1);
+        LocalDateTime gmtModified=LocalDateTime.now();
+        categoryBo.setGmtCreate(gmtCreate);
+        categoryBo.setGmtModified(gmtModified);
+        categoryBo.setPid(2L);
+        categoryBo.setName("name");
 
-        assertNotEquals(complexVo.getIntegerList().get(0),1);
-        assertNotEquals(complexVo.getIntegerList().get(1),2);
-        assertNotEquals(complexVo.getIntegerList().get(2),3);
-        assertEquals(complexVo.getInteger(),1);
-        assertEquals(complexVo.getString(),"a");
-        assertEquals(complexVo.getAShort(),(short) 1);
-        assertEquals(complexVo.getADouble(),1.1);
-        assertEquals(complexVo.getAFloat(),1.1F);
-        assertEquals(complexVo.getCharacter(),'a');
-        assertEquals(complexVo.getBool(),true);
-        assertEquals(complexVo.getLocalDateTime(),localDateTime);
-        assertEquals(complexVo.getBaseInt1(),3);
+
+        CategoryRetVo categoryRetVo = (CategoryRetVo) Common.cloneVo(categoryBo, CategoryRetVo.class);
+        assertEquals(categoryRetVo.getId(),1L);
+        assertEquals(categoryRetVo.getName(),"name");
+
+        assertEquals(categoryRetVo.getCreatedBy().getId(),2L);
+        assertEquals(categoryRetVo.getCreatedBy().getName(),"CreateName");
+        assertEquals(categoryRetVo.getModifiedBy().getId(),3L);
+        assertEquals(categoryRetVo.getModifiedBy().getName(),"ModiName");
+        assertEquals(categoryRetVo.getCommissionRate(),null);
+        assertEquals(categoryRetVo.getGmtCreate(),gmtCreate);
+        assertEquals(categoryRetVo.getGmtModified(),gmtModified);
     }
 }

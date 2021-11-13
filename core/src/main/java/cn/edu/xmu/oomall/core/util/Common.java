@@ -218,15 +218,71 @@ public class Common {
         Class boClass = bo.getClass();
         Object newVo = null;
         try {
+            //默认voClass有无参构造函数
             newVo = voClass.getDeclaredConstructor().newInstance();
             Field[] voFields = voClass.getDeclaredFields();
             for (Field voField : voFields) {
                 voField.setAccessible(true);
-                Field boField = boClass.getDeclaredField(voField.getName());
-                boField.setAccessible(true);
-                Class<?> type = boField.getType();
-                Object newObject = boField.get(bo);
-                voField.set(newVo, newObject);
+                Field boField=null;
+                try {
+                    boField= boClass.getDeclaredField(voField.getName());
+                }
+                //bo中查找不到对应的属性
+                catch (NoSuchFieldException e)
+                {
+                    //将此属性设置为null,继续进行下一retVo属性的复制
+                    voField.set(newVo, null);
+                    continue;
+                }
+
+                Class<?> boFieldType = boField.getType();
+                //属性名相同，类型相同，直接克隆
+                if (voField.getType().equals(boFieldType))
+                {
+                    boField.setAccessible(true);
+                    Object newObject = boField.get(bo);
+                    voField.set(newVo, newObject);
+                }
+                //createdBy和modifiedBy特殊处理
+                else
+                {
+                    //bo的createdBy和createName组装为SimpleRetVo的id,name
+                    Object newSimpleRetVo = voField.getType().getDeclaredConstructor().newInstance();
+                    Field newSimpleRetVoIdField=newSimpleRetVo.getClass().getDeclaredField("id");
+                    Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("name");
+                    newSimpleRetVoIdField.setAccessible(true);
+                    newSimpleRetVoNameField.setAccessible(true);
+
+                    if("createdBy".equals(boField.getName()))
+                    {
+                        Field boCreateByField = boClass.getDeclaredField("createdBy");
+                        Field boCreateNameField = boClass.getDeclaredField("createName");
+                        boCreateByField.setAccessible(true);
+                        boCreateNameField.setAccessible(true);
+                        Object boCreateBy=boCreateByField.get(bo);
+                        Object boCreateName=boCreateNameField.get(bo);
+
+                        newSimpleRetVoIdField.set(newSimpleRetVo,boCreateBy);
+                        newSimpleRetVoNameField.set(newSimpleRetVo,boCreateName);
+
+                        voField.set(newVo, newSimpleRetVo);
+                    }
+                    //把bo的modifiedBy和modifiedName组装为SimpleRetVo的id,name
+                    else if("modifiedBy".equals(boField.getName()))
+                    {
+                        Field boModifiedByField = boClass.getDeclaredField("modifiedBy");
+                        Field boModiNameField = boClass.getDeclaredField("modiName");
+                        boModifiedByField.setAccessible(true);
+                        boModiNameField.setAccessible(true);
+                        Object boModifiedBy=boModifiedByField.get(bo);
+                        Object boModiName=boModiNameField.get(bo);
+
+                        newSimpleRetVoIdField.set(newSimpleRetVo,boModifiedBy);
+                        newSimpleRetVoNameField.set(newSimpleRetVo,boModiName);
+
+                        voField.set(newVo, newSimpleRetVo);
+                    }
+                }
             }
         } catch (Exception e) {
             logger.error(e.toString());
