@@ -255,14 +255,14 @@ public class Common {
 
                     if("createdBy".equals(boField.getName()))
                     {
-                        Field boCreateByField = boClass.getDeclaredField("createdBy");
+                        Field boCreatedByField = boClass.getDeclaredField("createdBy");
                         Field boCreateNameField = boClass.getDeclaredField("createName");
-                        boCreateByField.setAccessible(true);
+                        boCreatedByField.setAccessible(true);
                         boCreateNameField.setAccessible(true);
-                        Object boCreateBy=boCreateByField.get(bo);
+                        Object boCreatedBy=boCreatedByField.get(bo);
                         Object boCreateName=boCreateNameField.get(bo);
 
-                        newSimpleRetVoIdField.set(newSimpleRetVo,boCreateBy);
+                        newSimpleRetVoIdField.set(newSimpleRetVo,boCreatedBy);
                         newSimpleRetVoNameField.set(newSimpleRetVo,boCreateName);
 
                         voField.set(newVo, newSimpleRetVo);
