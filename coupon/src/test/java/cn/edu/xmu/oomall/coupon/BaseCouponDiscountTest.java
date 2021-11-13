@@ -6,10 +6,9 @@ import cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponLimitation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-import org.junit.Assert;
+import org.json.JSONException;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.skyscreamer.jsonassert.JSONAssert;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,7 +18,6 @@ import java.lang.reflect.InvocationTargetException;
  * modified by: Ming Qiu
  * date: 2021-11-11
  */
-@RunWith(SpringJUnit4ClassRunner.class)
 public class BaseCouponDiscountTest {
 
 	@Test
@@ -29,13 +27,13 @@ public class BaseCouponDiscountTest {
 	}
 
 	@Test
-	public void getInstanceTest() throws JsonProcessingException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+	public void getInstanceTest() throws JsonProcessingException, ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, JSONException {
 		BaseCouponDiscount discount1 = new PriceCouponDiscount(new PriceCouponLimitation(10), 1);
 		String s = discount1.toJsonString();
 
 		BaseCouponDiscount d = discount1.getInstance(s);
 
-		Assert.assertEquals(("{\"value\":1,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponDiscount\",\"couponLimitation\":{\"value\":10,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo." +
-				"strategy.impl.PriceCouponLimitation\"}}"), d.toJsonString());
+		JSONAssert.assertEquals("{\"value\":1,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo.strategy.impl.PriceCouponDiscount\",\"couponLimitation\":{\"value\":10,\"className\":\"cn.edu.xmu.oomall.coupon.model.bo." +
+				"strategy.impl.PriceCouponLimitation\"}}", d.toJsonString(), true);
 	}
 }
