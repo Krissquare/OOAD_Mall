@@ -174,16 +174,16 @@ public class Common {
         try {
             vo = voClass.getDeclaredConstructor().newInstance();
         } catch (InstantiationException e) {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } catch (IllegalAccessException e) {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } catch (InvocationTargetException e) {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         } catch (NoSuchMethodException e) {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             return null;
         }
         Class boClass = bo.getClass();
@@ -201,7 +201,7 @@ public class Common {
                         try {
                             vf.set(vo, bf.get(bo));
                         } catch (IllegalAccessException e) {
-                            logger.info(e.getMessage());
+                            logger.error(e.getMessage());
                             return null;
                         }
                     }
@@ -209,13 +209,13 @@ public class Common {
                         try {
                             vf.set(vo, cloneVo(bf.get(bo), vf.getType()));
                         } catch (IllegalAccessException e) {
-                            logger.info(e.getMessage());
+                            logger.error(e.getMessage());
                             return null;
                         }
                     }
                 }
             } catch (NoSuchFieldException e) {
-                logger.info(e.getMessage());
+                logger.error(e.getMessage());
                 return null;
             }
         }
