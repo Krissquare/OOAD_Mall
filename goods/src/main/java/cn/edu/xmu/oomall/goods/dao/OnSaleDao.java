@@ -26,7 +26,7 @@ public class OnSaleDao {
     private Logger logger = LoggerFactory.getLogger(OnSaleDao.class);
 
     @Autowired
-    private OnSalePoMapper onsaleMapper;
+    private OnSalePoMapper onSalePoMapper;
 
     /**
      * 创建Onsale对象
@@ -34,98 +34,63 @@ public class OnSaleDao {
      * @param onSale 传入的Onsale对象
      * @return 返回对象ReturnObj
      */
-    public ReturnObject<OnSale> createOnsale(OnSale onSale, Long userId, String userName) {
+    public ReturnObject createOnSale(OnSale onSale, Long userId, String userName) {
         OnSalePo onsalePo = onSale.gotOnSalePo();
-
         setPoCreatedFields(onsalePo, userId, userName);
-
-        onsaleMapper.insert(onsalePo);
-        ReturnObject<OnSale> returnObject = new ReturnObject<>(new OnSale(onsalePo));
-        return returnObject;
+        onSalePoMapper.insert(onsalePo);
+        return new ReturnObject(new OnSale(onsalePo));
     }
 
 
-    public ReturnObject<Object> onlineOrOfflineOnSale(OnSale onsale, Long userId, String userName) {
+    public ReturnObject onlineOrOfflineOnSale(OnSale onsale, Long userId, String userName) {
         OnSalePo po = onsale.gotOnSalePo();
         setPoModifiedFields(po, userId, userName);
-        onsaleMapper.onlineOrOfflineOnSale(po);
-        return new ReturnObject<>();
+        onSalePoMapper.onlineOrOfflineOnSale(po);
+        return new ReturnObject();
     }
-
 
     public OnSale getOnSaleById(Long id) {
-        return new OnSale(onsaleMapper.selectByPrimaryKey(id));
+        return new OnSale(onSalePoMapper.selectByPrimaryKey(id));
     }
 
 
-
-    public ReturnObject<Object> searchOnSaleByProductNorSec(Long productId, Integer page, Integer pageSize) {
-
+    public ReturnObject searchOnSaleByProductNorSec(Long productId, Integer page, Integer pageSize) {
         PageHelper.startPage(page, pageSize);
-        List<OnSalePo> pos = onsaleMapper.getOnSaleByProductIdNorSec(productId);
+        List<OnSalePo> pos = onSalePoMapper.getOnSaleByProductIdNorSec(productId);
+        return getBoAndReturn(pos);
+    }
 
+    public ReturnObject searchOnSaleByProduct(Long productId, Integer page, Integer pageSize) {
+        PageHelper.startPage(page, pageSize);
+        List<OnSalePo> pos = onSalePoMapper.getOnSaleByProductId(productId);
+        return getBoAndReturn(pos);
+    }
 
+    public ReturnObject searchOnSaleByActivity(Long actId, Integer page, Integer pageSize, Integer state, OnSale.Type type) {
+        PageHelper.startPage(page, pageSize);
+        List<OnSalePo> pos= onSalePoMapper.getOnSaleByActivityId(actId, state, type.getCode());
+        return getBoAndReturn(pos);
+    }
+
+    public ReturnObject searchOnSaleByShare(Long actId, Integer page, Integer pageSize, Integer state) {
+        PageHelper.startPage(page, pageSize);
+        List<OnSalePo> pos= onSalePoMapper.getOnSaleByShare(actId, state);
+        return getBoAndReturn(pos);
+    }
+
+    private ReturnObject getBoAndReturn(List<OnSalePo> pos) {
         List<OnSale> onSales = new ArrayList<>(pos.size());
         for (OnSalePo onSalePo : pos) {
             OnSale onsale = new OnSale(onSalePo);
             onSales.add(onsale);
         }
         PageInfo<OnSale> pageInfo = PageInfo.of(onSales);
-        return new ReturnObject<>(pageInfo);
+        return new ReturnObject(pageInfo);
     }
-
-    public ReturnObject<Object> searchOnSaleByProduct(Long productId, Integer page, Integer pageSize) {
-
-        PageHelper.startPage(page, pageSize);
-        List<OnSalePo> pos = onsaleMapper.getOnSaleByProductId(productId);
-        List<OnSale> onSales = new ArrayList<>(pos.size());
-        for (OnSalePo onSalePo : pos) {
-            OnSale onsale = new OnSale(onSalePo);
-            onSales.add(onsale);
-        }
-        PageInfo<OnSale> pageInfo = PageInfo.of(onSales);
-        return new ReturnObject<>(pageInfo);
-    }
-
-    public ReturnObject<Object> searchOnSaleByActivity(Long actId, Integer page, Integer pageSize, Integer state, OnSale.Type type) {
-
-        PageHelper.startPage(page, pageSize);
-        List<OnSalePo> pos = null;
-        System.out.println(actId+" "+state+type.getCode());
-        pos = onsaleMapper.getOnSaleByActivityId(actId, state, type.getCode());
-
-        List<OnSale> onSales = new ArrayList<>(pos.size());
-        for (OnSalePo onSalePo : pos) {
-            OnSale onsale = new OnSale(onSalePo);
-            onSales.add(onsale);
-        }
-        PageInfo<OnSale> pageInfo = PageInfo.of(onSales);
-        return new ReturnObject<>(pageInfo);
-    }
-
-    public ReturnObject<Object> searchOnSaleByShare(Long actId, Integer page, Integer pageSize, Integer state) {
-
-        PageHelper.startPage(page, pageSize);
-        List<OnSalePo> pos = null;
-
-        pos = onsaleMapper.getOnSaleByShare(actId, state);
-
-        List<OnSale> onSales = new ArrayList<>(pos.size());
-        for (OnSalePo onSalePo : pos) {
-            OnSale onsale = new OnSale(onSalePo);
-            onSales.add(onsale);
-        }
-        PageInfo<OnSale> pageInfo = PageInfo.of(onSales);
-        return new ReturnObject<>(pageInfo);
-    }
-
 
 
     public boolean timeCollided(OnSale onsale) {
         OnSalePo po = onsale.gotOnSalePo();
-        if (onsaleMapper.getTimeCollidedCount(po) > 0) {
-            return true;
-        }
-        return false;
+        return onSalePoMapper.getTimeCollidedCount(po) > 0;
     }
 }

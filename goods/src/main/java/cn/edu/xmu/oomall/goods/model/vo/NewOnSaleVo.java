@@ -42,7 +42,7 @@ public class NewOnSaleVo {
         onsale.setEndTime(LocalDateTime.parse(this.endTime,df));
         onsale.setQuantity(this.quantity);
         onsale.setType(OnSale.Type.getTypeByCode(type));
-        onsale.setState(OnSale.Status.DRAFT);
+        onsale.setState(OnSale.State.DRAFT);
 
         return onsale;
     };

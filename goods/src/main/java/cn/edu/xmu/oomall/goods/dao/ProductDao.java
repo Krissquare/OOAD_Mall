@@ -20,22 +20,16 @@ public class ProductDao {
     private ProductPoMapper productMapper;
 
     public boolean hasExist(Long productId) {
-        if(null!=productMapper.selectByPrimaryKey(productId)){
-
-            return true;
-        }
-
-        return false;
+        return null != productMapper.selectByPrimaryKey(productId);
     }
 
 
     public ProductBaseInfo getBaseInfoById(Long productId){
         ProductPo productPo= productMapper.selectByPrimaryKey(productId);
-        ProductBaseInfo pbi=new ProductBaseInfo(productPo);
-        return pbi;
+        return new ProductBaseInfo(productPo);
     }
 
-    public boolean macthProductShop(Long productId, Long shopId) {
+    public boolean matchProductShop(Long productId, Long shopId) {
         ProductPo productPo=productMapper.selectByPrimaryKey(productId);
         return shopId.equals(productPo.getShopId());
     }

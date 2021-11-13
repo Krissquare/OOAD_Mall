@@ -149,7 +149,7 @@ public class OnSaleControllerTest {
         input.put("type", 0);
         s = input.toJSONString();
         res = this.mvc.perform(post("/shops/2/products/2532/onsales")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn();
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn();
 
     }
 
@@ -237,15 +237,9 @@ public class OnSaleControllerTest {
         MvcResult res = this.mvc.perform(get("/shops/0/onsales/996").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn();
 
-
-//        搜索结果不存在
-        res = this.mvc.perform(get("/shops/0/onsales/955448").contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn();
-
-
         // 非普通或秒杀
         res = this.mvc.perform(get("/shops/0/onsales/3").contentType(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk()).andReturn();
+        ).andExpect(status().isForbidden()).andReturn();
 
     }
 
@@ -313,9 +307,6 @@ public class OnSaleControllerTest {
         ).andExpect(status().isOk()).andReturn();
 
 
-        //        空
-        res = this.mvc.perform(get("/internal/grouponactivities/669/onsales")
-        ).andExpect(status().isNotFound()).andReturn();
 
     }
 
@@ -326,23 +317,16 @@ public class OnSaleControllerTest {
         ).andExpect(status().isOk()).andReturn();
 
 
-        //        空
-        res = this.mvc.perform(get("/internal/advacnesaleactivities/669/onsales")
-        ).andExpect(status().isNotFound()).andReturn();
 
     }
 
 
     @Test
     public void testSearchOnSaleShare() throws Exception{
-        //        正常
+        //  正常
         MvcResult res = this.mvc.perform(get("/internal/shareactivities/1/onsales")
         ).andExpect(status().isOk()).andReturn();
 
-
-        //        空
-        res = this.mvc.perform(get("/internal/shareactivities/669/onsales")
-        ).andExpect(status().isNotFound()).andReturn();
 
     }
 
@@ -351,11 +335,6 @@ public class OnSaleControllerTest {
         //        正常
         MvcResult res = this.mvc.perform(get("/internal/onsales/1")
         ).andExpect(status().isOk()).andReturn();
-
-
-        //        空
-        res = this.mvc.perform(get("/internal/onsales/9999")
-        ).andExpect(status().isNotFound()).andReturn();
 
     }
 

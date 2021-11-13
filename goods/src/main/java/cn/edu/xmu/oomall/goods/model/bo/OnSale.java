@@ -3,16 +3,35 @@ package cn.edu.xmu.oomall.goods.model.bo;
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.goods.model.po.OnSalePo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleRetVo;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+@Data
 public class OnSale  implements VoObject{
-     
+
+    private Long id;
+    private Long shopId;
+    private Long productId;
+    private Long price;
+    private LocalDateTime beginTime;
+    private LocalDateTime endTime;
+    private Integer quantity;
+    private Type type;
+    private Long activityId;
+    private Long shareActId;
+    private State state;
+    private Long createdBy;
+    private String createName;
+    private Long modifiedBy;
+    private String modiName;
+    private LocalDateTime gmtCreate;
+    private LocalDateTime gmtModified;
     private OnSalePo onsalePo;
 
-     
+
     public OnSale() {
         this.onsalePo = new OnSalePo();
     }
@@ -73,76 +92,76 @@ public class OnSale  implements VoObject{
         onsalePo.setPrice(price);
     }
 
-     
+
     public LocalDateTime getBeginTime() {
         return onsalePo.getBeginTime();
     }
 
-     
+
     public void setBeginTime(LocalDateTime beginTime) {
         onsalePo.setBeginTime(beginTime);
     }
 
-     
+
     public LocalDateTime getEndTime() {
         return onsalePo.getEndTime();
     }
 
-     
+
     public void setEndTime(LocalDateTime endTime) {
         onsalePo.setEndTime(endTime);
     }
 
-     
+
     public Integer getQuantity() {
         return onsalePo.getQuantity();
     }
 
-     
+
     public void setQuantity(Integer quantity) {
         onsalePo.setQuantity(quantity);
     }
 
-     
+
     public Type getType() {
         return Type.getTypeByCode(Integer.valueOf(onsalePo.getType()));
     }
 
-     
+
     public void setType(Type type) {
         Integer code=type.getCode();
         Byte b=(byte)(0XFF & code);
         onsalePo.setType(b);
     }
 
-     
+
     public Long getActivityId() {
         return onsalePo.getActivityId();
     }
 
-     
+
     public void setActivityId(Long activityId) {
         onsalePo.setActivityId(activityId);
     }
 
-     
+
     public Long getShareActId() {
         return onsalePo.getShareActId();
     }
 
-     
+
     public void setShareActId(Long shareActId) {
         onsalePo.setShareActId(shareActId);
     }
 
 
 
-    public Status getState() {
-        return Status.getStatusByCode(Integer.valueOf(onsalePo.getState()));
+    public State getState() {
+        return State.getStatusByCode(Integer.valueOf(onsalePo.getState()));
     }
 
 
-    public void setState(Status state) {
+    public void setState(State state) {
         Integer code=state.getCode();
         Byte b=(byte)(0XFF & code);
         onsalePo.setState(b);
@@ -238,17 +257,17 @@ public class OnSale  implements VoObject{
     }
 
 
-    public enum Status {
+    public enum State {
         DRAFT(0, "草稿"),
         ONLINE(1, "上线"),
         OFFLINE(2, "下线");
 
 
-        private static final Map<Integer, Status> STATE_MAP;
+        private static final Map<Integer, State> STATE_MAP;
 
         static { //由类加载机制，静态块初始加载对应的枚举属性到map中，而不用每次取属性时，遍历一次所有枚举值
             STATE_MAP = new HashMap();
-            for (Status enum1 : values()) {
+            for (State enum1 : values()) {
                 STATE_MAP.put(enum1.code, enum1);
             }
         }
@@ -256,12 +275,12 @@ public class OnSale  implements VoObject{
         private int code;
         private String description;
 
-        Status(int code, String description) {
+        State(int code, String description) {
             this.code=code;
             this.description=description;
         }
 
-        public static Status getStatusByCode(Integer code){
+        public static State getStatusByCode(Integer code){
             return STATE_MAP.get(code);
         }
 

@@ -59,37 +59,15 @@ public interface OnSalePoMapper {
     int updateByPrimaryKey(OnSalePo record);
 
 
-
     List<OnSalePo> getOnSaleByProductIdNorSec(Long productId);
 
     List<OnSalePo> getOnSaleByProductId(Long productId);
 
-    List<OnSalePo> getOnSaleByActivityId(Long actId, @Param("state") Integer state,@Param("type") Integer type);
+    List<OnSalePo> getOnSaleByActivityId(Long actId,  Integer state, Integer type);
 
-    List<OnSalePo> getOnSaleByShare(Long actId, @Param("state") Integer state);
-
-    Integer getCountByProductIdAll(Long productId);
-
-
-    List<OnSalePo> getOnsaleByProductIdAll(@Param("productId")Long productId,
-                                        @Param("pageSize") Integer pageSize,
-                                        @Param("page") Integer page);
-
+    List<OnSalePo> getOnSaleByShare(Long actId,  Integer state);
 
     int onlineOrOfflineOnSale(OnSalePo po);
-
-
-
-    List<OnSalePo>getAllOnsaleByProductId(Long productId);
-
-
-    List<OnSalePo> getOnsaleAct(Long actId, Integer state, Integer type, Integer pageSize, Integer page);
-
-    Integer getCountAct(Long actId, Integer state, Integer type);
-
-    List<OnSalePo> getOnsaleShare(Long actId, Integer state, Integer pageSize, Integer page);
-
-    Integer getCountShare(Long actId, Integer state);
 
     Integer getTimeCollidedCount(OnSalePo po);
 

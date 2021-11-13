@@ -53,22 +53,20 @@ public class OnSaleController {
         // 判断是否秒杀或普通
         if (!newOnSaleVo.getType().equals(OnSale.Type.NOACTIVITY.getCode())
                 && !newOnSaleVo.getType().equals(OnSale.Type.SECKILL.getCode())) {
-            // 返回403错误
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(ReturnNo.OK, "限定处理普通或秒杀。");
-            return getNullRetObj(returnObject2, httpServletResponse);
+            ReturnObject<Object> returnObject2 = new ReturnObject<>(ReturnNo.RESOURCE_ID_OUTSCOPE, "限定处理普通或秒杀。");
+            return decorateReturnObject(returnObject2);
         }
 
-        //        判断开始时间是否比结束时间晚
+        // 判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
-            return new ReturnObject<VoObject>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间，新增销售失败。");
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间，新增销售失败。"));
         }
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.createOnSale(shopId, id, newOnSaleVo, loginUserId, loginUserName);
+        ReturnObject returnObject1 = onsaleService.createOnSale(shopId, id, newOnSaleVo, loginUserId, loginUserName);
         if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
+            return decorateReturnObject(returnObject1);
         }
+
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
         return getRetObject(returnObject1);
 
@@ -80,12 +78,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<Object> returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.Status.ONLINE);
-
-        if (returnObject1.getCode() == ReturnNo.RESOURCE_ID_OUTSCOPE) {
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        }
-        return getNullRetObj(returnObject1, httpServletResponse);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.State.ONLINE);
+        return decorateReturnObject(returnObject1);
     }
 
     @PutMapping("shops/{shopId}/onsales/{id}/offline")
@@ -93,12 +87,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<Object> returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.Status.OFFLINE);
-
-        if (returnObject1.getCode() == ReturnNo.RESOURCE_ID_OUTSCOPE) {
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        }
-        return getNullRetObj(returnObject1, httpServletResponse);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.State.OFFLINE);
+        return decorateReturnObject(returnObject1);
     }
 
     @GetMapping("shops/{shopId}/products/{id}/onsales")
@@ -107,13 +97,9 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.searchOnSaleByProductNorSec(id, page ,pageSize);
+        ReturnObject returnObject1 = onsaleService.searchOnSaleByProductNorSec(id, page, pageSize);
+        return decorateReturnObject(returnObject1);
 
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
     }
 
     @GetMapping("shops/{shopId}/onsales/{id}")
@@ -121,39 +107,26 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.getDetail(id, true);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> re = new ReturnObject<>(returnObject1);
-            return getNullRetObj(re, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        ReturnObject returnObject1 = onsaleService.getDetail(id, true);
+        return decorateReturnObject(returnObject1);
     }
 
     @PutMapping("internal/onsales/{id}/online")
-    public Object onlineOnSaleGroupPre( @PathVariable Long id, Long loginUserId, String loginUserName) {
+    public Object onlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<Object> returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.Status.ONLINE);
-
-        if (returnObject1.getCode() == ReturnNo.RESOURCE_ID_OUTSCOPE) {
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        }
-        return getNullRetObj(returnObject1, httpServletResponse);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.ONLINE);
+        return decorateReturnObject(returnObject1);
     }
 
     @PutMapping("internal/onsales/{id}/offline")
-    public Object offlineOnSaleGroupPre( @PathVariable Long id, Long loginUserId, String loginUserName) {
+    public Object offlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<Object> returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre( id, loginUserId, loginUserName, OnSale.Status.OFFLINE);
-
-        if (returnObject1.getCode() == ReturnNo.RESOURCE_ID_OUTSCOPE) {
-            httpServletResponse.setStatus(HttpStatus.FORBIDDEN.value());
-        }
-        return getNullRetObj(returnObject1, httpServletResponse);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.OFFLINE);
+        return decorateReturnObject(returnObject1);
     }
 
 
@@ -164,13 +137,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.searchOnSaleByActivity(id,page, pageSize,  state, OnSale.Type.GROUPON);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        ReturnObject returnObject1 = onsaleService.searchOnSaleByActivity(id, page, pageSize, state, OnSale.Type.GROUPON);
+        return decorateReturnObject(returnObject1);
     }
 
     @GetMapping("internal/advacnesaleactivities/{id}/onsales")
@@ -180,13 +148,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.searchOnSaleByActivity(id,page, pageSize,  state, OnSale.Type.PRESALE);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        ReturnObject returnObject1 = onsaleService.searchOnSaleByActivity(id, page, pageSize, state, OnSale.Type.PRESALE);
+        return decorateReturnObject(returnObject1);
     }
 
 
@@ -197,13 +160,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.searchOnSaleByShare(id, page,pageSize,  state);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        ReturnObject returnObject1 = onsaleService.searchOnSaleByShare(id, page, pageSize, state);
+        return decorateReturnObject(returnObject1);
     }
 
 
@@ -212,13 +170,8 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject<VoObject> returnObject1 = onsaleService.getDetail(id, false);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        ReturnObject returnObject1 = onsaleService.getDetail(id, false);
+        return decorateReturnObject(returnObject1);
     }
 
 
@@ -235,7 +188,7 @@ public class OnSaleController {
 
         //        判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
-            return new ReturnObject<VoObject>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间，新增销售失败。");
+            return new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间，新增销售失败。");
         }
 
         ReturnObject<VoObject> returnObject1 = onsaleService.createOnSaleWithoutShopId(id, newOnSaleVo, loginUserId, loginUserName);
@@ -244,7 +197,6 @@ public class OnSaleController {
             return getNullRetObj(returnObject2, httpServletResponse);
         }
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
-
         return getRetObject(returnObject1);
     }
 
@@ -255,12 +207,7 @@ public class OnSaleController {
         loginUserName = "yujie";
 
         ReturnObject<VoObject> returnObject1 = onsaleService.searchOnSaleByProduct(id, page, pageSize);
-
-        if (returnObject1.getCode() != ReturnNo.OK) {
-            ReturnObject<Object> returnObject2 = new ReturnObject<>(returnObject1.getCode(), returnObject1.getErrmsg());
-            return getNullRetObj(returnObject2, httpServletResponse);
-        }
-        return getRetObject(returnObject1);
+        return decorateReturnObject(returnObject1);
     }
 
 }
