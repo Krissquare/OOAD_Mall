@@ -127,5 +127,4 @@ public class ShopAccountDao {
         shopAccountPo.setCreateName(loginUserName);
         shopAccountPo.setGmtCreate(LocalDateTime.now());
     }
-
 }
