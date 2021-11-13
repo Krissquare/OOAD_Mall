@@ -4,7 +4,9 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.ComponentScan;
 
 
 /**
@@ -13,12 +15,14 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.shop.mapper")
-@EnableFeignClients(basePackages = "cn.edu.xmu.oomall.shop.openfeign")
-public class Application {
+@EnableFeignClients(basePackages = "cn.edu.xmu.oomall.shop.microservice")
+@ComponentScan({"cn.edu.xmu.oomall.core", "cn.edu.xmu.oomall.shop"})
+@EnableDiscoveryClient
+public class ShopApplication {
 
     public static void main(String[] args) {
 
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ShopApplication.class, args);
 
     }
 
