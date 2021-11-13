@@ -1,6 +1,7 @@
 
 package cn.edu.xmu.oomall.shop.controller;
 
+import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
@@ -8,6 +9,7 @@ import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.vo.ShopConclusionVo;
 import cn.edu.xmu.oomall.shop.model.vo.ShopVo;
 import cn.edu.xmu.oomall.shop.service.ShopService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,36 @@ public class ShopController {
 
     @Autowired
     private ShopService shopService;
+
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @ApiOperation(value = "获得店铺简单信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization", value = "shopToken", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "id", value = "商店id", required = true, dataType = "Long", paramType = "path")
+    })
+    @GetMapping(value = "/shops/{id}")
+    public Object getSimpleShopById(@PathVariable Long id){
+            ReturnObject ret=shopService.getSimpleShopByShopId(id);
+            return Common.decorateReturnObject(ret);
+    }
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @ApiOperation(value = "管理员获得店铺信息")
+    @GetMapping(value = "/shops/{id}/shops")
+    public Object getAllShop(@PathVariable Long id,@RequestParam(name="page",required = false,defaultValue = "1")int page,@RequestParam(name="pageSize",required = false,defaultValue = "10")int pageSize){
+        if(id != 0){
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE));
+        }
+        ReturnObject<PageInfo<VoObject>> ret=shopService.getAllShop(id,page,pageSize);
+        return Common.getPageRetObject(ret);
+    }
+
+
     /**
      * @Author: 蒋欣雨
      * @Sn: 22920192204219

@@ -43,6 +43,19 @@ public class ShopControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
     }
+    /**
+     * 获取店铺信息
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getSimpleShopById() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        System.out.println(responseString);
+    }
 
     /**
      * 新建店铺（正常流程）

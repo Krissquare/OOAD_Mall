@@ -6,6 +6,8 @@ import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.ShopPoMapper;
 import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.po.ShopPo;
+import cn.edu.xmu.oomall.shop.model.po.ShopPoExample;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -30,6 +32,14 @@ public class ShopDao {
         }
         Shop shop = new Shop(shopPo);
         return new ReturnObject<>(shop);
+    }
+    public List<ShopPo> getAllShop(Long id,Integer page,Integer pageSize) {
+        ShopPoExample example=new ShopPoExample();
+        ShopPoExample.Criteria criteria=example.createCriteria();
+        List<ShopPo> shopPos;
+        PageHelper.startPage(page,pageSize);
+        shopPos=shopPoMapper.selectByExample(example);
+        return shopPos;
     }
 
 

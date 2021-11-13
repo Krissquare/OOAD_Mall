@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.shop.service;
 
+import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
@@ -8,12 +9,16 @@ import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.po.ShopPo;
 import cn.edu.xmu.oomall.shop.model.vo.*;
 import cn.edu.xmu.oomall.shop.openfeign.PayApi;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -24,10 +29,52 @@ public class ShopService {
     private ShopDao shopDao;
     @Resource
     private PayApi payApi;
-
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(rollbackFor = Exception.class)
     public ReturnObject<Shop> getShopByShopId(Long ShopId) {
         return shopDao.getShopById(ShopId);
+    }
+
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject<PageInfo<VoObject>> getAllShop(Long ShopId, int page, int pageSize) {
+        List<ShopPo> shopPos=shopDao.getAllShop(ShopId,page,pageSize);
+
+        List<VoObject> shopRetVos=new ArrayList<>();
+        for(ShopPo po:shopPos){
+            Shop shop=new Shop(po);
+            shopRetVos.add(shop);
+        }
+
+        //分页查询
+        PageInfo<VoObject> shopRetVoPageInfo=PageInfo.of(shopRetVos);
+        ShopAllRetVo shopAllRetVo=new ShopAllRetVo();
+        shopAllRetVo.setPage(Long.valueOf(page));
+        shopAllRetVo.setPageSize(Long.valueOf(pageSize));
+        shopAllRetVo.setPages((long)shopRetVoPageInfo.getPages());
+        shopAllRetVo.setTotal(shopAllRetVo.getTotal());
+        shopAllRetVo.setList(shopRetVos);
+
+        return new ReturnObject<>(shopRetVoPageInfo);
+    }
+
+
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject getSimpleShopByShopId(Long ShopId) {
+        ReturnObject ret = shopDao.getShopById(ShopId);
+        Shop shop = (Shop)ret.getData();
+        ShopSimpleRetVo vo = (ShopSimpleRetVo)shop.createSimpleVo();
+        return new ReturnObject(vo);
     }
 
     /**
@@ -41,7 +88,7 @@ public class ShopService {
         po.setName(shopVo.getName());
         ReturnObject ret = shopDao.newShop(po);
         Shop shop = new Shop((ShopPo) ret.getData());
-        ShopSimpleRetVo vo = shop.createSimpleVo();
+        ShopSimpleRetVo vo = (ShopSimpleRetVo)shop.createSimpleVo();
         return new ReturnObject(vo);
     }
 
