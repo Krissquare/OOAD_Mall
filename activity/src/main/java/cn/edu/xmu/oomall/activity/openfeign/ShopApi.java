@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author Gao Yanfeng
  * @date 2021/11/12
  */
-@FeignClient(value = "pay",url = "http://localhost:8081")
+@FeignClient(value = "shop",url = "http://localhost:8081")
 public interface ShopApi {
     @GetMapping("/shops/{id}")
     Object getShopInfo(@PathVariable Long id);

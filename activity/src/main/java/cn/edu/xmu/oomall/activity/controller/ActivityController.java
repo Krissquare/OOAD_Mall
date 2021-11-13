@@ -137,9 +137,9 @@ public class ActivityController {
             return fieldErrors;
         }
         try {
-            SimpleGroupOnActivityVo res = groupOnService.addActivity(shopId, body).createSimpleVo();
+            var res = groupOnService.addActivity(shopId, body);
             if (res != null) {
-                return ResponseUtil.ok(res);
+                return ResponseUtil.ok(res.createSimpleVo());
             } else {
                 return ResponseUtil.fail(ReturnNo.ACT_LATE_BEGINTIME, "开始时间不能晚于结束时间");
             }
