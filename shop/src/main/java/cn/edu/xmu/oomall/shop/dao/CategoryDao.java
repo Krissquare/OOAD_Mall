@@ -7,7 +7,7 @@ import cn.edu.xmu.oomall.shop.model.bo.Category;
 import cn.edu.xmu.oomall.shop.model.bo.CategoryList;
 import cn.edu.xmu.oomall.shop.model.po.CategoryPo;
 import cn.edu.xmu.oomall.shop.model.po.CategoryPoExample;
-import cn.edu.xmu.oomall.shop.util.RedisUtil;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
