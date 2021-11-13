@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -206,7 +207,6 @@ public class Common {
         }
     }
 
-
     /**
      * @author xucangbai
      * @date 2021/11/13
@@ -322,11 +322,36 @@ public class Common {
                 return new ResponseEntity(
                         ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.NOT_FOUND);
+
+            case AUTH_INVALID_JWT:
+            case AUTH_JWT_EXPIRED:
+                // 401
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.UNAUTHORIZED);
+
             case INTERNAL_SERVER_ERR:
                 // 500：数据库或其他严重错误
                 return new ResponseEntity(
                         ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
                         HttpStatus.INTERNAL_SERVER_ERROR);
+
+            case FIELD_NOTVALID:
+            case RESOURCE_FALSIFY:
+            case IMG_FORMAT_ERROR:
+            case IMG_SIZE_EXCEED:
+                // 400
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.BAD_REQUEST);
+
+            case RESOURCE_ID_OUTSCOPE:
+            case  FILE_NO_WRITE_PERMISSION:
+                // 403
+                return new ResponseEntity(
+                        ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg()),
+                        HttpStatus.FORBIDDEN);
+
             case OK:
                 // 200: 无错误
                 Object data = returnObject.getData();
@@ -335,6 +360,7 @@ public class Common {
                 }else{
                     return ResponseUtil.ok();
                 }
+
             default:
                 return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
         }
