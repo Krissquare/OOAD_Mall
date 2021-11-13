@@ -13,6 +13,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * @author  Xusheng Wang
  * @date  2021-11-11
+ * @studentId 34520192201587
  */
 
 @Data
@@ -39,6 +40,11 @@ public class ShopAccountVo implements VoObject {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime gmtModified;
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public ShopAccountPo createPo(){
         ShopAccountPo shopAccountPo=new ShopAccountPo();
         shopAccountPo.setType(type);
@@ -48,6 +54,11 @@ public class ShopAccountVo implements VoObject {
         return shopAccountPo;
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     public ShopAccountVo(ShopAccountPo shopAccountPo){
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         id=shopAccountPo.getId();
@@ -62,11 +73,21 @@ public class ShopAccountVo implements VoObject {
         modifiedBy=new SimpleAdminUserVo(shopAccountPo.getModifiedBy(),shopAccountPo.getModiName());
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @Override
     public Object createVo() {
         return this;
     }
 
+    /**
+     * @author  Xusheng Wang
+     * @date  2021-11-11
+     * @studentId 34520192201587
+     */
     @Override
     public Object createSimpleVo() {
         return this;
