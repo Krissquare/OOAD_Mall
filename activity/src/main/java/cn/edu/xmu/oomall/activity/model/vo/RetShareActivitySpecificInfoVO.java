@@ -34,7 +34,9 @@ public class RetShareActivitySpecificInfoVO implements VoObject, Serializable {
     LocalDateTime gmtModified;
     SimpleUserRetVo modifiedBy;
 
-    //TODO：这个没有用clonevo的原因是用clonevo的效果太差大部分还是要手动getset
+    /**
+     *   TODO：这个没有用clonevo的原因是用clonevo的效果太差大部分还是要手动getset
+     */
     public RetShareActivitySpecificInfoVO(ShareActivityPo shareActivityPo) {
         strategy = new ArrayList<>();
         shop=new ShopVO();

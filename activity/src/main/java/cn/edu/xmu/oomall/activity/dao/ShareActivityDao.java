@@ -248,9 +248,9 @@ public class ShareActivityDao {
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
             ShareActivityPo shareActivityPo = shareActivityPos.get(0);
-            //nouse cloneVO
+            //no use cloneVO
             RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = new RetShareActivitySpecificInfoVO(shareActivityPo);
-            //usecloneVO   TODO：这个没有用clonevo的原因是用clonevo的效果太差，大部分还是要手动getset
+            //use cloneVO   TODO：这个没有用clonevo的原因是用clonevo的效果太差，大部分还是要手动getset
             //RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO1 = (RetShareActivitySpecificInfoVO) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVO.class);
 
             redisUtil.set(key, JacksonUtil.toJson(retShareActivitySpecificInfoVO), shareActivityExpireTime);
