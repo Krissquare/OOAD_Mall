@@ -1,18 +1,20 @@
 package cn.edu.xmu.oomall.activity.controller;
 
-import cn.edu.xmu.oomall.activity.enums.GroupOnState;
+import cn.edu.xmu.oomall.activity.constant.Constants;
+import cn.edu.xmu.oomall.activity.constant.GroupOnState;
 import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityPostVo;
-import cn.edu.xmu.oomall.activity.model.vo.SimpleGroupOnActivityVo;
 import cn.edu.xmu.oomall.activity.service.GroupOnService;
 import cn.edu.xmu.oomall.core.util.*;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 /**
@@ -57,14 +59,10 @@ public class GroupOnActivityController {
     })
     @GetMapping(value = "/groupons")
     public Object getOnlineGroupOnActivities(@RequestParam(required = false) Long productId, @RequestParam(required = false) Long shopId,
-                                             @RequestParam(required = false) String beginTime, @RequestParam(required = false) String endTime,
+                                             @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT) LocalDateTime beginTime,
+                                             @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT) LocalDateTime endTime,
                                              @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer pageSize) {
-        try {
-            return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, GroupOnState.ONLINE, page, pageSize));
-        } catch (DateTimeParseException e) {
-            httpServletResponse.setStatus(400);
-            return ResponseUtil.fail(ReturnNo.FIELD_NOTVALID, "日期格式应为yyyy-MM-dd HH:mm:ss");
-        }
+        return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, GroupOnState.ONLINE, page, pageSize));
     }
 
 
@@ -109,15 +107,10 @@ public class GroupOnActivityController {
     })
     @GetMapping(value = "/shops/{shopId}/groupons")
     public Object getGroupOnActivitiesInShop(@PathVariable Long shopId, @RequestParam(required = false) Long productId,
-                                             @RequestParam(required = false) String beginTime, @RequestParam(required = false) String endTime,
+                                             @RequestParam(required = false) LocalDateTime beginTime, @RequestParam(required = false) LocalDateTime endTime,
                                              @RequestParam(required = false) GroupOnState state, @RequestParam(defaultValue = "1") Integer page,
                                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        try {
-            return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, GroupOnState.ONLINE, page, pageSize));
-        } catch (DateTimeParseException e) {
-            httpServletResponse.setStatus(400);
-            return ResponseUtil.fail(ReturnNo.FIELD_NOTVALID, "日期格式应为yyyy-MM-dd HH:mm:ss");
-        }
+        return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, state, page, pageSize));
     }
 
 
@@ -137,16 +130,11 @@ public class GroupOnActivityController {
         if (fieldErrors != null) {
             return fieldErrors;
         }
-        try {
-            var res = groupOnService.addActivity(shopId, body);
-            if (res != null) {
-                return ResponseUtil.ok(res.createSimpleVo());
-            } else {
-                return ResponseUtil.fail(ReturnNo.ACT_LATE_BEGINTIME, "开始时间不能晚于结束时间");
-            }
-        } catch (DateTimeParseException e) {
-            httpServletResponse.setStatus(400);
-            return ResponseUtil.fail(ReturnNo.FIELD_NOTVALID, "日期格式应为yyyy-MM-dd HH:mm:ss");
+        var res = groupOnService.addActivity(shopId, body);
+        if (res != null) {
+            return ResponseUtil.ok(res.createSimpleVo());
+        } else {
+            return ResponseUtil.fail(ReturnNo.ACT_LATE_BEGINTIME, "开始时间不能晚于结束时间");
         }
     }
 
@@ -173,4 +161,5 @@ public class GroupOnActivityController {
             return ResponseUtil.ok(res.createFullVo());
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
+import cn.edu.xmu.oomall.activity.constant.Constants;
 import cn.edu.xmu.oomall.core.model.VoObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +21,18 @@ import java.util.List;
 @NoArgsConstructor
 @ApiModel(value = "团购活动视图")
 public class GroupOnActivityVo {
+
     private Long id;
+
     private String name;
+
     private Long shopId;
+
     private List<GroupOnStrategyVo> strategy;
-    private String beginTime;
-    private String endTime;
+
+    @JsonFormat(pattern = Constants.DATE_TIME_FORMAT, timezone = "GMT+8")
+    private LocalDateTime beginTime;
+
+    @JsonFormat(pattern = Constants.DATE_TIME_FORMAT, timezone = "GMT+8")
+    private LocalDateTime endTime;
 }

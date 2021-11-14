@@ -1,14 +1,18 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
+import cn.edu.xmu.oomall.activity.constant.Constants;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,11 +29,13 @@ public class GroupOnActivityPostVo {
     @NotNull
     private String name;
 
-    @NotBlank
-    private String beginTime;
+    @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT)
+    @JsonFormat(pattern = Constants.DATE_TIME_FORMAT, timezone = "GMT+8")
+    private LocalDateTime beginTime;
 
-    @NotBlank
-    private String endTime;
+    @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT)
+    @JsonFormat(pattern = Constants.DATE_TIME_FORMAT, timezone = "GMT+8")
+    private LocalDateTime endTime;
 
     private List<@Valid GroupOnStrategyVo> strategy;
 }

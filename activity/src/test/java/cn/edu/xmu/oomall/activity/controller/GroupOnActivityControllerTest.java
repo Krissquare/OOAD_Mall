@@ -75,8 +75,8 @@ public class GroupOnActivityControllerTest {
         this.mvc.perform(get("/groupons")
                 .queryParam("shopId", "3")
                 .queryParam("productId", "1578")
-                .queryParam("beginTime", "2021-11-11 00:00:00")
-                .queryParam("endTime", "2023-11-11 00:00:00"))
+                .queryParam("beginTime", "2021-11-11T00:00:00.000")
+                .queryParam("endTime", "2023-11-11T00:00:00.000"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":0,\"data\":{\"list\":[{\"id\":3,\"name\":\"团购活动3\"}],\"total\":1,\"page\":1,\"pageSize\":10,\"pages\":1},\"errmsg\":\"成功\"}"));
@@ -93,7 +93,7 @@ public class GroupOnActivityControllerTest {
         this.mvc.perform(get("/groupons/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":1,\"name\":\"团购活动1\",\"shopId\":3,\"strategy\":null,\"beginTime\":\"2021-11-11 14:58:24\",\"endTime\":\"2022-02-19 14:58:24\"},\"errmsg\":\"成功\"}"));
+                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":1,\"name\":\"团购活动1\",\"shopId\":3,\"strategy\":null,\"beginTime\":\"2021-11-11T14:58:24.000\",\"endTime\":\"2022-02-19T14:58:24.000\"},\"errmsg\":\"成功\"}"));
     }
 
     /**
@@ -121,7 +121,7 @@ public class GroupOnActivityControllerTest {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         var responseString = this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
+                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -144,11 +144,11 @@ public class GroupOnActivityControllerTest {
         this.mvc.perform(get("/shops/1/groupons/16"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":16,\"name\":\"测试\",\"shopId\":1,\"strategy\":[{\"quantity\":10,\"percentage\":500}],\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-12 16:35:18\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"state\":0},\"errmsg\":\"成功\"}"));
+                .andExpect(content().json("{\"errno\":0,\"data\":{\"id\":16,\"name\":\"测试\",\"shopId\":1,\"strategy\":[{\"quantity\":10,\"percentage\":500}],\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-12T16:35:18.000\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"state\":0},\"errmsg\":\"成功\"}"));
     }
 
     /**
-     * 各业务在日期格式不正确时的返回
+     * 日期格式不正确，得到bad request
      *
      * @throws Exception
      */
@@ -159,23 +159,17 @@ public class GroupOnActivityControllerTest {
                 .queryParam("shopId", "1")
                 .queryParam("beginTime", "2021-11-11T00:00:00")
                 .queryParam("endTime", "2023-11-11T00:00:00"))
-                .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
+                .andExpect(status().isBadRequest());
 
         this.mvc.perform(get("/shops/2/groupons")
                 .queryParam("beginTime", "2021-11-11T00:00:00"))
-                .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
+                .andExpect(status().isBadRequest());
 
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
-                .andExpect(status().is(400))
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":503,\"errmsg\":\"日期格式应为yyyy-MM-dd HH:mm:ss\"}"));
+                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
+                .andExpect(status().isBadRequest());
     }
 
     /**
@@ -203,7 +197,7 @@ public class GroupOnActivityControllerTest {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         var responseString = this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
+                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -254,19 +248,19 @@ public class GroupOnActivityControllerTest {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
+                .content("{\"name\":\"\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"length must be between 1 and 128;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
+                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be greater than or equal to -1;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500000}]}"))
+                .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500000}]}"))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be less than or equal to 1000;\"}"));
@@ -283,7 +277,7 @@ public class GroupOnActivityControllerTest {
         Mockito.when(shopService.getShopInfo(1L)).thenReturn(new ReturnObject<>(new SimpleShopVo(1L, "OOMALL自营商铺")));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
-                .content("{\"name\":\"测试\",\"beginTime\":\"2022-11-11 00:00:00\",\"endTime\":\"2021-11-13 00:00:00\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
+                .content("{\"name\":\"测试\",\"beginTime\":\"2022-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":947,\"errmsg\":\"开始时间不能晚于结束时间\"}"));

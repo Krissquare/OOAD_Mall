@@ -1,6 +1,6 @@
 package cn.edu.xmu.oomall.activity.model.bo;
 
-import cn.edu.xmu.oomall.activity.enums.GroupOnState;
+import cn.edu.xmu.oomall.activity.constant.GroupOnState;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.core.model.VoObject;
@@ -22,8 +22,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GroupOnActivity implements VoObject {
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private Long id;
     private String name;
@@ -56,10 +54,6 @@ public class GroupOnActivity implements VoObject {
 
     public FullGroupOnActivityVo createFullVo() {
         var ret = (FullGroupOnActivityVo) Common.cloneVo(this, FullGroupOnActivityVo.class);
-        ret.setBeginTime(FORMATTER.format(beginTime));
-        ret.setEndTime(FORMATTER.format(endTime));
-        ret.setGmtCreate(FORMATTER.format(gmtCreate));
-        ret.setGmtModified(gmtModified == null ? null : FORMATTER.format(gmtModified));
         ret.setState(state.getCode());
         return ret;
 
@@ -68,8 +62,8 @@ public class GroupOnActivity implements VoObject {
     @Override
     public GroupOnActivityVo createVo() {
         var ret = (GroupOnActivityVo) Common.cloneVo(this, GroupOnActivityVo.class);
-        ret.setBeginTime(FORMATTER.format(beginTime));
-        ret.setEndTime(FORMATTER.format(endTime));
+        System.err.println(this);
+        System.err.println(ret);
         return ret;
     }
 

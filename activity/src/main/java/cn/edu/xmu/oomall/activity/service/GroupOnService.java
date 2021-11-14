@@ -1,8 +1,7 @@
 package cn.edu.xmu.oomall.activity.service;
 
 import cn.edu.xmu.oomall.activity.dao.GroupOnActivityDao;
-import cn.edu.xmu.oomall.activity.enums.GroupOnState;
-import cn.edu.xmu.oomall.activity.microservice.vo.OnSaleVo;
+import cn.edu.xmu.oomall.activity.constant.GroupOnState;
 import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +31,6 @@ public class GroupOnService {
 
     @Resource
     private GoodsService goodsService;
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     /**
      * 获得团购的所有状态
@@ -57,16 +53,14 @@ public class GroupOnService {
      * @return 成功添加的活动的BO
      */
     public GroupOnActivity addActivity(Long shopId, GroupOnActivityPostVo vo) {
-        LocalDateTime begin = LocalDateTime.parse(vo.getBeginTime(), FORMATTER);
-        LocalDateTime end = LocalDateTime.parse(vo.getEndTime(), FORMATTER);
-        if (begin.isAfter(end)) {
+        if (vo.getBeginTime().isAfter(vo.getEndTime())) {
             return null;
         } else {
             var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
             bo.setShopId(shopId);
             bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
-            bo.setBeginTime(begin);
-            bo.setEndTime(end);
+            bo.setBeginTime(vo.getBeginTime());
+            bo.setEndTime(vo.getEndTime());
             bo.setState(GroupOnState.DRAFT);
             dao.insertActivity(bo);
             return bo;
@@ -85,8 +79,8 @@ public class GroupOnService {
      * @param pageSize  每页大小
      * @return 符合条件的团购活动的VO的列表（分页）
      */
-    public PageInfoVo<SimpleGroupOnActivityVo> getGroupOnActivities(Long productId, Long shopId, String beginTime,
-                                                                    String endTime, GroupOnState state,
+    public PageInfoVo<SimpleGroupOnActivityVo> getGroupOnActivities(Long productId, Long shopId, LocalDateTime beginTime,
+                                                                    LocalDateTime endTime, GroupOnState state,
                                                                     Integer page, Integer pageSize) {
         var example = new GroupOnActivityPoExample();
         var criteria = example.createCriteria();
@@ -98,12 +92,10 @@ public class GroupOnService {
             criteria.andShopIdEqualTo(shopId);
         }
         if (beginTime != null) {
-            var begin = LocalDateTime.parse(beginTime, FORMATTER);
-            criteria.andBeginTimeGreaterThanOrEqualTo(begin);
+            criteria.andBeginTimeGreaterThanOrEqualTo(beginTime);
         }
         if (endTime != null) {
-            var end = LocalDateTime.parse(endTime, FORMATTER);
-            criteria.andEndTimeLessThanOrEqualTo(end);
+            criteria.andEndTimeLessThanOrEqualTo(endTime);
         }
         if (state != null) {
             criteria.andStateEqualTo(state.getCode().byteValue());

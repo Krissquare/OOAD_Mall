@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.enums;
+package cn.edu.xmu.oomall.activity.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
