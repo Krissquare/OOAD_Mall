@@ -21,7 +21,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupOnActivity implements VoObject {
+public class GroupOnActivity {
 
     private Long id;
     private String name;
@@ -37,35 +37,4 @@ public class GroupOnActivity implements VoObject {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
     private Byte state;
-
-    public static GroupOnActivity fromPo(GroupOnActivityPo po) {
-        var ret = (GroupOnActivity) Common.cloneVo(po, GroupOnActivity.class);
-        ret.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
-        return ret;
-    }
-
-    public GroupOnActivityPo createPo() {
-        var ret = (GroupOnActivityPo) Common.cloneVo(this, GroupOnActivityPo.class);
-        ret.setStrategy(JacksonUtil.toJson(strategy));
-        return ret;
-    }
-
-    public FullGroupOnActivityVo createFullVo() {
-        var ret = (FullGroupOnActivityVo) Common.cloneVo(this, FullGroupOnActivityVo.class);
-        return ret;
-
-    }
-
-    @Override
-    public GroupOnActivityVo createVo() {
-        var ret = (GroupOnActivityVo) Common.cloneVo(this, GroupOnActivityVo.class);
-        System.err.println(this);
-        System.err.println(ret);
-        return ret;
-    }
-
-    @Override
-    public SimpleGroupOnActivityVo createSimpleVo() {
-        return (SimpleGroupOnActivityVo) Common.cloneVo(this, SimpleGroupOnActivityVo.class);
-    }
 }

@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.activity.mapper.GroupOnActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
+import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityVo;
 import cn.edu.xmu.oomall.activity.model.vo.GroupOnStrategyVo;
 import cn.edu.xmu.oomall.activity.model.vo.PageInfoVo;
 import cn.edu.xmu.oomall.activity.model.vo.SimpleGroupOnActivityVo;
@@ -36,7 +37,8 @@ public class GroupOnActivityDao {
 
     public ReturnObject insertActivity(GroupOnActivity bo) {
         try {
-            GroupOnActivityPo po = bo.createPo();
+            GroupOnActivityPo po = (GroupOnActivityPo) Common.cloneVo(bo, GroupOnActivityPo.class);
+            po.setStrategy(JacksonUtil.toJson(bo.getStrategy()));
             Common.setPoCreatedFields(po, 1L, "admin");
             mapper.insert(po);
             redisUtil.set("groupon_" + po.getId().toString(), po, timeout);
@@ -53,7 +55,7 @@ public class GroupOnActivityDao {
             List<GroupOnActivityPo> poList = mapper.selectByExample(example);
             var voList = new ArrayList<SimpleGroupOnActivityVo>();
             for (var po : poList) {
-                voList.add(GroupOnActivity.fromPo(po).createSimpleVo());
+                voList.add((SimpleGroupOnActivityVo) Common.cloneVo(po, SimpleGroupOnActivityVo.class));
             }
             var pageInfo = new PageInfo<>(voList);
             pageInfo.setPages(PageInfo.of(poList).getPages());
