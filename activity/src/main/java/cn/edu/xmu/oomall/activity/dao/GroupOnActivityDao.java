@@ -12,6 +12,8 @@ import cn.edu.xmu.oomall.activity.model.vo.SimpleGroupOnActivityVo;
 import cn.edu.xmu.oomall.core.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -35,6 +37,8 @@ public class GroupOnActivityDao {
     @Value("${redispara.groupon.expiretime}")
     private long timeout;
 
+    private static Logger logger = LoggerFactory.getLogger(Common.class);
+
     public ReturnObject insertActivity(GroupOnActivity bo) {
         try {
             GroupOnActivityPo po = (GroupOnActivityPo) Common.cloneVo(bo, GroupOnActivityPo.class);
@@ -45,6 +49,7 @@ public class GroupOnActivityDao {
             bo.setId(po.getId());
             return new ReturnObject(Common.cloneVo(bo, SimpleGroupOnActivityVo.class));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
     }
@@ -64,6 +69,7 @@ public class GroupOnActivityDao {
             pageInfo.setPageSize(pageSize);
             return new ReturnObject(new PageInfoVo<>(pageInfo));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
     }
@@ -87,6 +93,7 @@ public class GroupOnActivityDao {
             ret.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
             return new ReturnObject(ret);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
     }
