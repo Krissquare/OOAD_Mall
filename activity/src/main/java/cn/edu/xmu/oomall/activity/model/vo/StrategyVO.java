@@ -18,10 +18,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StrategyVO implements VoObject, Serializable {
-    @Min(0)
+    @Min(value = 0,message = "规则的数量不能小于0")
     @NotNull(message = "数量不能为空")
     private Long quantity;
-    @Range(min = 0,max = 100)
+    @Range(min = 0,max = 100,message = "规则的百分比需要在0和100之间")
     @NotNull(message = "百分比不能为空")
     private Long percentage;
     @Override
