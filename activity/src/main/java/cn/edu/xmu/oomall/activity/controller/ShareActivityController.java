@@ -4,12 +4,11 @@ import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
 import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
 import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
 import cn.edu.xmu.oomall.activity.openfeign.vo.goods.OnSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
 import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.service.ShareActivityService;
-import cn.edu.xmu.oomall.core.util.Common;
-import cn.edu.xmu.oomall.core.util.JacksonUtil;
-import cn.edu.xmu.oomall.core.util.ReturnNo;
-import cn.edu.xmu.oomall.core.util.ReturnObject;
+import cn.edu.xmu.oomall.core.util.*;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: xiuchen lang 22920192204222
@@ -98,15 +100,23 @@ public class ShareActivityController {
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
-        Long shareActivityId = -1L;
+//        Long shareActivityId = -1L;
+        List<Long> shareActivityIds=new ArrayList<>();
         if (productId != null) {
             //TODO:openfeign获得分享活动id
-            ReturnObject<OnSaleInfoDTO> onSaleByProductId = goodsApi.getOnSaleByProductId(productId);
-            if (onSaleByProductId != null) {
-                shareActivityId = onSaleByProductId.getData().getShareAct().getId();
+            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,1);
+            if (onSalesByProductId != null) {
+                long total = onSalesByProductId.getData().getTotal();
+                ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);
+                List<SimpleSaleInfoDTO> list = onSalesByProductId2.getData().getList();
+                for (SimpleSaleInfoDTO simpleSaleInfoDTO : list) {
+                    if (simpleSaleInfoDTO.getShareActId() != null) {
+                        shareActivityIds.add(simpleSaleInfoDTO.getShareActId());
+                    }
+                }
             }
         }
-        ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, shareActivityId,
+        ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, shareActivityIds,
                 beginTime, endTime, state, page, pageSize);
         return Common.getPageRetObject(shareByShopId);
     }
@@ -195,15 +205,22 @@ public class ShareActivityController {
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
-        Long shareActivityId = -1L;
+        List<Long> shareActivityIds=new ArrayList<>();
         if (productId != null) {
             //TODO:openfeign获得分享活动id
-            ReturnObject<OnSaleInfoDTO> onSaleByProductId = goodsApi.getOnSaleByProductId(productId);
-            if (onSaleByProductId != null) {
-                shareActivityId = onSaleByProductId.getData().getShareAct().getId();
+            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,1);
+            if (onSalesByProductId != null) {
+                long total = onSalesByProductId.getData().getTotal();
+                ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);
+                List<SimpleSaleInfoDTO> list = onSalesByProductId2.getData().getList();
+                for (SimpleSaleInfoDTO simpleSaleInfoDTO : list) {
+                    if (simpleSaleInfoDTO.getShareActId() != null) {
+                        shareActivityIds.add(simpleSaleInfoDTO.getShareActId());
+                    }
+                }
             }
         }
-        ReturnObject shareByShopId = shareActivityService.getShareActivity(shopId, shareActivityId,
+        ReturnObject shareByShopId = shareActivityService.getShareActivity(shopId, shareActivityIds,
                 beginTime, endTime, page, pageSize);
         return Common.getPageRetObject(shareByShopId);
     }

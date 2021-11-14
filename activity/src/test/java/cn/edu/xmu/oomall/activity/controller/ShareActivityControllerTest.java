@@ -1,15 +1,18 @@
 package cn.edu.xmu.oomall.activity.controller;
+
 import cn.edu.xmu.oomall.activity.ActivityApplication;
 import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
 import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.OnSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
 import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.util.CreateObject;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
+import com.github.pagehelper.PageInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,10 +50,10 @@ public class ShareActivityControllerTest {
     @Before
     public void createObject() throws Exception {
         //生成一个 onsale对象
-        ReturnObject<OnSaleInfoDTO> onSaleInfoDTO = CreateObject.createOnSaleInfoDTO(1L);
-        ReturnObject<OnSaleInfoDTO> onSaleInfoDTO1 = CreateObject.createOnSaleInfoDTO(-1L);
-        Mockito.when(goodsApi.getOnSaleByProductId(1L)).thenReturn(onSaleInfoDTO);
-        Mockito.when(goodsApi.getOnSaleByProductId(-1L)).thenReturn(onSaleInfoDTO1);
+        ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSaleInfoDTO = CreateObject.createOnSaleInfoDTO(1L);
+        ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSaleInfoDTO1 = CreateObject.createOnSaleInfoDTO(-1L);
+        Mockito.when(goodsApi.getOnSalesByProductId(1L, 1, 10)).thenReturn(onSaleInfoDTO);
+        Mockito.when(goodsApi.getOnSalesByProductId(-1L, 1, 10)).thenReturn(onSaleInfoDTO1);
 
         //生成一个shop对象
         ReturnObject<ShopInfoDTO> shopInfoDTO = CreateObject.createShopInfoDTO(1L);
@@ -115,7 +118,7 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional
     public void testAddShareAct() throws Exception {
-        String requestJson="{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}\n";
+        String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}\n";
         //有添加所有query都有时且合规
         String responseString = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
                 .andExpect(status().isOk())
@@ -123,56 +126,56 @@ public class ShareActivityControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         //姓名为空或null
-        String requestJson1="{\"name\":\"\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson1 = "{\"name\":\"\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString1 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson1))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
         //时间为空
-        String requestJson2="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":null,\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson2 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":null,\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString2 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson2))
                 .andExpect(status().is(400))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
         //时间不合规
-        String requestJson3="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson3 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString3 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson3))
                 .andExpect(status().is(400))
                 .andReturn().getResponse().getContentAsString();
 
         //活动条件不合规
-        String requestJson4="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":null,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson4 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":null,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString4 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson4))
                 .andExpect(status().is(400))
                 .andReturn().getResponse().getContentAsString();
 
-        String requestJson5="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":-5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson5 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":-5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString5 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson5))
                 .andExpect(status().is(400))
                 .andReturn().getResponse().getContentAsString();
 
-        String requestJson6="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":110},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson6 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":110},{\"quantity\":10,\"percentage\":10}]}";
         String responseString6 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson6))
                 .andExpect(status().is(400))
                 .andReturn().getResponse().getContentAsString();
 
         //所有都合规
-        String requestJson7="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson7 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString7 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson7))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
         //时间不合规
-        String requestJson8="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:00\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson8 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:00\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString8 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson8))
                 .andExpect(status().is(200))
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         //shopId没有
-        String requestJson9="{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson9 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString9 = mvc.perform(post("/shops/11/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson9))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))

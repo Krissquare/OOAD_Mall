@@ -87,7 +87,7 @@ spring:
 
 mybatis:
   #po对象的包
-#  type-aliases-package: cn.edu.xmu.privilege.model
+  type-aliases-package: cn.edu.xmu.oomall.activity.model.po
   #mapper.xml所在的位置
   mapper-locations: classpath*:cn.edu.xmu.privilege.mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性

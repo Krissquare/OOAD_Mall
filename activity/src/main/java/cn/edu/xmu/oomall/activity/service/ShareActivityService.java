@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * @author: xiuchen lang 22920192204222
@@ -42,9 +43,9 @@ public class ShareActivityService {
      * @return
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject getShareByShopId(Long shopId, Long shareId, LocalDateTime beginTime,
+    public ReturnObject getShareByShopId(Long shopId, List<Long> shareIds, LocalDateTime beginTime,
                                          LocalDateTime endTime, Byte state, Integer page, Integer pageSize) {
-        return shareActivityDao.getShareByShopId(shopId, shareId, beginTime, endTime, state, page, pageSize);
+        return shareActivityDao.getShareByShopId(shopId, shareIds, beginTime, endTime, state, page, pageSize);
     }
 
     /**
@@ -73,9 +74,9 @@ public class ShareActivityService {
      * @return
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject getShareActivity(Long shopId, Long shareId, LocalDateTime beginTime,
+    public ReturnObject getShareActivity(Long shopId, List<Long> shareIds, LocalDateTime beginTime,
                                          LocalDateTime endTime, Integer page, Integer pageSize) {
-        return shareActivityDao.getShareActivity(shopId, shareId, beginTime, endTime, page, pageSize);
+        return shareActivityDao.getShareActivity(shopId, shareIds, beginTime, endTime, page, pageSize);
     }
 
     /**

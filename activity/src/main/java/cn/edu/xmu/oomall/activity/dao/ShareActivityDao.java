@@ -1,4 +1,5 @@
 package cn.edu.xmu.oomall.activity.dao;
+
 import cn.edu.xmu.oomall.activity.mapper.ShareActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBO;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPo;
@@ -37,6 +38,7 @@ public class ShareActivityDao {
 
     /**
      * 获得分享活动的所有状态
+     *
      * @return ReturnObject
      */
     public ReturnObject getShareState() {
@@ -51,23 +53,23 @@ public class ShareActivityDao {
     /**
      * 显示所有状态的分享活动
      *
-     * @param shopId 店铺Id
-     * @param shareId 相关的分享活动id
+     * @param shopId    店铺Id
+     * @param shareIds  相关的分享活动id 集合
      * @param beginTime 晚于此开始时间
-     * @param endTime 早于此结束时间
-     * @param state 分享活动状态
-     * @param page 页码
-     * @param pageSize 每页数目
+     * @param endTime   早于此结束时间
+     * @param state     分享活动状态
+     * @param page      页码
+     * @param pageSize  每页数目
      * @return
      */
-    public ReturnObject getShareByShopId(Long shopId, Long shareId, LocalDateTime beginTime,
+    public ReturnObject getShareByShopId(Long shopId, List<Long> shareIds, LocalDateTime beginTime,
                                          LocalDateTime endTime, Byte state, Integer page, Integer pageSize) {
 
         ShareActivityPoExample example = new ShareActivityPoExample();
         ShareActivityPoExample.Criteria criteria = example.createCriteria();
         criteria.andShopIdEqualTo(shopId);
-        if (shareId!=null&&shareId != -1) {
-            criteria.andIdEqualTo(shareId);
+        if (shareIds != null && !shareIds.isEmpty()) {
+            criteria.andIdIn(shareIds);
         }
         if (beginTime != null) {
             criteria.andBeginTimeGreaterThanOrEqualTo(beginTime);
@@ -91,11 +93,12 @@ public class ShareActivityDao {
     }
 
     /**
-     *管理员新增分享活动
-     * @param createName 创建者姓名
-     * @param createId  创建者id
-     * @param shopName 商铺名字
-     * @param shopId 商铺id
+     * 管理员新增分享活动
+     *
+     * @param createName       创建者姓名
+     * @param createId         创建者id
+     * @param shopName         商铺名字
+     * @param shopId           商铺id
      * @param shareActivityDTO 新增商铺内容
      * @return
      */
@@ -110,8 +113,8 @@ public class ShareActivityDao {
         shareActivityPo.setShopId(shopId);
         shareActivityPo.setShopName(shopName);
         shareActivityPo.setState(ShareActivityStatesBO.DRAFT.getCode());
-        Common.setPoCreatedFields(shareActivityPo,createId,createName);
-        Common.setPoModifiedFields(shareActivityPo,createId,createName);
+        Common.setPoCreatedFields(shareActivityPo, createId, createName);
+        Common.setPoModifiedFields(shareActivityPo, createId, createName);
         shareActivityPoMapper.insert(shareActivityPo);
         RetShareActivityInfoVO retShareActivityInfoVO = new RetShareActivityInfoVO(shareActivityPo);
         return new ReturnObject(retShareActivityInfoVO);
@@ -119,23 +122,24 @@ public class ShareActivityDao {
 
     /**
      * 查询分享活动 只显示上线状态的分享活动
-     * @param shopId 店铺Id
-     * @param shareId 分享活动id
+     *
+     * @param shopId    店铺Id
+     * @param shareIds   分享活动id 集合
      * @param beginTime 晚于此开始时间
-     * @param endTime 早于此结束时间
-     * @param page 页码
-     * @param pageSize 每页数目
+     * @param endTime   早于此结束时间
+     * @param page      页码
+     * @param pageSize  每页数目
      * @return
      */
-    public ReturnObject getShareActivity(Long shopId, Long shareId, LocalDateTime beginTime,
+    public ReturnObject getShareActivity(Long shopId, List<Long> shareIds, LocalDateTime beginTime,
                                          LocalDateTime endTime, Integer page, Integer pageSize) {
         ShareActivityPoExample example = new ShareActivityPoExample();
         ShareActivityPoExample.Criteria criteria = example.createCriteria();
-        if (shopId!=null){
+        if (shopId != null) {
             criteria.andShopIdEqualTo(shopId);
         }
-        if (shareId!=null&&shareId != -1) {
-            criteria.andIdEqualTo(shareId);
+        if (shareIds != null && !shareIds.isEmpty()) {
+            criteria.andIdIn(shareIds);
         }
         if (beginTime != null) {
             criteria.andBeginTimeGreaterThanOrEqualTo(beginTime);
@@ -156,39 +160,41 @@ public class ShareActivityDao {
         return new ReturnObject(pageInfo);
     }
     /**
-     *查看分享活动详情 只显示上线状态的分享活动
+     * 查看分享活动详情 只显示上线状态的分享活动
+     *
      * @param id 分享活动Id
      * @return
      */
-    public ReturnObject getShareActivityById(Long id){
-        String key="shareactivivybyid_"+id;
-        RetShareActivityInfoVO ret =(RetShareActivityInfoVO) redisUtil.get(key);
-        if(ret!=null){
+    public ReturnObject getShareActivityById(Long id) {
+        String key = "shareactivivybyid_" + id;
+        RetShareActivityInfoVO ret = (RetShareActivityInfoVO) redisUtil.get(key);
+        if (ret != null) {
             return new ReturnObject(ret);
         }
         ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
         ShareActivityPoExample.Criteria criteria = shareActivityPoExample.createCriteria();
         criteria.andIdEqualTo(id);
         List<ShareActivityPo> shareActivityPos = shareActivityPoMapper.selectByExample(shareActivityPoExample);
-        if (shareActivityPos.isEmpty()){
+        if (shareActivityPos.isEmpty()) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
         RetShareActivityInfoVO retShareActivityInfoVO = new RetShareActivityInfoVO(shareActivityPos.get(0));
         //查不到插入redis设置超时时间
-        redisUtil.set(key,retShareActivityInfoVO,shareActivityExpireTime);
+        redisUtil.set(key, retShareActivityInfoVO, shareActivityExpireTime);
         return new ReturnObject(retShareActivityInfoVO);
     }
 
     /**
      * 查看特定分享活动详情,显示所有状态的分享活动
+     *
      * @param shopId 店铺Id
-     * @param id 分享活动Id
+     * @param id     分享活动Id
      * @return
      */
-    public ReturnObject getShareActivityByShopIdAndId(Long shopId,Long id){
-        String key="shareactivivyidandshopid_"+id+"_"+shopId;
-        RetShareActivitySpecificInfoVO ret =(RetShareActivitySpecificInfoVO) redisUtil.get(key);
-        if(ret!=null){
+    public ReturnObject getShareActivityByShopIdAndId(Long shopId, Long id) {
+        String key = "shareactivivyidandshopid_" + id + "_" + shopId;
+        RetShareActivitySpecificInfoVO ret = (RetShareActivitySpecificInfoVO) redisUtil.get(key);
+        if (ret != null) {
             return new ReturnObject(ret);
         }
         ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
@@ -196,11 +202,11 @@ public class ShareActivityDao {
         criteria.andIdEqualTo(id);
         criteria.andShopIdEqualTo(shopId);
         List<ShareActivityPo> shareActivityPos = shareActivityPoMapper.selectByExample(shareActivityPoExample);
-        if (shareActivityPos.isEmpty()){
+        if (shareActivityPos.isEmpty()) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
-        RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO= new RetShareActivitySpecificInfoVO(shareActivityPos.get(0));
-        redisUtil.set(key,retShareActivitySpecificInfoVO,shareActivityExpireTime);
+        RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = new RetShareActivitySpecificInfoVO(shareActivityPos.get(0));
+        redisUtil.set(key, retShareActivitySpecificInfoVO, shareActivityExpireTime);
         return new ReturnObject(retShareActivitySpecificInfoVO);
     }
 }
