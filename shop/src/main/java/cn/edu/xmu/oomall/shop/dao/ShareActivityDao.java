@@ -56,7 +56,7 @@ public class ShareActivityDao {
         ShareActivityPo shareActivityPo;
         int ret;
         try {
-            shareActivityPo= shareActivity.newShareActivityPo();
+            shareActivityPo = (ShareActivityPo) Common.cloneVo(shareActivity,ShareActivityPo.class);
             ret = shareActivityPoMapper.updateByPrimaryKeySelective(shareActivityPo);
         }catch (Exception e){
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
