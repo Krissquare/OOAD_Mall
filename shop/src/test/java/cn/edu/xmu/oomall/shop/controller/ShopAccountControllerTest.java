@@ -79,6 +79,7 @@ public class ShopAccountControllerTest {
      */
     @Test
     public void deleteShopAccountTest() throws Exception{
+
         //测试正确删除
         String response1=mvc.perform(delete("/shops/2/accounts/2"))
                 .andExpect(status().isOk())
