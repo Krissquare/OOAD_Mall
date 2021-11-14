@@ -29,16 +29,17 @@ public class RetShareActivitySpecificInfoVO implements VoObject, Serializable {
     LocalDateTime endTime;
     List<StrategyVO> strategy;
     Byte state;
-    UserSimpInfoVO createdBy;
+    SimpleUserRetVo createdBy;
     LocalDateTime gmtCreate;
     LocalDateTime gmtModified;
-    UserSimpInfoVO modifiedBy;
+    SimpleUserRetVo modifiedBy;
 
+    //TODO：这个没有用clonevo的原因是用clonevo的效果太差大部分还是要手动getset
     public RetShareActivitySpecificInfoVO(ShareActivityPo shareActivityPo) {
         strategy = new ArrayList<>();
         shop=new ShopVO();
-        createdBy = new UserSimpInfoVO();
-        modifiedBy = new UserSimpInfoVO();
+        createdBy = new SimpleUserRetVo();
+        modifiedBy = new SimpleUserRetVo();
         String strategy = shareActivityPo.getStrategy();
         if (strategy != null) {
             List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(strategy, new ArrayList<StrategyVO>().getClass());

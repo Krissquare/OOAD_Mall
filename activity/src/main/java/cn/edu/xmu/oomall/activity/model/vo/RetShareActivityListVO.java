@@ -17,10 +17,6 @@ public class RetShareActivityListVO implements VoObject, Serializable {
     Long id;
     String name;
 
-    public RetShareActivityListVO(ShareActivityPo shareActivityPo){
-        this.id=shareActivityPo.getId();
-        this.name=shareActivityPo.getName();
-    }
     @Override
     public Object createVo() {
         return this;

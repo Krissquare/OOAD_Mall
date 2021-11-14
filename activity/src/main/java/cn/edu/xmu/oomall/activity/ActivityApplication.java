@@ -10,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication(scanBasePackages = {"cn.edu.xmu.oomall.core.*", "cn.edu.xmu.oomall.activity.*"})
 @MapperScan("cn.edu.xmu.oomall.activity.mapper")
-@EnableFeignClients(basePackages = "cn.edu.xmu.oomall.activity.mirrorService")
+@EnableFeignClients(basePackages = "cn.edu.xmu.oomall.activity.mirrorservice")
 public class ActivityApplication {
     public static void main(String[] args) {
         SpringApplication.run(ActivityApplication.class,args);

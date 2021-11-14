@@ -1,6 +1,6 @@
-package cn.edu.xmu.oomall.activity.mirrorService;
+package cn.edu.xmu.oomall.activity.mirrorservice;
 
-import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @date 2021/11/13 13:54
  */
 @FeignClient(value = "goods-service")
-public interface ShopApi {
+public interface ShopService {
     /**
      * 获得商铺信息
      * @param id 商铺id
      * @return
      */
     @GetMapping("/shops/{id}")
-    public ReturnObject<ShopInfoDTO> getShop(@PathVariable("id")Long id);
+    public ReturnObject<ShopInfoVO> getShop(@PathVariable("id")Long id);
 
 }

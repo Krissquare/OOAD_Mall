@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2021/11/12 19:58
  */
 @Data
-public class UserSimpInfoVO {
+public class SimpleUserRetVo {
     Long id;
     String userName;
 }

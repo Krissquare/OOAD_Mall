@@ -8,10 +8,13 @@ import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.core.util.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.List;
  */
 @Repository
 public class ShareActivityDao {
+    private static final Logger logger = LoggerFactory.getLogger(ShareActivityDao.class);
     @Autowired
     private ShareActivityPoMapper shareActivityPoMapper;
 
@@ -81,13 +85,15 @@ public class ShareActivityDao {
             PageInfo pageInfo = new PageInfo(shareActivityPos);
             List<RetShareActivityListVO> retShareActivityListVos = new ArrayList<>();
             for (ShareActivityPo shareActivityPo : shareActivityPos) {
-                RetShareActivityListVO retShareActivityListVO = new RetShareActivityListVO(shareActivityPo);
+                //cloneVO
+                RetShareActivityListVO retShareActivityListVO = (RetShareActivityListVO) Common.cloneVo(shareActivityPo, RetShareActivityListVO.class);
                 retShareActivityListVos.add(retShareActivityListVO);
             }
             pageInfo.setList(retShareActivityListVos);
             return new ReturnObject(pageInfo);
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -116,12 +122,19 @@ public class ShareActivityDao {
         try {
             int flag = shareActivityPoMapper.insert(shareActivityPo);
             if (flag == 0) {
-                return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+                return new ReturnObject(ReturnNo.FIELD_NOTVALID);
             }
-            RetShareActivityInfoVO retShareActivityInfoVO = new RetShareActivityInfoVO(shareActivityPo);
+            //使用clonevo
+            RetShareActivityInfoVO retShareActivityInfoVO = (RetShareActivityInfoVO) Common.cloneVo(shareActivityPo, RetShareActivityInfoVO.class);
+            if (shareActivityPo.getStrategy() != null) {
+                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                retShareActivityInfoVO.setStrategy(strategyVos);
+            }
+            retShareActivityInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
             return new ReturnObject(retShareActivityInfoVO);
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -159,13 +172,15 @@ public class ShareActivityDao {
             PageInfo pageInfo = new PageInfo(shareActivityPos);
             List<RetShareActivityListVO> retShareActivityListVos = new ArrayList<>();
             for (ShareActivityPo shareActivityPo : shareActivityPos) {
-                RetShareActivityListVO retShareActivityListVO = new RetShareActivityListVO(shareActivityPo);
+                //cloneVO
+                RetShareActivityListVO retShareActivityListVO = (RetShareActivityListVO) Common.cloneVo(shareActivityPo, RetShareActivityListVO.class);
                 retShareActivityListVos.add(retShareActivityListVO);
             }
             pageInfo.setList(retShareActivityListVos);
             return new ReturnObject(pageInfo);
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -178,8 +193,9 @@ public class ShareActivityDao {
     public ReturnObject getShareActivityById(Long id) {
         String key = "shareactivivybyid_" + id;
         try {
-            RetShareActivityInfoVO ret = (RetShareActivityInfoVO) redisUtil.get(key);
-            if (ret != null) {
+            Serializable serializable = redisUtil.get(key);
+            if (serializable != null) {
+                RetShareActivityInfoVO ret = JacksonUtil.toObj(serializable.toString(), RetShareActivityInfoVO.class);
                 return new ReturnObject(ret);
             }
             ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
@@ -189,14 +205,23 @@ public class ShareActivityDao {
             if (shareActivityPos.isEmpty()) {
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
-            RetShareActivityInfoVO retShareActivityInfoVO = new RetShareActivityInfoVO(shareActivityPos.get(0));
+
+            //使用clonevo
+            ShareActivityPo shareActivityPo = shareActivityPos.get(0);
+            RetShareActivityInfoVO retShareActivityInfoVO = (RetShareActivityInfoVO) Common.cloneVo(shareActivityPo, RetShareActivityInfoVO.class);
+            if (shareActivityPo.getStrategy() != null) {
+                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                retShareActivityInfoVO.setStrategy(strategyVos);
+            }
+            retShareActivityInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
+
             //查不到插入redis设置超时时间
-            redisUtil.set(key, retShareActivityInfoVO, shareActivityExpireTime);
+            redisUtil.set(key, JacksonUtil.toJson(retShareActivityInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivityInfoVO);
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
-
     }
 
     /**
@@ -209,8 +234,9 @@ public class ShareActivityDao {
     public ReturnObject getShareActivityByShopIdAndId(Long shopId, Long id) {
         String key = "shareactivivyidandshopid_" + id + "_" + shopId;
         try {
-            RetShareActivitySpecificInfoVO ret = (RetShareActivitySpecificInfoVO) redisUtil.get(key);
-            if (ret != null) {
+            Serializable serializable = redisUtil.get(key);
+            if (serializable != null) {
+                RetShareActivitySpecificInfoVO ret = JacksonUtil.toObj(serializable.toString(), RetShareActivitySpecificInfoVO.class);
                 return new ReturnObject(ret);
             }
             ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
@@ -221,11 +247,17 @@ public class ShareActivityDao {
             if (shareActivityPos.isEmpty()) {
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
-            RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = new RetShareActivitySpecificInfoVO(shareActivityPos.get(0));
-            redisUtil.set(key, retShareActivitySpecificInfoVO, shareActivityExpireTime);
+            ShareActivityPo shareActivityPo = shareActivityPos.get(0);
+            //nouse cloneVO
+            RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = new RetShareActivitySpecificInfoVO(shareActivityPo);
+            //usecloneVO   TODO：这个没有用clonevo的原因是用clonevo的效果太差，大部分还是要手动getset
+            //RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO1 = (RetShareActivitySpecificInfoVO) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVO.class);
+
+            redisUtil.set(key, JacksonUtil.toJson(retShareActivitySpecificInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivitySpecificInfoVO);
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
 
     }

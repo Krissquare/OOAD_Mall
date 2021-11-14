@@ -1,6 +1,6 @@
 package cn.edu.xmu.oomall.activity.util;
-import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
+import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
 
@@ -12,36 +12,36 @@ import java.util.List;
  * @date 2021/11/13 15:00
  */
 public class CreateObject {
-    public static ReturnObject<PageInfo<SimpleSaleInfoDTO>> createOnSaleInfoDTO(Long id) {
+    public static ReturnObject<PageInfo<SimpleSaleInfoVO>> createOnSaleInfoDTO(Long id) {
         if(id<=0){
             return new ReturnObject(new PageInfo<>());
         }
-        List<SimpleSaleInfoDTO> list = new ArrayList<>();
-        SimpleSaleInfoDTO simpleSaleInfoDTO = new SimpleSaleInfoDTO();
-        simpleSaleInfoDTO.setShareActId(1l);
-        list.add(simpleSaleInfoDTO);
-        SimpleSaleInfoDTO simpleSaleInfoDTO2 = new SimpleSaleInfoDTO();
-        simpleSaleInfoDTO2.setShareActId(2l);
-        list.add(simpleSaleInfoDTO2);
-        SimpleSaleInfoDTO simpleSaleInfoDTO3 = new SimpleSaleInfoDTO();
-        simpleSaleInfoDTO3.setShareActId(3l);
-        list.add(simpleSaleInfoDTO3);
+        List<SimpleSaleInfoVO> list = new ArrayList<>();
+        SimpleSaleInfoVO simpleSaleInfoVO = new SimpleSaleInfoVO();
+        simpleSaleInfoVO.setShareActId(1l);
+        list.add(simpleSaleInfoVO);
+        SimpleSaleInfoVO simpleSaleInfoVO2 = new SimpleSaleInfoVO();
+        simpleSaleInfoVO2.setShareActId(2l);
+        list.add(simpleSaleInfoVO2);
+        SimpleSaleInfoVO simpleSaleInfoVO3 = new SimpleSaleInfoVO();
+        simpleSaleInfoVO3.setShareActId(3l);
+        list.add(simpleSaleInfoVO3);
         //模拟不是share活动
-        SimpleSaleInfoDTO simpleSaleInfoDTO5= new SimpleSaleInfoDTO();
-        list.add(simpleSaleInfoDTO5);
-        SimpleSaleInfoDTO simpleSaleInfoDTO4 = new SimpleSaleInfoDTO();
-        simpleSaleInfoDTO4.setShareActId(4l);
-        list.add(simpleSaleInfoDTO4);
+        SimpleSaleInfoVO simpleSaleInfoVO5 = new SimpleSaleInfoVO();
+        list.add(simpleSaleInfoVO5);
+        SimpleSaleInfoVO simpleSaleInfoVO4 = new SimpleSaleInfoVO();
+        simpleSaleInfoVO4.setShareActId(4l);
+        list.add(simpleSaleInfoVO4);
         PageInfo pageInfo = new PageInfo(list);
         pageInfo.setTotal(10);
         return new ReturnObject(pageInfo);
     }
 
-    public static ReturnObject<ShopInfoDTO> createShopInfoDTO(Long id) {
+    public static ReturnObject<ShopInfoVO> createShopInfoDTO(Long id) {
         if(id<=0){
             return new ReturnObject();
         }
-        return new ReturnObject<>(new ShopInfoDTO(id,"良耳的商铺"));
+        return new ReturnObject<>(new ShopInfoVO(id,"良耳的商铺"));
     }
 
 }

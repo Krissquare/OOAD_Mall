@@ -1,13 +1,8 @@
 package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
-import cn.edu.xmu.oomall.activity.mirrorService.GoodsApi;
-import cn.edu.xmu.oomall.activity.mirrorService.ShopApi;
-import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.service.ShareActivityService;
 import cn.edu.xmu.oomall.core.util.*;
-import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -15,11 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author xiuchen lang 22920192204222
@@ -30,18 +22,12 @@ import java.util.List;
 @RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
 public class ShareActivityController {
 
-
     @Autowired
     private ShareActivityService shareActivityService;
 
     @Autowired
     private HttpServletResponse httpServletResponse;
 
-    @Autowired
-    private GoodsApi goodsApi;
-
-    @Resource
-    private ShopApi shopApi;
 
     /**
      * 获得分享活动的所有状态
@@ -90,31 +76,18 @@ public class ShareActivityController {
                                    @RequestParam(name = "state", required = false) Byte state,
                                    @RequestParam(name = "page", required = false) Integer page,
                                    @RequestParam(name = "pageSize", required = false) Integer pageSize) {
-        if (shopId < 0) {
+        if (shopId <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误");
+        }
+        if (productId!=null&&productId <= 0) {
+            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
         }
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 3 : pageSize;
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
-//        Long shareActivityId = -1L;
-        List<Long> shareActivityIds=new ArrayList<>();
-        if (productId != null) {
-            //TODO:openfeign获得分享活动id
-            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,10);
-            if (onSalesByProductId != null) {
-                long total = onSalesByProductId.getData().getTotal();
-                ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);
-                List<SimpleSaleInfoDTO> list = onSalesByProductId2.getData().getList();
-                for (SimpleSaleInfoDTO simpleSaleInfoDTO : list) {
-                    if (simpleSaleInfoDTO.getShareActId() != null) {
-                        shareActivityIds.add(simpleSaleInfoDTO.getShareActId());
-                    }
-                }
-            }
-        }
-        ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, shareActivityIds,
+        ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, productId,
                 beginTime, endTime, state, page, pageSize);
         return Common.getPageRetObject(shareByShopId);
     }
@@ -148,18 +121,8 @@ public class ShareActivityController {
         if (shareActivityDTO.getBeginTime().isAfter(shareActivityDTO.getEndTime())) {
             return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "开始时间不得早于结束时间");
         }
-        //TODO:通过商铺id弄到商铺名称
-        String shopName = new String();
-        if (shopId != null) {
-            ReturnObject<ShopInfoDTO> shop = shopApi.getShop(shopId);
-            if (shop == null) {
-                return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "不存在该商铺");
-            }
-            shopName = shop.getData().getName();
-        }
-        ReturnObject returnObject = shareActivityService.addShareAct(createName, createId, shopName, shopId, shareActivityDTO);
+        ReturnObject returnObject = shareActivityService.addShareAct(createName, createId, shopId, shareActivityDTO);
         return Common.decorateReturnObject(returnObject);
-//        String shopName = "良耳的商店";
     }
 
     /**
@@ -198,27 +161,15 @@ public class ShareActivityController {
         if (shopId != null && shopId <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误");
         }
+        if (productId != null && productId <= 0) {
+            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
+        }
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 3 : pageSize;
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
-        List<Long> shareActivityIds=new ArrayList<>();
-        if (productId != null) {
-            //TODO:openfeign获得分享活动id
-            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,10);
-            if (onSalesByProductId != null) {
-                long total = onSalesByProductId.getData().getTotal();
-                ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);
-                List<SimpleSaleInfoDTO> list = onSalesByProductId2.getData().getList();
-                for (SimpleSaleInfoDTO simpleSaleInfoDTO : list) {
-                    if (simpleSaleInfoDTO.getShareActId() != null) {
-                        shareActivityIds.add(simpleSaleInfoDTO.getShareActId());
-                    }
-                }
-            }
-        }
-        ReturnObject shareByShopId = shareActivityService.getShareActivity(shopId, shareActivityIds,
+        ReturnObject shareByShopId = shareActivityService.getShareActivity(shopId, productId,
                 beginTime, endTime, page, pageSize);
         return Common.getPageRetObject(shareByShopId);
     }
@@ -261,6 +212,5 @@ public class ShareActivityController {
     public Object getShareActivityByShopIdAndId(@PathVariable("shopId") Long shopId, @PathVariable("id") Long id) {
         return Common.decorateReturnObject(shareActivityService.getShareActivityByShopIdAndId(shopId, id));
     }
-
 
 }

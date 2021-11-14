@@ -1,7 +1,9 @@
-package cn.edu.xmu.oomall.activity.mirrorService.vo.goods;
+package cn.edu.xmu.oomall.activity.mirrorservice.vo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -11,7 +13,9 @@ import java.io.Serializable;
  * @date 2021/11/13 14:24
  */
 @Data
-public class ShopInfo implements VoObject, Serializable {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShopInfoVO implements VoObject, Serializable {
     private Long id;
     private String name;
     @Override

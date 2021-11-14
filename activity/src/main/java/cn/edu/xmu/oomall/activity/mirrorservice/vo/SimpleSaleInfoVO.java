@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.mirrorService.vo.goods;
+package cn.edu.xmu.oomall.activity.mirrorservice.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class SimpleSaleInfoDTO {
+public class SimpleSaleInfoVO {
     Long id;
     Integer price;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")

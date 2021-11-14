@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.activity.model.vo;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPo;
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -32,21 +33,6 @@ public class RetShareActivityInfoVO implements VoObject, Serializable {
     private LocalDateTime endTime;
     private List<StrategyVO> strategy;
 
-    public RetShareActivityInfoVO(ShareActivityPo shareActivityPo){
-        this.shop=new ShopVO();
-        this.strategy= new ArrayList<>();
-        this.id=shareActivityPo.getId();
-        this.shop.setId(shareActivityPo.getShopId());
-        this.shop.setName(shareActivityPo.getShopName());
-        this.name= shareActivityPo.getName();
-        this.beginTime= shareActivityPo.getBeginTime();
-        this.endTime=shareActivityPo.getEndTime();
-        String strategy = shareActivityPo.getStrategy();
-        if (strategy!=null){
-            List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(strategy,new ArrayList<StrategyVO>().getClass());
-            this.strategy=strategyVos;
-        }
-    }
     @Override
     public Object createVo() {
         return this;
