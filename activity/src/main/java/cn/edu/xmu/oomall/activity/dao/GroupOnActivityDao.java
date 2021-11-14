@@ -39,14 +39,14 @@ public class GroupOnActivityDao {
 
     private static Logger logger = LoggerFactory.getLogger(Common.class);
 
-    public ReturnObject insertActivity(GroupOnActivity bo) {
+    public ReturnObject insertActivity(GroupOnActivity bo, Long createdBy, String createName) {
         try {
             GroupOnActivityPo po = (GroupOnActivityPo) Common.cloneVo(bo, GroupOnActivityPo.class);
             po.setStrategy(JacksonUtil.toJson(bo.getStrategy()));
-            Common.setPoCreatedFields(po, 1L, "admin");
+            Common.setPoCreatedFields(po, createdBy, createName);
             mapper.insert(po);
-            redisUtil.set("groupon_" + po.getId().toString(), po, timeout);
             bo.setId(po.getId());
+            redisUtil.set("groupon_" + po.getId().toString(), bo, timeout);
             return new ReturnObject(Common.cloneVo(bo, SimpleGroupOnActivityVo.class));
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -76,22 +76,23 @@ public class GroupOnActivityDao {
 
     public ReturnObject getGroupOnActivity(Long id, GroupOnState state, Long shopId) {
         try {
-            var po = (GroupOnActivityPo) redisUtil.get("groupon_" + id.toString());
-            if (po == null) {
+            GroupOnActivityPo po;
+            var bo = (GroupOnActivity) redisUtil.get("groupon_" + id.toString());
+            if (bo == null) {
                 po = mapper.selectByPrimaryKey(id);
+                if (po == null) {
+                    return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "未找到指定ID对应的团购活动");
+                }
+                bo = (GroupOnActivity) Common.cloneVo(po, GroupOnActivity.class);
+                bo.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
             }
-            if (po == null) {
-                return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "未找到指定ID对应的团购活动");
+            if (state != null && !bo.getState().equals(state.getCode().byteValue())) {
+                return new ReturnObject<>(ReturnNo.STATENOTALLOW, "团购活动未上线");
             }
-            if (state != null && !po.getState().equals(state.getCode().byteValue())) {
-                return new ReturnObject<>(ReturnNo.RESOURCE_FALSIFY, "团购活动未上线");
-            }
-            if (shopId != null && !po.getShopId().equals(shopId)) {
+            if (shopId != null && !bo.getShopId().equals(shopId)) {
                 return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST, "指定店铺中不存在指定ID对应的团购活动");
             }
-            var ret = (GroupOnActivity) Common.cloneVo(po, GroupOnActivity.class);
-            ret.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
-            return new ReturnObject(ret);
+            return new ReturnObject(bo);
         } catch (Exception e) {
             logger.error(e.getMessage());
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);

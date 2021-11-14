@@ -2,7 +2,6 @@ package cn.edu.xmu.oomall.activity.mapper;
 
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
-import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 

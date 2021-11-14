@@ -124,11 +124,13 @@ public class GroupOnActivityController {
     })
     @PostMapping(value = "/shops/{shopId}/groupons")
     public Object addGroupOnActivity(@PathVariable("shopId") Long shopId, @Valid @RequestBody GroupOnActivityPostVo body, BindingResult bindingResult) {
+        Long createBy = 1L;
+        String createName = "admin";
         var fieldErrors = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (fieldErrors != null) {
             return fieldErrors;
         }
-        return Common.decorateReturnObject(groupOnService.addActivity(shopId, body));
+        return Common.decorateReturnObject(groupOnService.addActivity(shopId, body, createBy, createName));
     }
 
     @ApiOperation(value = "管理员查看特定团购活动详情", produces = "application/json;charset=UTF-8")

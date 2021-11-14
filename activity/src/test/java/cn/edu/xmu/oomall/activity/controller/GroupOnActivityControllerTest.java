@@ -203,7 +203,7 @@ public class GroupOnActivityControllerTest {
                 .andReturn().getResponse().getContentAsString();
         var id = JacksonUtil.parseObject(responseString, "data", GroupOnActivityVo.class).getId();
         this.mvc.perform(get("/groupons/" + id))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":507,\"errmsg\":\"团购活动未上线\"}"));
     }
