@@ -62,14 +62,13 @@ public class ShopAccountVo implements VoObject {
     public ShopAccountVo(ShopAccountPo shopAccountPo){
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         id=shopAccountPo.getId();
-        shopId=shopAccountPo.getShopId();
         type=shopAccountPo.getType();
         account=shopAccountPo.getAccount();
         name=shopAccountPo.getName();
         priority=shopAccountPo.getPriority();
+        createdBy=new SimpleAdminUserVo(shopAccountPo.getCreatedBy(),shopAccountPo.getCreateName());
         gmtCreate=shopAccountPo.getGmtCreate();
         gmtModified=shopAccountPo.getGmtModified();
-        createdBy=new SimpleAdminUserVo(shopAccountPo.getCreatedBy(),shopAccountPo.getCreateName());
         modifiedBy=new SimpleAdminUserVo(shopAccountPo.getModifiedBy(),shopAccountPo.getModiName());
     }
 
