@@ -68,14 +68,15 @@ public class ShopAccountControllerTest {
     @Test
     public void getShopAccountsTest() throws Exception{
 
-        String expectResponse="{\"errno\":0,\"data\":[{\"id\":2,\"type\":0,\"account\":\"111220333\",\"name\":\"甜蜜之旅支付宝帐号\",\"priority\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}},{\"id\":3,\"type\":1,\"account\":\"3112133333\",\"name\":\"甜蜜之旅微信帐号\",\"priority\":2,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}}],\"errmsg\":\"成功\"}";
+        String expectResponse="{\"code\":\"OK\",\"errmsg\":\"成功\",\"data\":[{\"id\":2,\"type\":0,\"account\":\"111220333\",\"name\":\"甜蜜之旅支付宝帐号\",\"priority\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}},{\"id\":3,\"type\":1,\"account\":\"3112133333\",\"name\":\"甜蜜之旅微信帐号\",\"priority\":2,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}}]}";
 
         String responseString=mvc.perform(get("/shops/2/accounts"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn().getResponse().getContentAsString();
 
-        JSONAssert.assertEquals(expectResponse, responseString, true);
+        JSONAssert.assertEquals(expectResponse, responseString, false);
     }
 
     /**
