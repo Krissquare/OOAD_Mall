@@ -10,13 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 /**
  * 商品分类Service
  *
  * @author Zhiliang Li 22920192204235
- * @date 2021/11/12
+ * @date 2021/11/14
  */
 @Service
 public class CategoryService {
@@ -30,7 +28,7 @@ public class CategoryService {
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReturnObject getSubCategories(Long id) {
         if (categoryDao.getCategoryById(id).getData() == null && id > 0) {
             return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
