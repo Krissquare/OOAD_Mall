@@ -133,7 +133,7 @@ public class Common {
                 if (objs != null){
                     List<Object> ret = new ArrayList<>(objs.size());
                     for (Object data : objs) {
-                        if (data instanceof VoObject) {
+                        if (data instanceof Object) {
                             ret.add(cloneVo(data,voClass));
                         }
                     }
@@ -180,15 +180,15 @@ public class Common {
         }
     }
 
-    private static Object getPageRetVo(ReturnObject<PageInfo<VoObject>> returnObject,Class voClass){
+    private static Object getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
-                PageInfo<VoObject> objs = returnObject.getData();
+                PageInfo<Object> objs = returnObject.getData();
                 if (objs != null){
                     List<Object> voObjs = new ArrayList<>(objs.getList().size());
                     for (Object data : objs.getList()) {
-                        if (data instanceof VoObject) {
+                        if (data instanceof Object) {
                             voObjs.add(cloneVo(data,voClass));
                         }
                     }
