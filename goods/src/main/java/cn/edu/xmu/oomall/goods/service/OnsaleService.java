@@ -210,7 +210,6 @@ public class OnsaleService {
     public ReturnObject searchOnSaleByShare(Long actId, Integer page, Integer pageSize,
                                             Integer state) {
 
-        System.out.println(actId+"ser");
         ReturnObject retOnSales = onsaleDao.searchOnSaleByShare(actId, page, pageSize, state);
         PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
         OnSaleSimpleInfo info;

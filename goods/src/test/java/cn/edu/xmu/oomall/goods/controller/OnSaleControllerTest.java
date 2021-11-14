@@ -237,7 +237,6 @@ public class OnSaleControllerTest {
 
         String res = this.mvc.perform(get("/shops/0/products/2549/onsales").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        System.out.println(res);
         String expect="{\"errno\":0,\"data\":{\"page\":1,\"pageSize\":3,\"total\":3,\"pages\":1,\"list\":[{\"id\":1000,\"price\":7429,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":38},{\"id\":3913,\"price\":6666,\"beginTime\":\"2021-11-12T08:39:31\",\"endTime\":\"2021-11-12T09:39:39\",\"quantity\":20},{\"id\":3940,\"price\":2233,\"beginTime\":\"2021-08-17T20:20:30\",\"endTime\":\"2021-08-17T21:20:20\",\"quantity\":100}]},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,true);
 
@@ -333,7 +332,6 @@ public class OnSaleControllerTest {
         //        正常
         String res = this.mvc.perform(get("/internal/grouponactivities/6/onsales")
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        System.out.println(res);
         String expect="{\"errno\":0,\"data\":{\"page\":1,\"pageSize\":4,\"total\":4,\"pages\":1,\"list\":[{\"id\":2,\"price\":473,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":97},{\"id\":68,\"price\":73338,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":53},{\"id\":3945,\"price\":4444,\"beginTime\":\"2023-04-21T23:38:27\",\"endTime\":\"2026-05-27T23:38:32\",\"quantity\":44},{\"id\":3946,\"price\":4444,\"beginTime\":\"2023-04-21T23:38:27\",\"endTime\":\"2026-05-27T23:38:32\",\"quantity\":44}]},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,true);
 
@@ -345,7 +343,6 @@ public class OnSaleControllerTest {
         //        正常
         String res = this.mvc.perform(get("/internal/advacnesaleactivities/1/onsales")
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
-        System.out.println(res);
         String expect="{\"errno\":0,\"data\":{\"page\":1,\"pageSize\":4,\"total\":4,\"pages\":1,\"list\":[{\"id\":3,\"price\":12650,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":26},{\"id\":40,\"price\":46784,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":84},{\"id\":47,\"price\":10459,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":94},{\"id\":50,\"price\":17246,\"beginTime\":\"2021-11-11T14:38:20\",\"endTime\":\"2022-02-19T14:38:20\",\"quantity\":54}]},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,true);
 
