@@ -180,7 +180,7 @@ public class Common {
         }
     }
 
-    public static Object getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
+    private static Object getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
