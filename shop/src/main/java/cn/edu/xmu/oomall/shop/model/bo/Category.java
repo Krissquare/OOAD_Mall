@@ -4,6 +4,7 @@ import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.shop.model.po.CategoryPo;
 import cn.edu.xmu.oomall.shop.model.vo.CategoryRetVo;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
  * @date 2021/11/12
  */
 @Data
+@NoArgsConstructor
 public class Category implements VoObject, Serializable {
     private Long id;
     private String name;
@@ -27,20 +29,6 @@ public class Category implements VoObject, Serializable {
     private LocalDateTime gmtModified;
     private String modiName;
 
-    public Category(){
-    }
-    public Category(CategoryPo po){
-        this.id = po.getId();
-        this.pid = po.getPid();
-        this.name = po.getName();
-        this.commissionRatio=po.getCommissionRatio();
-        this.createdBy=po.getCreatedBy();
-        this.createName=po.getCreateName();
-        this.gmtCreate=po.getGmtCreate();
-        this.modifiedBy=po.getModifiedBy();
-        this.gmtModified=po.getGmtModified();
-        this.modiName=po.getModiName();
-    }
     @Override
     public Object createVo() {
         return new CategoryRetVo(this);
@@ -50,19 +38,5 @@ public class Category implements VoObject, Serializable {
         return new CategoryRetVo(this);
     }
 
-    public CategoryPo createCategoryPo() {
-        CategoryPo po = new CategoryPo();
-        po.setId(this.id);
-        po.setName(this.name);
-        po.setPid(this.pid);
-        po.setModiName(this.modiName);
-        po.setModifiedBy(this.modifiedBy);
-        po.setGmtModified(this.gmtModified);
-        po.setCommissionRatio(this.commissionRatio);
-        po.setGmtCreate(this.gmtCreate);
-        po.setCreateName(this.createName);
-        po.setCreatedBy(this.createdBy);
-        return po;
-    }
 }
 

@@ -31,12 +31,11 @@ public class ShopDao {
         } catch (Exception e) {
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }
-        Shop shop = new Shop(shopPo);
+        Shop shop = (Shop) Common.cloneVo(shopPo, Shop.class);
         return new ReturnObject<>(shop);
     }
-    public List<ShopPo> getAllShop(Long id,Integer page,Integer pageSize) {
+    public List<ShopPo> getAllShop(Integer page,Integer pageSize) {
         ShopPoExample example=new ShopPoExample();
-        ShopPoExample.Criteria criteria=example.createCriteria();
         List<ShopPo> shopPos;
         PageHelper.startPage(page,pageSize);
         shopPos=shopPoMapper.selectByExample(example);
@@ -56,12 +55,11 @@ public class ShopDao {
     }
 
 
-    public ReturnObject newShop(ShopPo po,Long loginUser, String loginUsername) {
+    public ReturnObject newShop(ShopPo po) {
         int ret;
         po.setDeposit(Long.valueOf(0));
         po.setGmtCreate(LocalDateTime.now());
         po.setState(Shop.State.EXAME.getCode().byteValue());
-        Common.setPoCreatedFields(po,loginUser,loginUsername);
         ret = shopPoMapper.insertSelective(po);
         if (ret == 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
@@ -76,12 +74,11 @@ public class ShopDao {
      *
      * @Param: [po]
      */
-    public ReturnObject UpdateShop(Long id, Shop shop,Long loginUser, String loginUsername) {
+    public ReturnObject UpdateShop(Long id, Shop shop) {
         int ret;
         try {
             ShopPo shopPo = shopPoMapper.selectByPrimaryKey(id);
             shopPo.setName(shop.getName());
-            Common.setPoModifiedFields(shopPo,loginUser,loginUsername);
             if (shopPo.getState() == Shop.State.FORBID.getCode().byteValue()) {
                 return new ReturnObject(ReturnNo.STATENOTALLOW, "商铺处于关闭态");
             } else {
@@ -100,13 +97,12 @@ public class ShopDao {
     }
 
 
-    public ReturnObject updateShopState(Shop shop,Long loginUser, String loginUsername) {
-        ShopPo shopPo = shop.createPo();
+    public ReturnObject updateShopState(Shop shop) {
+        ShopPo shopPo = (ShopPo) Common.cloneVo(shop, ShopPo.class);
         int ret;
         try {
             ret = shopPoMapper.updateByPrimaryKeySelective(shopPo);
             shopPo.setGmtModified(LocalDateTime.now());
-            Common.setPoModifiedFields(shopPo,loginUser,loginUsername);
         } catch (Exception e) {
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }

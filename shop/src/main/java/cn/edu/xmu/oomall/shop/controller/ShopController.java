@@ -1,12 +1,12 @@
 
 package cn.edu.xmu.oomall.shop.controller;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.vo.ShopConclusionVo;
+import cn.edu.xmu.oomall.shop.model.vo.ShopRetVo;
 import cn.edu.xmu.oomall.shop.model.vo.ShopVo;
 import cn.edu.xmu.oomall.shop.service.ShopService;
 import com.github.pagehelper.PageInfo;
@@ -53,12 +53,12 @@ public class ShopController {
      */
     @ApiOperation(value = "管理员获得店铺信息")
     @GetMapping(value = "/shops/{id}/shops")
-    public Object getAllShop(@PathVariable Long id,@RequestParam(name="page",required = false,defaultValue = "1")int page,@RequestParam(name="pageSize",required = false,defaultValue = "10")int pageSize){
+    public Object getAllShop(@PathVariable Long id,@RequestParam(name="page",required = false,defaultValue = "1")Integer page,@RequestParam(name="pageSize",required = false,defaultValue = "3")Integer pageSize){
         if(id != 0){
             return Common.decorateReturnObject(new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE));
         }
-        ReturnObject<PageInfo<VoObject>> ret=shopService.getAllShop(id,page,pageSize);
-        return Common.getPageRetObject(ret);
+        ReturnObject<PageInfo<Object>> ret=shopService.getAllShop(page,pageSize);
+        return Common.getPageRetVo(ret, ShopRetVo.class);
     }
 
 

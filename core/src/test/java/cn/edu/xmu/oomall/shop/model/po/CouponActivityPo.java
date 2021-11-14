@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.core.util.po;
+package cn.edu.xmu.oomall.shop.model.po;
 import java.time.LocalDateTime;
 
 public class CouponActivityPo {
