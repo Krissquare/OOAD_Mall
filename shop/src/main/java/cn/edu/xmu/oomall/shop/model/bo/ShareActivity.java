@@ -48,24 +48,6 @@ public class ShareActivity implements VoObject {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 
-    public ShareActivityPo newShareActivityPo(){
-        ShareActivityPo shareActivityPo=new ShareActivityPo();
-        shareActivityPo.setId(this.id);
-        shareActivityPo.setShopId(this.shopId);
-        shareActivityPo.setShopName(this.shopName);
-        shareActivityPo.setName(this.name);
-        shareActivityPo.setStrategy(this.strategy);
-        shareActivityPo.setBeginTime(this.beginTime);
-        shareActivityPo.setEndTime(this.endTime);
-        shareActivityPo.setState(this.state);
-        shareActivityPo.setCreatedBy(this.createdBy);
-        shareActivityPo.setCreateName(this.createName);
-        shareActivityPo.setModifiedBy(this.modifiedBy);
-        shareActivityPo.setModiName(this.modiName);
-        shareActivityPo.setGmtCreate(this.gmtCreate);
-        shareActivityPo.setGmtModified(this.gmtModified);
-        return shareActivityPo;
-    }
     @Override
     public Object createVo() {
         return null;
