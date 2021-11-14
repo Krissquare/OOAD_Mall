@@ -4,6 +4,7 @@ import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.shop.model.vo.ShopAccountVo;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,18 +46,18 @@ public class ShopAccountControllerTest {
         String requestJson= JacksonUtil.toJson(shopAccountVo);
 
         //测试新增记录需要移动优先级的情况
-        String response1=mvc.perform(post("/shops/2/accounts").contentType("application/json;charset=UTF-8")
+        mvc.perform(post("/shops/2/accounts").contentType("application/json;charset=UTF-8")
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
+                .andDo(MockMvcResultHandlers.print());
 
         //测试新增记录不需要移动优先级的情况
-        String response2=mvc.perform(post("/shops/5/accounts").contentType("application/json;charset=UTF-8")
+        mvc.perform(post("/shops/5/accounts").contentType("application/json;charset=UTF-8")
                 .content(requestJson))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
+                .andDo(MockMvcResultHandlers.print());
     }
 
     /**
@@ -66,10 +67,15 @@ public class ShopAccountControllerTest {
      */
     @Test
     public void getShopAccountsTest() throws Exception{
-        mvc.perform(get("/shops/2/accounts"))
+
+        String expectResponse="{\"errno\":0,\"data\":[{\"id\":2,\"type\":0,\"account\":\"111220333\",\"name\":\"甜蜜之旅支付宝帐号\",\"priority\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}},{\"id\":3,\"type\":1,\"account\":\"3112133333\",\"name\":\"甜蜜之旅微信帐号\",\"priority\":2,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 14:14:59\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null}}],\"errmsg\":\"成功\"}";
+
+        String responseString=mvc.perform(get("/shops/2/accounts"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andDo(MockMvcResultHandlers.print());
+                .andReturn().getResponse().getContentAsString();
+
+        JSONAssert.assertEquals(expectResponse, responseString, true);
     }
 
     /**
