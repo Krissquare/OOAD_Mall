@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 12:46
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 12:46
  */
 @SpringBootApplication
 @MapperScan("cn.edu.xmu.oomall.activity.mapper")

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/13 12:21
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/13 12:21
  */
 @FeignClient(value = "goods-service")
 public interface GoodsApi {

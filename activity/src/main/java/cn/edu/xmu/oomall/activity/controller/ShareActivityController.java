@@ -3,7 +3,6 @@ package cn.edu.xmu.oomall.activity.controller;
 import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
 import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
 import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.OnSaleInfoDTO;
 import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
 import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.service.ShareActivityService;
@@ -19,13 +18,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 12:52
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 12:52
  */
 @Api(value = "分享活动API", tags = "activity")
 @RestController

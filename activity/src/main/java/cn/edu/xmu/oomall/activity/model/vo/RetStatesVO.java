@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 15:04
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 15:04
  */
 @Data
 @AllArgsConstructor

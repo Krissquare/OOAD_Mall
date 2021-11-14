@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 17:36
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 17:36
  */
 @Data
 @ToString

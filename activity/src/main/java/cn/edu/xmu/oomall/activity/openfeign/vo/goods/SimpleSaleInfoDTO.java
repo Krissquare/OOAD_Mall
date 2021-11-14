@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 /**
  * 管理员查询所有商品的价格浮动（2021-1-3） 返回的列表
  *
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/13 22:17
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/13 22:17
  */
 @Data
 @NoArgsConstructor

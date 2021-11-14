@@ -8,8 +8,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 15:53
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 15:53
  */
 @Data
 @ApiModel(value = "分享活动列表")

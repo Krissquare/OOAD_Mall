@@ -11,10 +11,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 17:38
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 17:38
  */
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

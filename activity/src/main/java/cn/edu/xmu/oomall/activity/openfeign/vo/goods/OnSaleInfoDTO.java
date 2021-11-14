@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 /**
  * 查询特定价格浮动的详情DTO
  *
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/13 14:35
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/13 14:35
  */
 @Data
 public class OnSaleInfoDTO implements VoObject, Serializable {

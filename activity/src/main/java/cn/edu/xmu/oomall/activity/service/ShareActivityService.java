@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * @author: xiuchen lang 22920192204222
- * @Date: 2021/11/12 12:55
+ * @author xiuchen lang 22920192204222
+ * @date 2021/11/12 12:55
  */
 @Service
 public class ShareActivityService {
@@ -34,7 +34,7 @@ public class ShareActivityService {
      * 显示所有状态的分享活动
      *
      * @param shopId 店铺Id
-     * @param shareId 相关的分享活动id
+     * @param shareIds 相关的分享活动id
      * @param beginTime 晚于此开始时间
      * @param endTime 早于此结束时间
      * @param state 分享活动状态
@@ -66,7 +66,7 @@ public class ShareActivityService {
     /**
      * 查询分享活动 只显示上线状态的分享活动
      * @param shopId 店铺Id
-     * @param shareId 分享活动id
+     * @param shareIds 分享活动id
      * @param beginTime 晚于此开始时间
      * @param endTime 早于此结束时间
      * @param page 页码
