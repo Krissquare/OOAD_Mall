@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
  * @author Gao Yanfeng
  * @date 2021/11/12
  */
-@FeignClient(value = "shop",url = "http://localhost:8081")
+@FeignClient(name = "Shop")
 public interface ShopService {
     @GetMapping("/shops/{id}")
     ReturnObject<SimpleShopVo> getShopInfo(@PathVariable Long id);

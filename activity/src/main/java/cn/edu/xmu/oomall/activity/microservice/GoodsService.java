@@ -15,7 +15,7 @@ import java.util.List;
  * @author Gao Yanfeng
  * @date 2021/11/13
  */
-@FeignClient(value = "goods",url = "http://localhost:8081")
+@FeignClient(name = "Goods")
 public interface GoodsService {
     @GetMapping("/internal/products/{id}/onsales")
     ReturnObject<PageInfoVo<SimpleOnSaleVo>> getOnsSlesOfProduct(@PathVariable Long id, @RequestParam Integer page, @RequestParam Integer pageSize);
