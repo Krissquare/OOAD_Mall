@@ -26,7 +26,7 @@
     <result column="modi_name" jdbcType="VARCHAR" property="modiName" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
-    <result column="state" jdbcType="TINYINT" property="state"></result>
+    <result column="state" jdbcType="TINYINT" property="state" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -68,7 +68,8 @@
     -->
     `id`, `shop_id`, `shop_name`, `goods_id`, `category_id`, `freight_id`, `sku_sn`, 
     `name`, `original_price`, `weight`, `image_url`, `barcode`, `unit`, `origin_place`, 
-    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`
+    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`, 
+    `state`
   </sql>
   <select id="selectByExample" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductPoExample" resultMap="BaseResultMap">
     <!--
@@ -362,11 +363,4 @@
       `state` = #{state,jdbcType=TINYINT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
-
-
-  <select id="getShopIdById" resultType="java.lang.Long" parameterType="java.lang.Long">
-    select `shop_id`
-    from oomall_product
-where id=#{id}
-  </select>
 </mapper>
