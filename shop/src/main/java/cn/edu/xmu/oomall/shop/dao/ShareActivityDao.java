@@ -57,7 +57,7 @@ public class ShareActivityDao {
         ShareActivityPo shareActivityPo;
         int ret;
         try {
-            shareActivityPo = (ShareActivityPo) Common.cloneVo(getMessageshareActivity,ShareActivityPo.class);
+            shareActivityPo = (ShareActivityPo) Common.cloneVo(shareActivity,ShareActivityPo.class);
             ret = shareActivityPoMapper.updateByPrimaryKeySelective(shareActivityPo);
         }catch (Exception e){
             logger.error(e.getMessage());

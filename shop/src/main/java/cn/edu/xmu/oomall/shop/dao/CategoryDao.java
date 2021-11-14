@@ -178,6 +178,7 @@ public class CategoryDao {
     public ReturnObject deleteCategoryById(Long id){
         try{
             deleteRedisForDeleteOrUpdate(id);
+
             int ret;
             ret= categoryPoMapper.deleteByPrimaryKey(id);
             if(ret==0){
