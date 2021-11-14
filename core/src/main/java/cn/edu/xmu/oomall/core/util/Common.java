@@ -124,7 +124,7 @@ public class Common {
         }
     }
 
-    private static Object getListRetVo(ReturnObject<List> returnObject,Class voClass)
+    public static Object getListRetVo(ReturnObject<List> returnObject,Class voClass)
     {
         ReturnNo code = returnObject.getCode();
         switch (code){
@@ -180,7 +180,7 @@ public class Common {
         }
     }
 
-    private static Object getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
+    public static Object getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
