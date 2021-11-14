@@ -95,7 +95,7 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
-redispara:
-  groupon:
-    expiretime:
-      10000
+oomall:
+  activity:
+    category:
+      expiretime: 10000
