@@ -17,6 +17,7 @@ public class OrderItem {
 	private Long skuId;
 	private Long orderId;
 	private String name;
+	private Long categoryId;
 	private Integer quantity;
 	private Long price;
 	private Long discount;
