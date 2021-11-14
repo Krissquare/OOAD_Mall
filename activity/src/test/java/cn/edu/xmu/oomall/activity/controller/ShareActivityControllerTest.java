@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * ShareActivityController Tester.
  *
  * @author xiuchen lang 22920192204222
- * @date  11/13/2021
+ * @date 11/13/2021
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ActivityApplication.class)
