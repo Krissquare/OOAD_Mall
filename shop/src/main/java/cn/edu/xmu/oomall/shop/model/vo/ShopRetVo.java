@@ -22,18 +22,4 @@ public class ShopRetVo {
     private SimpleUserRetVo modifiedBy;
     private String gmtCreated;
     private String gmtModified;
-//    public ShopRetVo(Shop shop) {
-//        this.id = shop.getId();
-//        this.name = shop.getName();
-//        this.createdBy=;
-//
-//        this.modifiedBy=shop.getModifiedBy();
-//
-//        if(shop.getGmtCreated()!=null) {
-//            this.gmtCreated= shop.getGmtCreated().toString();
-//        }
-//        if(shop.getGmtModified()!=null) {
-//            this.gmtModified=shop.getGmtModified().toString();
-//        }
-//    }
 }

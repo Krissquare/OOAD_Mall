@@ -34,12 +34,17 @@ public class ShopDao {
         Shop shop = (Shop) Common.cloneVo(shopPo, Shop.class);
         return new ReturnObject<>(shop);
     }
-    public List<ShopPo> getAllShop(Integer page,Integer pageSize) {
-        ShopPoExample example=new ShopPoExample();
+
+    public ReturnObject getAllShop(Integer page, Integer pageSize) {
+        ShopPoExample example = new ShopPoExample();
         List<ShopPo> shopPos;
-        PageHelper.startPage(page,pageSize);
-        shopPos=shopPoMapper.selectByExample(example);
-        return shopPos;
+        try {
+            PageHelper.startPage(page, pageSize);
+            shopPos = shopPoMapper.selectByExample(example);
+        } catch (Exception e) {
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
+        }
+        return new ReturnObject<>(shopPos);
     }
 
 
@@ -60,11 +65,15 @@ public class ShopDao {
         po.setDeposit(Long.valueOf(0));
         po.setGmtCreate(LocalDateTime.now());
         po.setState(Shop.State.EXAME.getCode().byteValue());
-        ret = shopPoMapper.insertSelective(po);
-        if (ret == 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID);
-        } else {
-            return new ReturnObject(po);
+        try {
+            ret = shopPoMapper.insertSelective(po);
+            if (ret == 0) {
+                return new ReturnObject(ReturnNo.FIELD_NOTVALID);
+            } else {
+                return new ReturnObject(po);
+            }
+        } catch (Exception e) {
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }
 
     }
