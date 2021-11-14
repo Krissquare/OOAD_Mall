@@ -133,7 +133,7 @@ public class Common {
                 if (objs != null){
                     List<Object> ret = new ArrayList<>(objs.size());
                     for (Object data : objs) {
-                        if (data instanceof VoObject) {
+                        if (data instanceof Object) {
                             ret.add(cloneVo(data,voClass));
                         }
                     }

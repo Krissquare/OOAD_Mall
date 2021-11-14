@@ -48,7 +48,7 @@ public class ShopAccountService {
      */
     public ReturnObject<List<ShopAccountVo>> getShopAccounts(Long shopId) {
         ReturnObject<List<ShopAccountVo>> returnObject=shopAccountDao.getShopAccounts(shopId);
-        return new ReturnObject(returnObject);
+        return returnObject;
     }
 
     /**
