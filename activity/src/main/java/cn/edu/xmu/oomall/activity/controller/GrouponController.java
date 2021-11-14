@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.activity.util.GrouponReturnStatus;
 import cn.edu.xmu.oomall.core.*;
 import cn.edu.xmu.oomall.core.util.ResponseUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -54,11 +55,15 @@ public class GrouponController {
 
         GrouponReturnStatus result = grouponService.onlineGrouponActivity(id,shopId,admin);
         switch (result){
+            //success
             case CHANGED: return ResponseUtil.ok();
-            case ALREADY: return ResponseUtil.fail(ReturnNo.STATENOTALLOW,"已经是上线状态！");
-            case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
-            case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
-            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
+            //500
+            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
+            //507
+            default: return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
+//            case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
+//            case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
+//            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
         }
     }
 
@@ -91,6 +96,7 @@ public class GrouponController {
             case ALREADY: return ResponseUtil.fail(ReturnNo.STATENOTALLOW,"已经是下线状态！");
             case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
             case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
+            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
             default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
         }
     }
@@ -128,6 +134,8 @@ public class GrouponController {
             case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
             //902
             case SALE_TIME_CONFLICT: return ResponseUtil.fail(ReturnNo.GOODS_PRICE_CONFLICT);
+            //500
+            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
             //400-507
             default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
         }
@@ -152,6 +160,8 @@ public class GrouponController {
         switch (result){
             //ok
             case CHANGED: return ResponseUtil.ok();
+            //500
+            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
             //507
             default: return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
         }
@@ -185,6 +195,8 @@ public class GrouponController {
             case ADD_FORBIDDEN_STATE:return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
             //902
             case ADD_TIME_CONFLICT:return ResponseUtil.fail(ReturnNo.GOODS_PRICE_CONFLICT);
+            //500
+            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
             //400-507
             default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
         }

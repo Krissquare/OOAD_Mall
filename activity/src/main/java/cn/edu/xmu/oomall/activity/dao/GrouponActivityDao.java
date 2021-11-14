@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.activity.dao;
 
 import cn.edu.xmu.oomall.activity.mapper.GroupOnActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
-import cn.edu.xmu.oomall.activity.util.RedisUtil;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -16,10 +16,10 @@ public class GrouponActivityDao {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${redis-para.groupon-activity.expiretime}")
+    @Value("${oomall.activity.groupon.expiretime}")
     private long timeout;
 
-    public GroupOnActivityPo getGrouponActivity(Long id){
+    public GroupOnActivityPo getGrouponActivity(Long id) throws Exception{
         //带Redis缓存的查询
         //规定团购活动在redis里key的存储形式为"groupon_"+id
         GroupOnActivityPo groupOnActivityPo = (GroupOnActivityPo) redisUtil.get("groupon_"+id.toString());
@@ -32,7 +32,7 @@ public class GrouponActivityDao {
         return groupOnActivityPo;
     }
 
-    public void updateGrouponActivity(GroupOnActivityPo groupOnActivityPo){
+    public void updateGrouponActivity(GroupOnActivityPo groupOnActivityPo) throws Exception{
         //同时更新数据库和Redis缓存
         redisUtil.set("groupon_"+groupOnActivityPo.getId().toString(),groupOnActivityPo,timeout);
         groupOnActivityPoMapper.updateByPrimaryKey(groupOnActivityPo);
@@ -43,7 +43,7 @@ public class GrouponActivityDao {
 //        groupOnActivityPoMapper.insert(groupOnActivityPo);
 //    }
 
-    public void deleteGrouponActivity(GroupOnActivityPo groupOnActivityPo){
+    public void deleteGrouponActivity(GroupOnActivityPo groupOnActivityPo) throws Exception{
         redisUtil.del("groupon_"+groupOnActivityPo.getId().toString());
         groupOnActivityPoMapper.deleteByPrimaryKey(groupOnActivityPo.getId());
     }

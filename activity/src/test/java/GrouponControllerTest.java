@@ -55,7 +55,7 @@ public class GrouponControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\": 507, \"errmsg\": \"已经是上线状态！\"}";
+        String expectedResponse = "{\"errno\": 507, \"errmsg\": \"当前状态禁止此操作\"}";
         JSONAssert.assertEquals(expectedResponse,responseString,true);
     }
     @Test public void grouponUpLineByManagerTest3() throws Exception{
@@ -65,7 +65,7 @@ public class GrouponControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\": 505, \"errmsg\": \"该店铺没有这个活动！\"}";
+        String expectedResponse = "{\"errno\": 507, \"errmsg\": \"当前状态禁止此操作\"}";
         JSONAssert.assertEquals(expectedResponse,responseString,true);
     }
     @Test public void grouponUpLineByManagerTest4() throws Exception{
@@ -75,7 +75,7 @@ public class GrouponControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\": 924, \"errmsg\": \"不存在的团购活动！\"}";
+        String expectedResponse = "{\"errno\": 507, \"errmsg\": \"当前状态禁止此操作\"}";
         JSONAssert.assertEquals(expectedResponse,responseString,true);
     }
     ///////////////下线///////////////

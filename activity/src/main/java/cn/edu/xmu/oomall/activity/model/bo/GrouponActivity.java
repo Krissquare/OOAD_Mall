@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.activity.model.bo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.vo.GrouponUpdateSimpleVo;
 import cn.edu.xmu.oomall.core.model.VoObject;
+import cn.edu.xmu.oomall.core.util.Common;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -36,22 +37,7 @@ public class GrouponActivity implements VoObject {
     }
 
     public GroupOnActivityPo getGrouponActivityPo(){
-        GroupOnActivityPo groupOnActivityPo = new GroupOnActivityPo();
-        groupOnActivityPo.setId(id);
-        groupOnActivityPo.setName(name);
-        groupOnActivityPo.setShopId(shopId);
-        groupOnActivityPo.setShopName(shopName);
-        groupOnActivityPo.setStrategy(strategy);
-        groupOnActivityPo.setBeginTime(beginTime);
-        groupOnActivityPo.setEndTime(endTime);
-        groupOnActivityPo.setState(state);
-        groupOnActivityPo.setCreatedBy(createdBy);
-        groupOnActivityPo.setCreateName(createName);
-        groupOnActivityPo.setModifiedBy(modifiedBy);
-        groupOnActivityPo.setModiName(modiName);
-        groupOnActivityPo.setGmtCreate(gmtCreate);
-        groupOnActivityPo.setGmtModified(gmtModified);
-        return groupOnActivityPo;
+        return (GroupOnActivityPo) Common.cloneVo(this,GroupOnActivityPo.class);
     }
 
     public void generateFromPo(GroupOnActivityPo groupOnActivityPo){

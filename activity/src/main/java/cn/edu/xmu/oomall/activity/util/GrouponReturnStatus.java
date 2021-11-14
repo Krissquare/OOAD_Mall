@@ -15,5 +15,7 @@ public enum GrouponReturnStatus {
     //当前状态禁止操作
     CHANGE_FORBIDDEN,
     //和上线的onSale活动时间冲突
-    SALE_TIME_CONFLICT
+    SALE_TIME_CONFLICT,
+    //出现异常
+    INTERNAL_FAULT
 }

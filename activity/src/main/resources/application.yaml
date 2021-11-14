@@ -96,11 +96,10 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
-redis-para:
-  groupon-activity:
-    expiretime: 3600
-
-
+oomall:
+  activity:
+    groupon:
+      expiretime: 3600
 
 
 
