@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @NoArgsConstructor
-public class Region implements VoObject, Serializable {
+public class Region implements Serializable {
 
     private Long id;
     private Long pid;
@@ -27,15 +27,5 @@ public class Region implements VoObject, Serializable {
     private String modiName;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
-
-    @Override
-    public Object createVo(){
-        return new RegionRetVo(this);
-    }
-
-    @Override
-    public Object createSimpleVo(){
-        return new RegionRetVo(this);
-    }
 
 }

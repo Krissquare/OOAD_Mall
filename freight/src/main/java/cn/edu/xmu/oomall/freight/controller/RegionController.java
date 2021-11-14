@@ -58,7 +58,7 @@ public class RegionController {
             List<Region> retRegions = (List<Region>)returnObject.getData();
             List<RegionRetVo> regionRetVos = new ArrayList<>(5);
             for (Region regionItem : retRegions) {
-                regionRetVos.add( (RegionRetVo) regionItem.createVo() );
+                regionRetVos.add( (RegionRetVo) Common.cloneVo(regionItem, RegionRetVo.class) );
             }
             returnObject = new ReturnObject(regionRetVos);
         }
@@ -118,16 +118,7 @@ public class RegionController {
             return new ResponseEntity(ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE, "非管理员无权操作"), HttpStatus.FORBIDDEN);
         }
 
-        ReturnObject returnObject = regionService.adminGetChildRegion(id);
-
-        if(returnObject.getData()!=null) {
-            List<Region> retRegions = (List<Region>)returnObject.getData();
-            List<RegionRetVo> regionRetVos = new ArrayList<>(5);
-            for (Region regionItem : retRegions) {
-                regionRetVos.add(new RegionRetVo(regionItem));
-            }
-            returnObject = new ReturnObject(regionRetVos);
-        }
+        ReturnObject<List<RegionRetVo>> returnObject = regionService.getChildRegion(id, Long.valueOf(did));
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -146,16 +137,7 @@ public class RegionController {
     @GetMapping("/regions/{id}/subregions")
     public Object getChildRegion(@PathVariable("id") Long id) {
 
-        ReturnObject<List<Region>> returnObject = regionService.getChildRegion(id);
-
-        if(returnObject.getData()!=null) {
-            List<Region> retRegions = (List<Region>)returnObject.getData();
-            List<RegionRetVo> regionRetVos = new ArrayList<>(5);
-            for (Region regionItem : retRegions) {
-                regionRetVos.add(new RegionRetVo(regionItem));
-            }
-            returnObject = new ReturnObject(regionRetVos);
-        }
+        ReturnObject<List<RegionRetVo>> returnObject = regionService.getChildRegion(id, 1L);
 
         return Common.decorateReturnObject(returnObject);
     }

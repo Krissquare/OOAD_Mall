@@ -78,7 +78,7 @@ public class RegionDao {
             return new ReturnObject(retRegions);
 
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class RegionDao {
             return new ReturnObject();
 
         }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -141,7 +141,7 @@ public class RegionDao {
             return new ReturnObject(retRegions);
 
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -191,7 +191,7 @@ public class RegionDao {
             return new ReturnObject(retRegions);
 
         } catch (Exception e) {
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -217,7 +217,7 @@ public class RegionDao {
             return new ReturnObject();
 
         } catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -248,16 +248,16 @@ public class RegionDao {
             return new ReturnObject();
 
         }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
     /**
-     * 管理员停用地区
+     * 管理员停用或恢复地区
      * @param regionPo,userId,userName
      * @return ReturnObject
      */
-    public ReturnObject suspendRegion(RegionPo regionPo, Long userId, String userName) {
+    public ReturnObject modiStateRegion(RegionPo regionPo, Long userId, String userName) {
 
         try {
             Common.setPoModifiedFields(regionPo,userId,userName);
@@ -278,37 +278,7 @@ public class RegionDao {
             return new ReturnObject();
 
         }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
-        }
-    }
-
-    /**
-     * 管理员恢复地区
-     * @param regionPo,userId,userName
-     * @return ReturnObject
-     */
-    public ReturnObject resumeRegion(RegionPo regionPo, Long userId, String userName) {
-
-        try {
-            Common.setPoModifiedFields(regionPo,userId,userName);
-
-            RegionPo rp=regionPoMapper.selectByPrimaryKey(regionPo.getId());
-            if (rp == null) {
-                ReturnObject retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
-                return retObj;
-            }
-            if (rp.getState().equals(STATE_ABANDONED)) {
-                ReturnObject retObj = new ReturnObject(ReturnNo.STATENOTALLOW);
-                return retObj;
-            }
-
-            regionPoMapper.updateByPrimaryKeySelective(regionPo);
-            deleteRedis(regionPo.getId());
-
-            return new ReturnObject();
-
-        }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 

@@ -7,11 +7,13 @@ import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.dao.RegionDao;
 import cn.edu.xmu.oomall.goods.model.bo.Region;
 import cn.edu.xmu.oomall.goods.model.po.RegionPo;
+import cn.edu.xmu.oomall.goods.model.vo.RegionRetVo;
 import cn.edu.xmu.oomall.goods.model.vo.RegionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,7 +37,7 @@ public class RegionService {
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
+    @Transactional(rollbackFor=Exception.class, readOnly = true)
     public ReturnObject<List<Region>> getParentRegion(Long id) {
 
         ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(id);
@@ -60,28 +62,31 @@ public class RegionService {
         return retObj;
     }
 
+
     /**
-     * 管理员根据id查询子地区
+     * 根据id查询子地区(管理员或普通)
      * @param id
      * @return ReturnObject
      */
-    @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
+    @Transactional(rollbackFor=Exception.class, readOnly = true)
+    public ReturnObject getChildRegion(Long id, Long did) {
 
-        ReturnObject<List<Region>> returnObject = regionDao.adminGetChildRegion(id);
+        ReturnObject<List<Region>> returnObject;
+        if(did.equals(Long.valueOf(0))) {
+            returnObject = regionDao.adminGetChildRegion(id);
+        }
+        else {
+            returnObject = regionDao.getChildRegion(id);
+        }
 
-        return returnObject;
-    }
-
-    /**
-     * 根据id查询子地区(只返回有效地区)
-     * @param id
-     * @return ReturnObject
-     */
-    @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<List<Region>> getChildRegion(Long id) {
-
-        ReturnObject<List<Region>> returnObject = regionDao.getChildRegion(id);
+        if(returnObject.getData()!=null) {
+            List<Region> retRegions = returnObject.getData();
+            List<RegionRetVo> regionRetVos = new ArrayList<>();
+            for (Region regionItem : retRegions) {
+                regionRetVos.add( (RegionRetVo) Common.cloneVo(regionItem, RegionRetVo.class) );
+            }
+            returnObject = new ReturnObject(regionRetVos);
+        }
 
         return returnObject;
     }
@@ -127,7 +132,7 @@ public class RegionService {
         region.setId(id);
         region.setState(STATE_SUSPENDED);
 
-        return regionDao.suspendRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
+        return regionDao.modiStateRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
     }
 
     /**
@@ -142,7 +147,7 @@ public class RegionService {
         region.setId(id);
         region.setState(STATE_EFFCTIVE);
 
-        return regionDao.resumeRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
+        return regionDao.modiStateRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
     }
 
 }

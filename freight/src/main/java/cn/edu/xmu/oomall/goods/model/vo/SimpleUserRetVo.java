@@ -16,6 +16,6 @@ public class SimpleUserRetVo {
     private Long id;
 
     @ApiModelProperty(value = "管理员名")
-    private String userName;
+    private String name;
 
 }
