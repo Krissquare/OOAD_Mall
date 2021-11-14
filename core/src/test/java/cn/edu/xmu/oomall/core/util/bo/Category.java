@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.core.util.bo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.po.CategoryPo;
+import cn.edu.xmu.oomall.shop.model.po.CategoryPo;
 import cn.edu.xmu.oomall.core.util.vo.CategoryRetVo;
 import lombok.Data;
 import lombok.NoArgsConstructor;

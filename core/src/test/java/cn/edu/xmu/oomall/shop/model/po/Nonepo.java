@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.core.util.po;
+package cn.edu.xmu.oomall.shop.model.po;
 
 public class Nonepo {
         private int id;
