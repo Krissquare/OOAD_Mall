@@ -1,15 +1,19 @@
 package cn.edu.xmu.oomall.shop.dao;
 
 import cn.edu.xmu.oomall.core.util.Common;
+import cn.edu.xmu.oomall.core.util.ReturnNo;
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.ShopAccountPoMapper;
 import cn.edu.xmu.oomall.shop.model.po.ShopAccountPo;
 import cn.edu.xmu.oomall.shop.model.po.ShopAccountPoExample;
+import cn.edu.xmu.oomall.shop.model.vo.ShopAccountVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author  Xusheng Wang
@@ -28,7 +32,7 @@ public class ShopAccountDao {
      * @date  2021-11-11
      * @studentId 34520192201587
      */
-    public  List<ShopAccountPo> getShopAccounts(Long shopId) {
+    public ReturnObject<List<ShopAccountVo>> getShopAccounts(Long shopId) {
         List<ShopAccountPo> accountPoList= new ArrayList<>();
         ShopAccountPoExample shopAccountPoExample=new ShopAccountPoExample();
         ShopAccountPoExample.Criteria criteria=shopAccountPoExample.createCriteria();
@@ -37,13 +41,11 @@ public class ShopAccountDao {
         }
         try {
             accountPoList = shopAccountPoMapper.selectByExample(shopAccountPoExample);
-            return accountPoList;
+            List<ShopAccountVo> ret=accountPoList.stream().map(ShopAccountVo::new).collect(Collectors.toList());
+            return new ReturnObject<>(ret);
         }
         catch (Exception exception){
-            ShopAccountPo shopAccountPo=new ShopAccountPo();
-            shopAccountPo.setId((long) -1);
-            accountPoList.add(0,shopAccountPo);
-            return accountPoList;
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,exception.getMessage());
         }
     }
 
@@ -114,17 +116,5 @@ public class ShopAccountDao {
         catch (Exception exception){
             return false;
         }
-    }
-
-    /**
-     * @author  Xusheng Wang
-     * @date  2021-11-11
-     * @studentId 34520192201587
-     */
-    private void setShopAccountPo(ShopAccountPo shopAccountPo,Long shopId, Long loginUserId, String loginUserName) {
-        shopAccountPo.setShopId(shopId);
-        shopAccountPo.setCreatedBy(loginUserId);
-        shopAccountPo.setCreateName(loginUserName);
-        shopAccountPo.setGmtCreate(LocalDateTime.now());
     }
 }

@@ -47,13 +47,8 @@ public class ShopAccountService {
      * @studentId 34520192201587
      */
     public ReturnObject<List<ShopAccountVo>> getShopAccounts(Long shopId) {
-        List<ShopAccountPo> shopAccountPoList=shopAccountDao.getShopAccounts(shopId);
-        List<ShopAccountVo> ret =shopAccountPoList.stream().map(ShopAccountVo::new).collect(Collectors.toList());
-        if(ret.get(0).getId()==-1){
-            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,"获取失败");
-        }
-        else
-            return new ReturnObject<>(ret);
+        ReturnObject<List<ShopAccountVo>> returnObject=shopAccountDao.getShopAccounts(shopId);
+        return new ReturnObject(returnObject);
     }
 
     /**
