@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.goods.model.bo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.goods.model.vo.OnSaleSimpleRetVo;
+import com.github.pagehelper.PageInfo;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -21,22 +22,17 @@ public class OnSaleSimpleInfo  implements VoObject {
 
     private List<OnSale> list;
 
-    public OnSaleSimpleInfo(Integer page, Integer pageSize,Integer total,
-                          List<OnSale> onSales) {
-        this.list=new ArrayList<OnSale>();
-        this.page=page;
-        this.pageSize=pageSize;
-        this.total=total;
-        this.pages=(int)Math.ceil(total.doubleValue()/pageSize.doubleValue());
 
-        for(OnSale onsale:onSales){
-            list.add(onsale);
-        }
+    public OnSaleSimpleInfo(PageInfo<OnSale> pageInfo) {
+        this.list=pageInfo.getList();
+        this.total= Math.toIntExact(pageInfo.getTotal());
+        this.pages=pageInfo.getPages();
+        this.pageSize=pageInfo.getPageSize();
+        this.page=pageInfo.getPageNum();
     }
 
     @Override
     public Object createVo() {
-
         return new OnSaleSimpleRetVo(this);
     }
 

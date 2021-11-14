@@ -7,6 +7,8 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+import static cn.edu.xmu.oomall.core.util.Common.cloneVo;
+
 /**
  * @author yujie lin
  * @date 2021/11/11
@@ -21,14 +23,14 @@ public class OnSaleSimpleRetVo {
     private List<NewOnSaleRetVo> list;
 
     public OnSaleSimpleRetVo(OnSaleSimpleInfo info) {
-        this.list=new ArrayList<NewOnSaleRetVo>();
+        this.list= new ArrayList<>();
         this.page=info.getPage();
         this.pageSize=info.getPageSize();
         this.total= info.getTotal();
-        this.pages=(int)Math.ceil(total.doubleValue()/pageSize.doubleValue());
+        this.pages=info.getPages();
 
         for(OnSale onsale:info.getList()){
-            NewOnSaleRetVo ret=new NewOnSaleRetVo(onsale);
+            NewOnSaleRetVo ret= new NewOnSaleRetVo(onsale);
             list.add(ret);
         }
     }

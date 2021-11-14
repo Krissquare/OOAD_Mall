@@ -21,9 +21,6 @@ public class NewOnSaleRetVo {
 
     private Integer quantity;
 
-
-
-
     public NewOnSaleRetVo(OnSale onsale) {
         this.id = onsale.getId();
         this.price=onsale.getPrice();

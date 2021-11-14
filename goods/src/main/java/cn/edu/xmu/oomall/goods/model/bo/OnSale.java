@@ -3,14 +3,16 @@ package cn.edu.xmu.oomall.goods.model.bo;
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.goods.model.po.OnSalePo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleRetVo;
+import com.alibaba.druid.support.spring.stat.annotation.Stat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class OnSale  implements VoObject{
+public class OnSale  implements VoObject, Serializable {
 
     private Long id;
     private Long shopId;
@@ -19,33 +21,19 @@ public class OnSale  implements VoObject{
     private LocalDateTime beginTime;
     private LocalDateTime endTime;
     private Integer quantity;
-    private Type type;
+    private Byte type;
     private Long activityId;
     private Long shareActId;
-    private State state;
+    private Byte state;
     private Long createdBy;
     private String createName;
     private Long modifiedBy;
     private String modiName;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
-    private OnSalePo onsalePo;
-
-
-    public OnSale() {
-        this.onsalePo = new OnSalePo();
-    }
-
-    public OnSale(OnSalePo onsalePo) {
-        this.onsalePo = onsalePo;
-    }
 
 
 
-
-    public OnSalePo gotOnSalePo() {
-        return this.onsalePo;
-    }
 
     @Override
     public Object createVo() {
@@ -57,164 +45,28 @@ public class OnSale  implements VoObject{
         return null;
     }
 
-    public Long getId() {
-        return onsalePo.getId();
-    }
-
-    public void setId(Long id) {
-        onsalePo.setId(id);
-    }
-
-    public Long getShopId() {
-        return onsalePo.getShopId();
-    }
-
-    public void setShopId(Long shopId) {
-        onsalePo.setShopId(shopId);
-    }
-
-
-    public Long getProductId() {
-        return onsalePo.getProductId();
-    }
-
-    public void setProductId(Long productId) {
-        onsalePo.setProductId(productId);
-    }
-
-
-    public Long getPrice() {
-        return onsalePo.getPrice();
-    }
-
-
-    public void setPrice(Long price) {
-        onsalePo.setPrice(price);
-    }
-
-
-    public LocalDateTime getBeginTime() {
-        return onsalePo.getBeginTime();
-    }
-
-
-    public void setBeginTime(LocalDateTime beginTime) {
-        onsalePo.setBeginTime(beginTime);
-    }
-
-
-    public LocalDateTime getEndTime() {
-        return onsalePo.getEndTime();
-    }
-
-
-    public void setEndTime(LocalDateTime endTime) {
-        onsalePo.setEndTime(endTime);
-    }
-
-
-    public Integer getQuantity() {
-        return onsalePo.getQuantity();
-    }
-
-
-    public void setQuantity(Integer quantity) {
-        onsalePo.setQuantity(quantity);
-    }
-
-
     public Type getType() {
-        return Type.getTypeByCode(Integer.valueOf(onsalePo.getType()));
+        return Type.getTypeByCode(Integer.valueOf(type));
     }
 
 
     public void setType(Type type) {
-        Integer code=type.getCode();
-        Byte b=(byte)(0XFF & code);
-        onsalePo.setType(b);
-    }
-
-
-    public Long getActivityId() {
-        return onsalePo.getActivityId();
-    }
-
-
-    public void setActivityId(Long activityId) {
-        onsalePo.setActivityId(activityId);
-    }
-
-
-    public Long getShareActId() {
-        return onsalePo.getShareActId();
-    }
-
-
-    public void setShareActId(Long shareActId) {
-        onsalePo.setShareActId(shareActId);
+        this.type=(byte)(0XFF & type.getCode());
     }
 
 
 
     public State getState() {
-        return State.getStatusByCode(Integer.valueOf(onsalePo.getState()));
+        return State.getStatusByCode(Integer.valueOf(state));
     }
 
 
     public void setState(State state) {
         Integer code=state.getCode();
         Byte b=(byte)(0XFF & code);
-        onsalePo.setState(b);
+        this.state=b;
     }
 
-    public Long getCreatedBy(){
-        return onsalePo.getCreatedBy();
-    }
-
-    public void setCreatedBy(Long createdBy){
-        onsalePo.setCreatedBy(createdBy);
-    }
-
-    public String getCreateName(){
-        return onsalePo.getCreateName();
-    }
-
-    public void setCreateName(String createName){
-        onsalePo.setCreateName(createName);
-    }
-
-
-    public Long getModifiedBy(){
-        return onsalePo.getModifiedBy();
-    }
-
-    public void setModifiedBy(Long modifiedBy){
-        onsalePo.setModifiedBy(modifiedBy);
-    }
-
-    public String getModiName(){
-        return onsalePo.getModiName();
-    }
-
-    public void setModiName(String modiName){
-        onsalePo.setModiName(modiName);
-    }
-
-    public LocalDateTime getGmtCreate() {
-        return onsalePo.getGmtCreate();
-    }
-
-    public void setGmtCreate(LocalDateTime llt){
-        onsalePo.setGmtCreate(llt);
-    }
-
-    public LocalDateTime getGmtModified() {
-        return onsalePo.getGmtModified();
-    }
-
-    public void setGmtModified(LocalDateTime llt){
-        onsalePo.setGmtModified(llt);
-    }
 
 
 

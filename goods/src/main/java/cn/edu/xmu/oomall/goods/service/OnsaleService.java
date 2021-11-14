@@ -1,19 +1,20 @@
 package cn.edu.xmu.oomall.goods.service;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.dao.OnSaleDao;
 import cn.edu.xmu.oomall.goods.dao.ProductDao;
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
-import cn.edu.xmu.oomall.goods.model.bo.OnSaleDetailInfo;
+
 import cn.edu.xmu.oomall.goods.model.bo.OnSaleSimpleInfo;
 import cn.edu.xmu.oomall.goods.model.bo.ProductBaseInfo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
-import cn.edu.xmu.oomall.goods.openfeign.ShareActApi;
-import cn.edu.xmu.oomall.goods.openfeign.ShopApi;
+import cn.edu.xmu.oomall.goods.model.vo.OnSaleDetailRetVo;
+import cn.edu.xmu.oomall.goods.microservice.ShareService;
+import cn.edu.xmu.oomall.goods.microservice.ShopService;
+import cn.edu.xmu.oomall.goods.microservice.bo.ActInfo;
+import cn.edu.xmu.oomall.goods.microservice.bo.ShopInfo;
 import com.github.pagehelper.PageInfo;
-import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +45,10 @@ public class OnsaleService {
     private ProductDao productDao;
 
     @Resource
-    private ShopApi shopApi;
+    private ShopService shopService;
 
     @Resource
-    private ShareActApi shareActApi;
+    private ShareService shareService;
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -55,13 +56,15 @@ public class OnsaleService {
 
         //判断该货品是否存在
         if (!productDao.hasExist(productId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "商品id不存在。");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
         }
 
         // 判断该货品是否该商家的
         if (!productDao.matchProductShop(productId, shopId)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "该货品不属于该商铺。");
         }
+
+
 
         OnSale bo =newOnSaleVO.createOnsale(shopId,productId);
         // 判断是否有冲突的销售情况
@@ -76,7 +79,7 @@ public class OnsaleService {
 
         //判断该货品是否存在
         if (!productDao.hasExist(productId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "商品id不存在。");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
         }
         Long shopId = productDao.getShopIdById(productId);
         OnSale bo = newOnSaleVO.createOnsale(shopId,productId);
@@ -91,14 +94,14 @@ public class OnsaleService {
     public ReturnObject onlineOrOfflineOnSale(Long shopId, Long onsaleId, Long userId, String userName, OnSale.State finalState) {
         //判断OnSale是否存在
         OnSale onsale = onsaleDao.getOnSaleById(onsaleId);
-        if (null == onsale.gotOnSalePo()) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该浮动价格");
+        if (null == onsale) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
         }
 
         //限定只能处理普通和秒杀，其他类型返回403错误
         if (onsale.getType() != OnSale.Type.NOACTIVITY
                 && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀订单");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
         }
 
         if (finalState == OnSale.State.OFFLINE) {
@@ -129,14 +132,14 @@ public class OnsaleService {
 
         //判断OnSale是否存在
         OnSale onsale = onsaleDao.getOnSaleById(onsaleId);
-        if (null == onsale.gotOnSalePo()) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该浮动价格");
+        if (null == onsale) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
         }
 
         //限定只能处理团购和预售，其他类型返回403错误
         if (onsale.getType() != OnSale.Type.GROUPON
                 && onsale.getType() != OnSale.Type.PRESALE) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理团购和预售订单");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理团购和预售类型");
         }
 
         if (finalState == OnSale.State.OFFLINE) {
@@ -171,8 +174,8 @@ public class OnsaleService {
         }
 
         ReturnObject retOnSales = onsaleDao.searchOnSaleByProductNorSec(productId, page, pageSize);
-        PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
-        OnSaleSimpleInfo info = new OnSaleSimpleInfo(page, pageSize, Math.toIntExact(pageInfo.getTotal()), pageInfo.getList());
+        PageInfo pageInfo = (PageInfo<OnSale>) retOnSales.getData();
+        OnSaleSimpleInfo info = new OnSaleSimpleInfo(pageInfo);
         return new ReturnObject(info);
 
 
@@ -186,11 +189,10 @@ public class OnsaleService {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
         }
 
-        ReturnObject<Object> retOnSales = onsaleDao.searchOnSaleByProduct(productId, page, pageSize);
-        PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
-        OnSaleSimpleInfo info = new OnSaleSimpleInfo(page, pageSize, Math.toIntExact(pageInfo.getTotal()), pageInfo.getList());
-        return new ReturnObject<>(info);
-
+        ReturnObject<PageInfo<OnSale>> retOnSales = onsaleDao.searchOnSaleByProduct(productId, page, pageSize);
+        PageInfo<OnSale> pageInfo =  retOnSales.getData();
+        OnSaleSimpleInfo info = new OnSaleSimpleInfo(pageInfo);
+        return new ReturnObject(info);
 
     }
 
@@ -200,7 +202,7 @@ public class OnsaleService {
 
         ReturnObject retOnSales = onsaleDao.searchOnSaleByActivity(actId, page, pageSize, state, type);
         PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
-        OnSaleSimpleInfo info = new OnSaleSimpleInfo(page, pageSize, Math.toIntExact(pageInfo.getTotal()), pageInfo.getList());
+        OnSaleSimpleInfo info = new OnSaleSimpleInfo(pageInfo);
         return new ReturnObject<>(info);
     }
 
@@ -208,29 +210,35 @@ public class OnsaleService {
     public ReturnObject searchOnSaleByShare(Long actId, Integer page, Integer pageSize,
                                             Integer state) {
 
+        System.out.println(actId+"ser");
         ReturnObject retOnSales = onsaleDao.searchOnSaleByShare(actId, page, pageSize, state);
         PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
-        OnSaleSimpleInfo info = new OnSaleSimpleInfo(page, pageSize, Math.toIntExact(pageInfo.getTotal()), pageInfo.getList());
+        OnSaleSimpleInfo info;
+        if(pageInfo.getList().size()==0){
+             info=null;
+        }
+        info = new OnSaleSimpleInfo(pageInfo);
         return new ReturnObject<>(info);
     }
 
 
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject<VoObject> getDetail(Long onSaleId, boolean normalAndSecking) {
+    public ReturnObject getDetail(Long onSaleId, boolean normalAndSecking) {
 
         OnSale onSale = onsaleDao.getOnSaleById(onSaleId);
 
         if (normalAndSecking && onSale.getType() != OnSale.Type.NOACTIVITY && onSale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "该订单非普通或秒杀类型。");
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通或秒杀类型");
         }
 
         // 根据shopId 查shopName，
         Long shopId = onSale.getShopId();
-        String shopName;
-        try {
-            shopName = shopApi.getName(shopId);
-        } catch (FeignException e) {
-            shopName = "mock-shop-name";
+        String shopName="mock-shop-name";
+
+        try{
+            shopName = ((ShopInfo)shopService.getInfo(shopId).getData()).getName();
+        }
+        catch(Exception e){
             logger.error(e.getMessage());
         }
 
@@ -238,15 +246,18 @@ public class OnsaleService {
         ProductBaseInfo pInfo = productDao.getBaseInfoById(onSale.getProductId());
         //根据shareActId查name
         Long shareActId = onSale.getShareActId();
-        String shareActName;
-        try {
-            shareActName = shareActApi.getName(shareActId);
-        } catch (FeignException e) {
-            shareActName = "mock-act-name";
+        String shareActName="mock-act-name";
+
+        try{
+            shareActName = ((ActInfo)shareService.getInfo(shareActId).getData()).getName();
+        }
+        catch(Exception e){
             logger.error(e.getMessage());
         }
-        OnSaleDetailInfo info= (new OnSaleDetailInfo(shopName,pInfo,shareActName,onSale));
-        return new ReturnObject(info);
+
+        OnSaleDetailRetVo ret= new OnSaleDetailRetVo(shopName,pInfo,shareActName,onSale);
+
+        return new ReturnObject(ret);
     }
 
 

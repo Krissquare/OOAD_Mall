@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.goods.model.bo;
 
-import cn.edu.xmu.oomall.goods.model.po.ProductPo;
 import lombok.Data;
 
 /**
@@ -10,12 +9,15 @@ import lombok.Data;
 @Data
 public class ProductBaseInfo {
     private Long id;
-    private String productName;
+    private String name;
     private String imageUrl;
 
-    public ProductBaseInfo(ProductPo productPo){
-        this.id=productPo.getId();
-        this.productName=productPo.getName();
-        this.imageUrl=productPo.getImageUrl();
+    public ProductBaseInfo(){}
+
+    public ProductBaseInfo(ProductBaseInfo p){
+        id=p.getId();
+        name=p.getName();
+        imageUrl=p.getImageUrl();
     }
+
 }

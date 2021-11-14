@@ -63,7 +63,4 @@ public interface ProductPoMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProductPo record);
-
-
-    Long getShopIdById(Long id);
 }

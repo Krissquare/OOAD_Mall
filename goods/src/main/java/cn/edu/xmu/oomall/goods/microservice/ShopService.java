@@ -1,16 +1,16 @@
-package cn.edu.xmu.oomall.goods.openfeign;
+package cn.edu.xmu.oomall.goods.microservice;
 
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 /**
  * @author YuJie
  */
 @FeignClient(value = "shop",url = "http://localhost:8081")
-public interface ShopApi {
+public interface ShopService {
 
-    @GetMapping("shops/{id}/name")
-    String getName(@PathVariable Long id);
+    @GetMapping("shops/{id}")
+    ReturnObject getInfo(@PathVariable Long id);
 }
