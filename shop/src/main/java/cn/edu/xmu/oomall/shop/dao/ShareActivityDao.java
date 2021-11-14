@@ -40,7 +40,8 @@ public class ShareActivityDao {
                 return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
         }catch (Exception e){
-            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         ShareActivity shareActivity = (ShareActivity) Common.cloneVo(shareActivityPo,ShareActivity.class);
         return new ReturnObject<>(shareActivity);
@@ -56,10 +57,11 @@ public class ShareActivityDao {
         ShareActivityPo shareActivityPo;
         int ret;
         try {
-            shareActivityPo= shareActivity.newShareActivityPo();
+            shareActivityPo = (ShareActivityPo) Common.cloneVo(getMessageshareActivity,ShareActivityPo.class);
             ret = shareActivityPoMapper.updateByPrimaryKeySelective(shareActivityPo);
         }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.());
         }
         if(ret == 0){
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
@@ -79,7 +81,8 @@ public class ShareActivityDao {
         try {
             ret=shareActivityPoMapper.deleteByPrimaryKey(id);
         }catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret==0){
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
@@ -101,7 +104,8 @@ public class ShareActivityDao {
             ret = shareActivityPoMapper.updateByPrimaryKey(shareActivityPo);
         }
         catch (Exception e){
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret == 0){
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
