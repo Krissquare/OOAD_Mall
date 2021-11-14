@@ -1,10 +1,9 @@
 package cn.edu.xmu.oomall.activity.util;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

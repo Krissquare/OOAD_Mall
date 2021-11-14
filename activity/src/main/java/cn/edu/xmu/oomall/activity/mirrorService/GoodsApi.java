@@ -1,7 +1,7 @@
-package cn.edu.xmu.oomall.activity.openfeign;
+package cn.edu.xmu.oomall.activity.mirrorService;
 
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.OnSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.OnSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
 import org.springframework.cloud.openfeign.FeignClient;

@@ -1,10 +1,10 @@
 package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
-import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
-import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.GoodsApi;
+import cn.edu.xmu.oomall.activity.mirrorService.ShopApi;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.service.ShareActivityService;
 import cn.edu.xmu.oomall.core.util.*;
 import com.github.pagehelper.PageInfo;
@@ -102,7 +102,7 @@ public class ShareActivityController {
         List<Long> shareActivityIds=new ArrayList<>();
         if (productId != null) {
             //TODO:openfeign获得分享活动id
-            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,1);
+            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,10);
             if (onSalesByProductId != null) {
                 long total = onSalesByProductId.getData().getTotal();
                 ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);
@@ -206,7 +206,7 @@ public class ShareActivityController {
         List<Long> shareActivityIds=new ArrayList<>();
         if (productId != null) {
             //TODO:openfeign获得分享活动id
-            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,1);
+            ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId = goodsApi.getOnSalesByProductId(productId,1,10);
             if (onSalesByProductId != null) {
                 long total = onSalesByProductId.getData().getTotal();
                 ReturnObject<PageInfo<SimpleSaleInfoDTO>> onSalesByProductId2 = goodsApi.getOnSalesByProductId(productId,1, (int) total);

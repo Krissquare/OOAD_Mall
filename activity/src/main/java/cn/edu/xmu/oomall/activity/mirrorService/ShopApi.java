@@ -1,6 +1,6 @@
-package cn.edu.xmu.oomall.activity.openfeign;
+package cn.edu.xmu.oomall.activity.mirrorService;
 
-import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

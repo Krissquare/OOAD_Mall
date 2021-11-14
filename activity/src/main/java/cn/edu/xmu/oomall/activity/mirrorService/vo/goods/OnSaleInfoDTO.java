@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.openfeign.vo.goods;
+package cn.edu.xmu.oomall.activity.mirrorService.vo.goods;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
 import com.fasterxml.jackson.annotation.JsonFormat;

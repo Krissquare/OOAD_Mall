@@ -1,10 +1,10 @@
 package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.ActivityApplication;
-import cn.edu.xmu.oomall.activity.openfeign.GoodsApi;
-import cn.edu.xmu.oomall.activity.openfeign.ShopApi;
-import cn.edu.xmu.oomall.activity.openfeign.vo.goods.SimpleSaleInfoDTO;
-import cn.edu.xmu.oomall.activity.openfeign.vo.shop.ShopInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.GoodsApi;
+import cn.edu.xmu.oomall.activity.mirrorService.ShopApi;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.goods.SimpleSaleInfoDTO;
+import cn.edu.xmu.oomall.activity.mirrorService.vo.shop.ShopInfoDTO;
 import cn.edu.xmu.oomall.activity.util.CreateObject;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -41,10 +40,10 @@ public class ShareActivityControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    @MockBean(name = "cn.edu.xmu.oomall.activity.openfeign.GoodsApi")
+    @MockBean(name = "cn.edu.xmu.oomall.activity.mirrorService.GoodsApi")
     private GoodsApi goodsApi;
 
-    @MockBean(name = "cn.edu.xmu.oomall.activity.openfeign.ShopApi")
+    @MockBean(name = "cn.edu.xmu.oomall.activity.mirrorService.ShopApi")
     private ShopApi shopApi;
 
     @Before

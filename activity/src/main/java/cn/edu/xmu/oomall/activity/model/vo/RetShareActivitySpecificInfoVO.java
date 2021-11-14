@@ -57,7 +57,6 @@ public class RetShareActivitySpecificInfoVO implements VoObject, Serializable {
         this.state=shareActivityPo.getState();
         this.gmtCreate=shareActivityPo.getGmtCreate();
         this.gmtModified=shareActivityPo.getGmtModified();;
-
     }
 
     @Override

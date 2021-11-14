@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.openfeign.vo.shop;
+package cn.edu.xmu.oomall.activity.mirrorService.vo.shop;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
 import lombok.AllArgsConstructor;

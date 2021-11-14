@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.openfeign.vo.goods;
+package cn.edu.xmu.oomall.activity.mirrorService.vo.goods;
 
 import lombok.Data;
 
