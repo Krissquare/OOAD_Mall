@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @ApiModel(value = "状态视图")
 public class StateVo {
-    private Integer code;
+    private Byte code;
     private String name;
 
 }

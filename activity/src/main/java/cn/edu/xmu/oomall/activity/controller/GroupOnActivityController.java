@@ -2,7 +2,9 @@ package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.constant.Constants;
 import cn.edu.xmu.oomall.activity.constant.GroupOnState;
+import cn.edu.xmu.oomall.activity.model.vo.FullGroupOnActivityVo;
 import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityPostVo;
+import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityVo;
 import cn.edu.xmu.oomall.activity.service.GroupOnService;
 import cn.edu.xmu.oomall.core.util.*;
 
@@ -39,7 +41,7 @@ public class GroupOnActivityController {
     })
     @GetMapping(value = "/groupons/states")
     public Object getGroupOnStates() {
-        return ResponseUtil.ok(groupOnService.getGroupOnStates());
+        return Common.decorateReturnObject(groupOnService.getGroupOnStates());
     }
 
 
@@ -62,7 +64,7 @@ public class GroupOnActivityController {
                                              @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT) LocalDateTime beginTime,
                                              @RequestParam(required = false) @DateTimeFormat(pattern = Constants.DATE_TIME_FORMAT) LocalDateTime endTime,
                                              @RequestParam(defaultValue = "1") Integer page, @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, GroupOnState.ONLINE, page, pageSize));
+        return Common.decorateReturnObject(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, GroupOnState.ONLINE, page, pageSize));
     }
 
 
@@ -77,15 +79,11 @@ public class GroupOnActivityController {
     })
     @GetMapping(value = "/groupons/{id}")
     public Object getOnlineGroupOnActivity(@PathVariable Long id) {
-        var res = groupOnService.getGroupOnActivity(id);
-        if (res == null) {
-            httpServletResponse.setStatus(404);
-            return ResponseUtil.fail(ReturnNo.RESOURCE_ID_NOTEXIST, "未找到指定ID对应的团购活动");
-        } else if (res.getState() != GroupOnState.ONLINE) {
-            httpServletResponse.setStatus(403);
-            return ResponseUtil.fail(ReturnNo.OK, "没有权限访问未上线的团购活动");
+        var ret = groupOnService.getGroupOnActivity(id, GroupOnState.ONLINE, null);
+        if (ret.getCode().equals(ReturnNo.OK)) {
+            return Common.decorateReturnObject(new ReturnObject(Common.cloneVo(ret.getData(), GroupOnActivityVo.class)));
         } else {
-            return ResponseUtil.ok(res.createVo());
+            return Common.decorateReturnObject(ret);
         }
     }
 
@@ -110,7 +108,7 @@ public class GroupOnActivityController {
                                              @RequestParam(required = false) LocalDateTime beginTime, @RequestParam(required = false) LocalDateTime endTime,
                                              @RequestParam(required = false) GroupOnState state, @RequestParam(defaultValue = "1") Integer page,
                                              @RequestParam(defaultValue = "10") Integer pageSize) {
-        return ResponseUtil.ok(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, state, page, pageSize));
+        return Common.decorateReturnObject(groupOnService.getGroupOnActivities(productId, shopId, beginTime, endTime, state, page, pageSize));
     }
 
 
@@ -130,12 +128,7 @@ public class GroupOnActivityController {
         if (fieldErrors != null) {
             return fieldErrors;
         }
-        var res = groupOnService.addActivity(shopId, body);
-        if (res != null) {
-            return ResponseUtil.ok(res.createSimpleVo());
-        } else {
-            return ResponseUtil.fail(ReturnNo.ACT_LATE_BEGINTIME, "开始时间不能晚于结束时间");
-        }
+        return Common.decorateReturnObject(groupOnService.addActivity(shopId, body));
     }
 
     @ApiOperation(value = "管理员查看特定团购活动详情", produces = "application/json;charset=UTF-8")
@@ -150,15 +143,11 @@ public class GroupOnActivityController {
     })
     @GetMapping(value = "/shops/{shopId}/groupons/{id}")
     public Object getGroupOnActivityInShop(@PathVariable Long shopId, @PathVariable Long id) {
-        var res = groupOnService.getGroupOnActivity(id);
-        if (res == null) {
-            httpServletResponse.setStatus(404);
-            return ResponseUtil.fail(ReturnNo.RESOURCE_ID_NOTEXIST, "未找到指定ID对应的团购活动");
-        } else if (!res.getShopId().equals(shopId)) {
-            httpServletResponse.setStatus(404);
-            return ResponseUtil.fail(ReturnNo.RESOURCE_ID_NOTEXIST, "指定店铺中不存在指定ID对应的团购活动");
+        var ret = groupOnService.getGroupOnActivity(id, null, shopId);
+        if (ret.getCode().equals(ReturnNo.OK)) {
+            return Common.decorateReturnObject(new ReturnObject(Common.cloneVo(ret.getData(), FullGroupOnActivityVo.class)));
         } else {
-            return ResponseUtil.ok(res.createFullVo());
+            return Common.decorateReturnObject(ret);
         }
     }
 

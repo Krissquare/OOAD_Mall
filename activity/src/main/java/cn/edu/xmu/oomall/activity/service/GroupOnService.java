@@ -8,8 +8,11 @@ import cn.edu.xmu.oomall.activity.model.vo.*;
 import cn.edu.xmu.oomall.activity.microservice.GoodsService;
 import cn.edu.xmu.oomall.activity.microservice.ShopService;
 import cn.edu.xmu.oomall.core.util.Common;
+import cn.edu.xmu.oomall.core.util.ReturnNo;
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -35,14 +38,15 @@ public class GroupOnService {
     /**
      * 获得团购的所有状态
      *
-     * @return 团购的状态列表
+     * @return ReturnObject
      */
-    public List<StateVo> getGroupOnStates() {
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ReturnObject getGroupOnStates() {
         var res = new ArrayList<StateVo>();
         for (var v : GroupOnState.values()) {
-            res.add(new StateVo(v.getCode(), v.getName()));
+            res.add(new StateVo(v.getCode().byteValue(), v.getName()));
         }
-        return res;
+        return new ReturnObject(res);
     }
 
     /**
@@ -50,20 +54,18 @@ public class GroupOnService {
      *
      * @param shopId 店铺id
      * @param vo     添加活动的提交信息
-     * @return 成功添加的活动的BO
+     * @return ReturnObject
      */
-    public GroupOnActivity addActivity(Long shopId, GroupOnActivityPostVo vo) {
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject addActivity(Long shopId, GroupOnActivityPostVo vo) {
         if (vo.getBeginTime().isAfter(vo.getEndTime())) {
-            return null;
+            return new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
         } else {
             var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
             bo.setShopId(shopId);
             bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
-            bo.setBeginTime(vo.getBeginTime());
-            bo.setEndTime(vo.getEndTime());
-            bo.setState(GroupOnState.DRAFT);
-            dao.insertActivity(bo);
-            return bo;
+            bo.setState(GroupOnState.DRAFT.getCode().byteValue());
+            return dao.insertActivity(bo);
         }
     }
 
@@ -77,11 +79,12 @@ public class GroupOnService {
      * @param state     状态
      * @param page      页码
      * @param pageSize  每页大小
-     * @return 符合条件的团购活动的VO的列表（分页）
+     * @return ReturnObject
      */
-    public PageInfoVo<SimpleGroupOnActivityVo> getGroupOnActivities(Long productId, Long shopId, LocalDateTime beginTime,
-                                                                    LocalDateTime endTime, GroupOnState state,
-                                                                    Integer page, Integer pageSize) {
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ReturnObject getGroupOnActivities(Long productId, Long shopId, LocalDateTime beginTime,
+                                             LocalDateTime endTime, GroupOnState state,
+                                             Integer page, Integer pageSize) {
         var example = new GroupOnActivityPoExample();
         var criteria = example.createCriteria();
         if (productId != null) {
@@ -100,18 +103,20 @@ public class GroupOnService {
         if (state != null) {
             criteria.andStateEqualTo(state.getCode().byteValue());
         }
-        var pageInfo = dao.getGroupActivities(example, page, pageSize);
-        return new PageInfoVo<>(pageInfo);
+        return dao.getGroupActivities(example, page, pageSize);
     }
 
     /**
-     * 根据id获得团购活动BO
+     * 根据id获得团购活动BO，可以指定状态/店铺id
      *
      * @param id 团购活动id
-     * @return 团购活动BO
+     * @param state 团购活动状态
+     * @param shopId 店铺id
+     * @return ReturnObject
      */
-    public GroupOnActivity getGroupOnActivity(Long id) {
-        return dao.getGroupOnActivity(id);
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ReturnObject getGroupOnActivity(Long id, GroupOnState state, Long shopId) {
+        return dao.getGroupOnActivity(id, state, shopId);
     }
 
 

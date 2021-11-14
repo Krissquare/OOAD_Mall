@@ -181,7 +181,7 @@ public class GroupOnActivityControllerTest {
     @Transactional
     public void getOnlineGroupOnActivityTest2() throws Exception {
         this.mvc.perform(get("/groupons/0"))
-                .andExpect(status().is(404))
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":504,\"errmsg\":\"未找到指定ID对应的团购活动\"}"));
     }
@@ -203,9 +203,9 @@ public class GroupOnActivityControllerTest {
                 .andReturn().getResponse().getContentAsString();
         var id = JacksonUtil.parseObject(responseString, "data", GroupOnActivityVo.class).getId();
         this.mvc.perform(get("/groupons/" + id))
-                .andExpect(status().is(403))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andExpect(content().json("{\"errno\":0,\"errmsg\":\"没有权限访问未上线的团购活动\"}"));
+                .andExpect(content().json("{\"errno\":507,\"errmsg\":\"团购活动未上线\"}"));
     }
 
     /**
@@ -217,7 +217,7 @@ public class GroupOnActivityControllerTest {
     @Transactional
     public void getGroupOnActivityInShopTest2() throws Exception {
         this.mvc.perform(get("/shops/1/groupons/0"))
-                .andExpect(status().is(404))
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":504,\"errmsg\":\"未找到指定ID对应的团购活动\"}"));
     }
@@ -232,7 +232,7 @@ public class GroupOnActivityControllerTest {
     @Transactional
     public void getGroupOnActivityInShopTest3() throws Exception {
         this.mvc.perform(get("/shops/1/groupons/1"))
-                .andExpect(status().is(404))
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":504,\"errmsg\":\"指定店铺中不存在指定ID对应的团购活动\"}"));
     }
@@ -249,19 +249,19 @@ public class GroupOnActivityControllerTest {
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500}]}"))
-                .andExpect(status().is(400))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"length must be between 1 and 128;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":-10,\"percentage\":500}]}"))
-                .andExpect(status().is(400))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be greater than or equal to -1;\"}"));
         this.mvc.perform(post("/shops/1/groupons")
                 .contentType("application/json;charset=UTF-8")
                 .content("{\"name\":\"测试\",\"beginTime\":\"2021-11-11T00:00:00.000\",\"endTime\":\"2021-11-13T00:00:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":500000}]}"))
-                .andExpect(status().is(400))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andExpect(content().json("{\"errno\":503,\"errmsg\":\"must be less than or equal to 1000;\"}"));
     }

@@ -18,16 +18,4 @@ public enum GroupOnState {
     private Integer code;
     private String name;
 
-    public static GroupOnState fromCode(Integer code) {
-        switch (code) {
-            case 0:
-                return DRAFT;
-            case 1:
-                return ONLINE;
-            case 2:
-                return OFFLINE;
-            default:
-                return null;
-        }
-    }
 }

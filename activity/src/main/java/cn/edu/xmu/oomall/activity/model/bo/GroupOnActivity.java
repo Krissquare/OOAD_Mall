@@ -36,25 +36,22 @@ public class GroupOnActivity implements VoObject {
     private String modiName;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
-    private GroupOnState state;
+    private Byte state;
 
     public static GroupOnActivity fromPo(GroupOnActivityPo po) {
         var ret = (GroupOnActivity) Common.cloneVo(po, GroupOnActivity.class);
         ret.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
-        ret.setState(GroupOnState.fromCode(po.getState().intValue()));
         return ret;
     }
 
     public GroupOnActivityPo createPo() {
         var ret = (GroupOnActivityPo) Common.cloneVo(this, GroupOnActivityPo.class);
         ret.setStrategy(JacksonUtil.toJson(strategy));
-        ret.setState(state.getCode().byteValue());
         return ret;
     }
 
     public FullGroupOnActivityVo createFullVo() {
         var ret = (FullGroupOnActivityVo) Common.cloneVo(this, FullGroupOnActivityVo.class);
-        ret.setState(state.getCode());
         return ret;
 
     }

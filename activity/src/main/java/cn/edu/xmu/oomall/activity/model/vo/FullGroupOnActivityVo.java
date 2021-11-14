@@ -44,5 +44,5 @@ public class FullGroupOnActivityVo {
     @JsonFormat(pattern = Constants.DATE_TIME_FORMAT, timezone = "GMT+8")
     private LocalDateTime gmtModified;
 
-    private Integer state;
+    private Byte state;
 }
