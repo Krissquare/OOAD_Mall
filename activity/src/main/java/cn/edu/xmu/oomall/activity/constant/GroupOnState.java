@@ -15,7 +15,19 @@ public enum GroupOnState {
     OFFLINE(2, "下线"),
     ;
 
-    private Integer code;
-    private String name;
+    private final Integer code;
+    private final String name;
 
+    public static GroupOnState valueOf(Byte code) {
+        switch (code) {
+            case 0:
+                return DRAFT;
+            case 1:
+                return ONLINE;
+            case 2:
+                return OFFLINE;
+            default:
+                return null;
+        }
+    }
 }

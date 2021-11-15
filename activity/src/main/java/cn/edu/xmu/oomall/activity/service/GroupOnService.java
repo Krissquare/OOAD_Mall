@@ -61,7 +61,7 @@ public class GroupOnService {
             var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
             bo.setShopId(shopId);
             bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
-            bo.setState(GroupOnState.DRAFT.getCode().byteValue());
+            bo.setState(GroupOnState.DRAFT);
             return dao.insertActivity(bo, createBy, createName);
     }
 

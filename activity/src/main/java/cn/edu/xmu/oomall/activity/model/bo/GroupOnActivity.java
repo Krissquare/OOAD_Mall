@@ -38,4 +38,12 @@ public class GroupOnActivity implements Serializable {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
     private Byte state;
+
+    public GroupOnState getState() {
+        return GroupOnState.valueOf(state);
+    }
+
+    public void setState(GroupOnState state) {
+        this.state = state.getCode().byteValue();
+    }
 }

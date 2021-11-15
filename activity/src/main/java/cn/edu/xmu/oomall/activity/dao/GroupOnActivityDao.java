@@ -86,7 +86,7 @@ public class GroupOnActivityDao {
                 bo = (GroupOnActivity) Common.cloneVo(po, GroupOnActivity.class);
                 bo.setStrategy(JacksonUtil.parseObjectList(po.getStrategy(), GroupOnStrategyVo.class));
             }
-            if (state != null && !bo.getState().equals(state.getCode().byteValue())) {
+            if (state != null && !bo.getState().equals(state)) {
                 return new ReturnObject<>(ReturnNo.STATENOTALLOW, "团购活动未上线");
             }
             if (shopId != null && !bo.getShopId().equals(shopId)) {
