@@ -11,9 +11,13 @@ import cn.edu.xmu.oomall.shop.model.po.ShopAccountPo;
 import cn.edu.xmu.oomall.shop.model.po.ShopPo;
 import cn.edu.xmu.oomall.shop.model.vo.*;
 import cn.edu.xmu.oomall.shop.microservice.PaymentService;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ShopService {
@@ -26,11 +30,54 @@ public class ShopService {
     @Autowired
     private ReconciliationService reconciliationService;
 
-
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReturnObject<Shop> getShopByShopId(Long ShopId) {
         return shopDao.getShopById(ShopId);
     }
 
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ReturnObject<PageInfo<Object>> getAllShop(Integer page, Integer pageSize) {
+        List<ShopPo> shopPos = (List<ShopPo>) shopDao.getAllShop(page, pageSize).getData();
+
+        List<Object> shopRetVos = new ArrayList<>();
+        for (ShopPo po : shopPos) {
+            shopRetVos.add(po);
+        }
+        //分页查询
+        PageInfo<Object> shopRetVoPageInfo = PageInfo.of(shopRetVos);
+        ShopAllRetVo shopAllRetVo = new ShopAllRetVo();
+        shopAllRetVo.setPage(Long.valueOf(page));
+        shopAllRetVo.setPageSize(Long.valueOf(pageSize));
+        shopAllRetVo.setPages((long) shopRetVoPageInfo.getPages());
+        shopAllRetVo.setTotal(shopAllRetVo.getTotal());
+        shopAllRetVo.setList(shopRetVos);
+        return new ReturnObject<>(shopRetVoPageInfo);
+    }
+
+
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
+    @Transactional(readOnly = true, rollbackFor = Exception.class)
+    public ReturnObject getSimpleShopByShopId(Long ShopId) {
+        ReturnObject ret = shopDao.getShopById(ShopId);
+        ShopSimpleRetVo vo = (ShopSimpleRetVo) Common.cloneVo(ret.getData(), ShopSimpleRetVo.class);
+        return new ReturnObject(vo);
+    }
+
+    /**
+     * @Author: 蒋欣雨
+     * @Sn: 22920192204219
+     */
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject newShop(ShopVo shopVo, Long loginUser, String loginUsername) {
         ShopPo po = new ShopPo();
@@ -38,7 +85,7 @@ public class ShopService {
         Common.setPoCreatedFields(po, loginUser, loginUsername);
         ReturnObject ret = shopDao.newShop(po);
         if (ret.getCode().equals(0)) {
-            ShopSimpleRetVo vo = (ShopSimpleRetVo)  Common.cloneVo(ret.getData(), ShopSimpleRetVo.class);
+            ShopSimpleRetVo vo = (ShopSimpleRetVo) Common.cloneVo(ret.getData(), ShopSimpleRetVo.class);
             ret = new ReturnObject(vo);
         }
         return ret;
@@ -54,7 +101,7 @@ public class ShopService {
         Shop shop = new Shop();
         shop.setId(id);
         shop.setName(shopVo.getName());
-        Common.setPoModifiedFields(shop,  loginUser, loginUsername);
+        Common.setPoModifiedFields(shop, loginUser, loginUsername);
 
         ReturnObject ret = shopDao.UpdateShop(shop.getId(), shop);
         return ret;
@@ -63,7 +110,7 @@ public class ShopService {
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject deleteShopById(Long id, Long loginUser, String loginUsername) {
         ReturnObject ret = reconciliationService.isClean(id);
-        if (! ret.getCode().equals(0)) {
+        if (!ret.getCode().equals(0)) {
             return ret;
         }
 
@@ -83,7 +130,7 @@ public class ShopService {
         /*******************************************/
         RefundDepositVo depositVo = (RefundDepositVo) Common.cloneVo(accountPo, RefundDepositVo.class);
         ReturnObject refundRet = paymentService.refund(depositVo);
-        if (! refundRet.getCode().equals(0)){
+        if (!refundRet.getCode().equals(0)) {
             return refundRet;
         }
 
@@ -122,6 +169,7 @@ public class ShopService {
             return new ReturnObject(ReturnNo.STATENOTALLOW);
         }
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject offShelfShop(Long id, Long loginUser, String loginUsername) {

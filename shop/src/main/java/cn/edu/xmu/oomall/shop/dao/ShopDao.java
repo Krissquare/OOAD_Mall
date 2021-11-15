@@ -7,6 +7,8 @@ import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.mapper.ShopPoMapper;
 import cn.edu.xmu.oomall.shop.model.bo.Shop;
 import cn.edu.xmu.oomall.shop.model.po.ShopPo;
+import cn.edu.xmu.oomall.shop.model.po.ShopPoExample;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -33,6 +35,18 @@ public class ShopDao {
         return new ReturnObject<>(shop);
     }
 
+    public ReturnObject getAllShop(Integer page, Integer pageSize) {
+        ShopPoExample example = new ShopPoExample();
+        List<ShopPo> shopPos;
+        try {
+            PageHelper.startPage(page, pageSize);
+            shopPos = shopPoMapper.selectByExample(example);
+        } catch (Exception e) {
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
+        }
+        return new ReturnObject<>(shopPos);
+    }
+
 
     public ReturnObject getShopState() {
         List<Map<String, Object>> stateList = new ArrayList<>();
@@ -51,11 +65,15 @@ public class ShopDao {
         po.setDeposit(Long.valueOf(0));
         po.setGmtCreate(LocalDateTime.now());
         po.setState(Shop.State.EXAME.getCode().byteValue());
-        ret = shopPoMapper.insertSelective(po);
-        if (ret == 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID);
-        } else {
-            return new ReturnObject(po);
+        try {
+            ret = shopPoMapper.insertSelective(po);
+            if (ret == 0) {
+                return new ReturnObject(ReturnNo.FIELD_NOTVALID);
+            } else {
+                return new ReturnObject(po);
+            }
+        } catch (Exception e) {
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
         }
 
     }
