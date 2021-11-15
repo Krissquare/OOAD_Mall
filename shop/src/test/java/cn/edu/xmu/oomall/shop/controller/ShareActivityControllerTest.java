@@ -287,7 +287,7 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional
     public void deleteShareActivity_ShareActivityIdNotFound() throws Exception{
-        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/11"))
+        String responseString=this.mvc.perform(delete("/shops/1/shareactivities/11"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
