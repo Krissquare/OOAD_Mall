@@ -52,30 +52,22 @@ public class ShareActivityService {
             ReturnObject shareActivity;
             onSale= onSaleService.getOnSaleById(id);
             shareActivity= getShareActivityByShareActivityId(sid);
-            if(onSale==null||shareActivity.getData()==null){
+            if(onSale.getData()==null||shareActivity.getData()==null){
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
-            }else{
-                OnSale onSale1 = (OnSale) onSale.getData();
-                if(onSale1.getState().equals(OnSale.State.Online.getCode())){
-                    ShareActivity shareActivity1=(ShareActivity) shareActivity.getData();
-                    if(!shareActivity1.getState().equals(ShareActivity.State.Offline.getCode())){
-                        if (onSaleService.updateAddOnSaleShareActId(id,sid)){
-                            OnSaleRetVo onSaleRetVo = (OnSaleRetVo) Common.cloneVo(onSale1,OnSaleRetVo.class);
-                            return new ReturnObject<>(onSaleRetVo);
-                        }else{
-                            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
-                        }
-                    }
-                    else{
-                        //分享活动需为草稿态或上线态 否则出507错误
-                        return new ReturnObject(ReturnNo.STATENOTALLOW);
-                    }
-                }
-                else{
-                    //OnSale需为上线状态 否则返回507
-                    return new ReturnObject(ReturnNo.STATENOTALLOW);
-                }
             }
+            OnSale onSale1 = (OnSale) onSale.getData();
+            if(!onSale1.getState().equals(OnSale.State.Online.getCode())){
+                return new ReturnObject(ReturnNo.STATENOTALLOW);
+            }
+            ShareActivity shareActivity1=(ShareActivity) shareActivity.getData();
+            if(shareActivity1.getState().equals(ShareActivity.State.Offline.getCode())){
+                return new ReturnObject(ReturnNo.STATENOTALLOW);
+            }
+            if (!onSaleService.updateAddOnSaleShareActId(id,sid)){
+                return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            }
+            OnSaleRetVo onSaleRetVo = (OnSaleRetVo) Common.cloneVo(onSale1,OnSaleRetVo.class);
+            return new ReturnObject<>(onSaleRetVo);
         }catch (Exception e){
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
@@ -94,17 +86,14 @@ public class ShareActivityService {
             ReturnObject shareActivity;
             onSale= onSaleService.getOnSaleById(id);
             shareActivity= getShareActivityByShareActivityId(sid);
-            if(onSale==null||shareActivity.getData()==null){
+            if(onSale.getData()==null||shareActivity.getData()==null){
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
-            else{
-                OnSale onSale1 = (OnSale) onSale.getData();
-                if(onSaleService.updateDeleteOnSaleShareActId(id,sid)){
-                    return new ReturnObject(ReturnNo.OK);
-                }else {
-                    return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
-                }
+            OnSale onSale1 = (OnSale) onSale.getData();
+            if(!onSaleService.updateDeleteOnSaleShareActId(id,sid)){
+                return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
             }
+            return new ReturnObject(ReturnNo.OK);
         }catch (Exception e){
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
         }
@@ -119,9 +108,6 @@ public class ShareActivityService {
      */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject modifyShareActivity(Long id, ShareActivityVo shareActivityVo,Long loginUser, String loginUsername){
-        if(shareActivityVo.getBeginTime().compareTo(shareActivityVo.getEndTime())>0){
-            return new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
-        }
         ShareActivity shareActivity= new ShareActivity();;
         shareActivity.setId(id);
         shareActivity.setGmtModified(LocalDateTime.now());
@@ -133,14 +119,12 @@ public class ShareActivityService {
         var x = getShareActivityByShareActivityId(id).getData();
         if (x==null){
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
-        }else{
-            if(!x.getState().equals(ShareActivity.State.Draft.getCode().byteValue())){
-                return new ReturnObject(ReturnNo.STATENOTALLOW);
-            }else{
-                ReturnObject ret = shareActivityDao.modifyShareActivity(id,shareActivity);
-                return ret;
-            }
         }
+        if(!x.getState().equals(ShareActivity.State.Draft.getCode().byteValue())){
+            return new ReturnObject(ReturnNo.STATENOTALLOW);
+        }
+        ReturnObject ret = shareActivityDao.modifyShareActivity(id,shareActivity);
+        return ret;
     }
 
     /**
@@ -154,15 +138,11 @@ public class ShareActivityService {
         if (x==null){
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
-        else{
-            if(!x.getState().equals(ShareActivity.State.Draft.getCode().byteValue())){
-                return new ReturnObject(ReturnNo.STATENOTALLOW);
-            }
-            else{
-                ReturnObject ret = shareActivityDao.deleteShareActivity(id);
-                return ret;
-            }
+        if(!x.getState().equals(ShareActivity.State.Draft.getCode().byteValue())){
+            return new ReturnObject(ReturnNo.STATENOTALLOW);
         }
+        ReturnObject ret = shareActivityDao.deleteShareActivity(id);
+        return ret;
     }
 
     /**
@@ -176,18 +156,13 @@ public class ShareActivityService {
         if (x==null){
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
-        else{
-            System.out.println(x.getState());
-            if(x.getState().equals(ShareActivity.State.Online.getCode())){
-                return new ReturnObject(ReturnNo.STATENOTALLOW);
-            }
-            else{
-                x.setState((byte) 1);
-                Common.setPoModifiedFields(x,loginUser,loginUsername);
-                ReturnObject ret=shareActivityDao.updateShareActivityState(x);
-                return ret;
-            }
+        if(x.getState().equals(ShareActivity.State.Online.getCode())){
+            return new ReturnObject(ReturnNo.STATENOTALLOW);
         }
+        x.setState((byte) 1);
+        Common.setPoModifiedFields(x,loginUser,loginUsername);
+        ReturnObject ret=shareActivityDao.updateShareActivityState(x);
+        return ret;
     }
 
     /**
@@ -201,16 +176,12 @@ public class ShareActivityService {
         if (x==null){
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }
-        else{
-            if(x.getState().equals(ShareActivity.State.Offline.getCode())){
-                return new ReturnObject(ReturnNo.STATENOTALLOW);
-            }
-            else{
-                x.setState((byte) 2);
-                Common.setPoModifiedFields(x,loginUser,loginUsername);
-                ReturnObject ret=shareActivityDao.updateShareActivityState(x);
-                return ret;
-            }
+        if(x.getState().equals(ShareActivity.State.Offline.getCode())){
+            return new ReturnObject(ReturnNo.STATENOTALLOW);
         }
+        x.setState((byte) 2);
+        Common.setPoModifiedFields(x,loginUser,loginUsername);
+        ReturnObject ret=shareActivityDao.updateShareActivityState(x);
+        return ret;
     }
 }
