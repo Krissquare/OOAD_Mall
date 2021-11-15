@@ -1,7 +1,8 @@
-package cn.edu.xmu.oomall.freight;
+package cn.edu.xmu.oomall.freight.mapper;
 
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
-import cn.edu.xmu.oomall.goods.model.vo.RegionVo;
+import cn.edu.xmu.oomall.freight.FreightApplication;
+import cn.edu.xmu.oomall.freight.model.vo.RegionVo;
 import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;

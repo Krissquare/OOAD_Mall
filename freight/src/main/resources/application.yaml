@@ -48,7 +48,6 @@ spring:
           slow-sql-millis: 100
       validation-query: select 1
 
-
   redis:
     # Redis数据库索引（默认为0）
     database: 0
@@ -66,6 +65,7 @@ spring:
         max-wait: -1
     # 连接超时时间（毫秒）
     timeout: 5000
+
   sql:
     init:
       mode: always
@@ -75,9 +75,9 @@ spring:
 
 mybatis:
   #po对象的包
-  type-aliases-package: cn.edu.xmu.oomall.goods.model
+  type-aliases-package: cn.edu.xmu.oomall.freight.model
   #mapper.xml所在的位置
-  mapper-locations: classpath*:cn.edu.xmu.goods.mapper/*.xml
+  mapper-locations: classpath*:cn.edu.xmu.freight.mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
   configuration:
     #输出产生的SQL
