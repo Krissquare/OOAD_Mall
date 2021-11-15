@@ -300,7 +300,6 @@ public class Common {
                     else {
                         //将此属性设置为null,继续进行下一retVo属性的复制
                         voField.set(newVo, null);
-                        continue;
                     }
                 }
             }
