@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.goods.model.po;
+package cn.edu.xmu.oomall.freight.model.po;
 
 import java.time.LocalDateTime;
 
