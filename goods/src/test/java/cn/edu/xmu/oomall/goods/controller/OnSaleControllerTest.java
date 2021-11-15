@@ -368,7 +368,7 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(put("/internal/onsales/22")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-        
+        String expect;
 
 //        开始时间晚于结束时间
         input = new JSONObject();
