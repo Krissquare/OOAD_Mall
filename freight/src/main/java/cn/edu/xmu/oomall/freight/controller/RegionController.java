@@ -5,9 +5,8 @@ import cn.edu.xmu.oomall.core.util.ResponseUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.service.RegionService;
-import cn.edu.xmu.oomall.goods.model.bo.Region;
-import cn.edu.xmu.oomall.goods.model.vo.RegionRetVo;
-import cn.edu.xmu.oomall.goods.model.vo.RegionVo;
+import cn.edu.xmu.oomall.freight.model.vo.RegionRetVo;
+import cn.edu.xmu.oomall.freight.model.vo.RegionVo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
 import java.util.List;
 
 import static cn.edu.xmu.oomall.core.util.Common.*;
@@ -54,14 +52,7 @@ public class RegionController {
 
         ReturnObject returnObject = regionService.getParentRegion(id);
 
-        if(returnObject.getData()!=null) {
-            List<Region> retRegions = (List<Region>)returnObject.getData();
-            List<RegionRetVo> regionRetVos = new ArrayList<>(5);
-            for (Region regionItem : retRegions) {
-                regionRetVos.add( (RegionRetVo) Common.cloneVo(regionItem, RegionRetVo.class) );
-            }
-            returnObject = new ReturnObject(regionRetVos);
-        }
+        returnObject = Common.getListRetVo(returnObject,RegionRetVo.class);
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -118,7 +109,7 @@ public class RegionController {
             return new ResponseEntity(ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE, "非管理员无权操作"), HttpStatus.FORBIDDEN);
         }
 
-        ReturnObject<List<RegionRetVo>> returnObject = regionService.getChildRegion(id, Long.valueOf(did));
+        ReturnObject returnObject = regionService.getChildRegion(id, Long.valueOf(did));
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -137,7 +128,7 @@ public class RegionController {
     @GetMapping("/regions/{id}/subregions")
     public Object getChildRegion(@PathVariable("id") Long id) {
 
-        ReturnObject<List<RegionRetVo>> returnObject = regionService.getChildRegion(id, 1L);
+        ReturnObject returnObject = regionService.getChildRegion(id, 1L);
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -169,7 +160,7 @@ public class RegionController {
             return object;
         }
 
-        ReturnObject<Object> returnObject = regionService.modifyRegion(regionVo, id, userId, userName);
+        ReturnObject returnObject = regionService.modifyRegion(regionVo, id, userId, userName);
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -196,7 +187,7 @@ public class RegionController {
         userId=Long.valueOf(1);
         userName="admin";
 
-        ReturnObject<Object> returnObject = regionService.abandonRegion(id, userId, userName);
+        ReturnObject returnObject = regionService.abandonRegion(id, userId, userName);
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -223,7 +214,7 @@ public class RegionController {
         userId=Long.valueOf(1);
         userName="admin";
 
-        ReturnObject<Object> returnObject = regionService.suspendRegion(id, userId, userName);
+        ReturnObject returnObject = regionService.suspendRegion(id, userId, userName);
 
         return Common.decorateReturnObject(returnObject);
     }
@@ -250,7 +241,7 @@ public class RegionController {
         userId=Long.valueOf(1);
         userName="admin";
 
-        ReturnObject<Object> returnObject = regionService.resumeRegion(id, userId, userName);
+        ReturnObject returnObject = regionService.resumeRegion(id, userId, userName);
 
         return Common.decorateReturnObject(returnObject);
     }

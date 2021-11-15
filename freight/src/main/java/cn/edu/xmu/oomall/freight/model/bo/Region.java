@@ -1,8 +1,5 @@
-package cn.edu.xmu.oomall.goods.model.bo;
+package cn.edu.xmu.oomall.freight.model.bo;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.goods.model.po.RegionPo;
-import cn.edu.xmu.oomall.goods.model.vo.RegionRetVo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

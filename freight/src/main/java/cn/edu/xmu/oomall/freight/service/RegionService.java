@@ -1,14 +1,12 @@
 package cn.edu.xmu.oomall.freight.service;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
-import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.dao.RegionDao;
-import cn.edu.xmu.oomall.goods.model.bo.Region;
-import cn.edu.xmu.oomall.goods.model.po.RegionPo;
-import cn.edu.xmu.oomall.goods.model.vo.RegionRetVo;
-import cn.edu.xmu.oomall.goods.model.vo.RegionVo;
+import cn.edu.xmu.oomall.freight.model.bo.Region;
+import cn.edu.xmu.oomall.freight.model.po.RegionPo;
+import cn.edu.xmu.oomall.freight.model.vo.RegionRetVo;
+import cn.edu.xmu.oomall.freight.model.vo.RegionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,9 +36,9 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class, readOnly = true)
-    public ReturnObject<List<Region>> getParentRegion(Long id) {
+    public ReturnObject getParentRegion(Long id) {
 
-        ReturnObject<List<Region>> returnObject = regionDao.getParentRegion(id);
+        ReturnObject returnObject = regionDao.getParentRegion(id);
 
         return returnObject;
     }
@@ -51,13 +49,13 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> createRegion(RegionVo regionVo, Long pid, Long userId, String userName) {
+    public ReturnObject createRegion(RegionVo regionVo, Long pid, Long userId, String userName) {
 
         Region region = (Region) Common.cloneVo(regionVo,Region.class);
         region.setPid(pid);
         region.setState(STATE_EFFCTIVE);
 
-        ReturnObject<Object> retObj = regionDao.createRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
+        ReturnObject retObj = regionDao.createRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
 
         return retObj;
     }
@@ -71,7 +69,7 @@ public class RegionService {
     @Transactional(rollbackFor=Exception.class, readOnly = true)
     public ReturnObject getChildRegion(Long id, Long did) {
 
-        ReturnObject<List<Region>> returnObject;
+        ReturnObject returnObject;
         if(did.equals(Long.valueOf(0))) {
             returnObject = regionDao.adminGetChildRegion(id);
         }
@@ -79,16 +77,7 @@ public class RegionService {
             returnObject = regionDao.getChildRegion(id);
         }
 
-        if(returnObject.getData()!=null) {
-            List<Region> retRegions = returnObject.getData();
-            List<RegionRetVo> regionRetVos = new ArrayList<>();
-            for (Region regionItem : retRegions) {
-                regionRetVos.add( (RegionRetVo) Common.cloneVo(regionItem, RegionRetVo.class) );
-            }
-            returnObject = new ReturnObject(regionRetVos);
-        }
-
-        return returnObject;
+        return Common.getListRetVo(returnObject,RegionRetVo.class);
     }
 
     /**
@@ -97,7 +86,7 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> modifyRegion(RegionVo regionVo, Long id, Long userId, String userName) {
+    public ReturnObject modifyRegion(RegionVo regionVo, Long id, Long userId, String userName) {
 
         Region region = (Region) Common.cloneVo(regionVo, Region.class);
         region.setId(id);
@@ -111,7 +100,7 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> abandonRegion(Long id, Long userId, String userName) {
+    public ReturnObject abandonRegion(Long id, Long userId, String userName) {
 
         Region region=new Region();
         region.setId(id);
@@ -126,7 +115,7 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> suspendRegion(Long id, Long userId, String userName) {
+    public ReturnObject suspendRegion(Long id, Long userId, String userName) {
 
         Region region=new Region();
         region.setId(id);
@@ -141,7 +130,7 @@ public class RegionService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject<Object> resumeRegion(Long id, Long userId, String userName) {
+    public ReturnObject resumeRegion(Long id, Long userId, String userName) {
 
         Region region=new Region();
         region.setId(id);

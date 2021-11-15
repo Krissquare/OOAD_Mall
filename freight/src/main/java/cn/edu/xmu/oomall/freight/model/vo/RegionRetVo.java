@@ -1,6 +1,5 @@
-package cn.edu.xmu.oomall.goods.model.vo;
+package cn.edu.xmu.oomall.freight.model.vo;
 
-import cn.edu.xmu.oomall.goods.model.bo.Region;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
