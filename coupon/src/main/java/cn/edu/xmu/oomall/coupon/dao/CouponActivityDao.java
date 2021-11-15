@@ -37,6 +37,9 @@ public class CouponActivityDao {
 
     @Value("${webdav.password}")
     String webDavPassword;
+
+    @Value("${webdav.baseurl}")
+    String baseUrl;
     /**
      * 查看优惠活动模块的所有活动
      * @return ReturnObject<List<Map<String, Object>>>
@@ -149,10 +152,10 @@ public class CouponActivityDao {
             String oldUrl = couponActivityPo.getImageUrl();
             //如果文件不为空，需要将删除ImageHelper中的原来文件
             if(oldUrl!=null){
-                ImgHelper.deleteRemoteImg(oldUrl,webDavUser,webDavPassword,"http://localhost/webdav/");
+                ImgHelper.deleteRemoteImg(oldUrl,webDavUser,webDavPassword,baseUrl);
             }
             //将新增的文件上传到dav中
-            ReturnObject returnObject1 = ImgHelper.remoteSaveImg(multipartFile,1000000,webDavUser,webDavPassword,"http://localhost/webdav/");
+            ReturnObject returnObject1 = ImgHelper.remoteSaveImg(multipartFile,1000000,webDavUser,webDavPassword,baseUrl);
             if(!returnObject1.getCode().equals(ReturnNo.OK)){
                 // 返回调用ImageHelper的错误信息
                 return returnObject1;

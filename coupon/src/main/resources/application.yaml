@@ -88,6 +88,11 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
+webdav:
+  user: DELL
+  password: zrj2714
+  baseurl: http://localhost/webdav/
+
 
 
 
