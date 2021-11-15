@@ -176,6 +176,39 @@ public class OnsaleService {
 
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject updateOnSaleNorSec(OnSale bo,Long shopId,Long userId,String userName) {
+
+        //判断OnSale是否存在
+        OnSale onsale = onsaleDao.getOnSaleById(bo.getId());
+        if (null == onsale) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
+        }
+
+        //限定只能处理普通和秒杀，其他类型返回403错误
+        if (onsale.getType() != OnSale.Type.NOACTIVITY
+                && onsale.getType() != OnSale.Type.SECKILL) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
+        }
+
+
+        //只有草稿态或下线态才能修改， 否则出507错误
+        if (onsale.getState() != OnSale.State.DRAFT
+                &&onsale.getState() != OnSale.State.OFFLINE) {
+            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态或下线态无法修改");
+        }
+
+        bo.setProductId(onsale.getProductId());
+        // 判断是否有冲突的销售情况
+        if (onsaleDao.timeCollided(bo)) {
+            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
+        }
+
+
+        return onsaleDao.updateOnSale(bo,userId, userName);
+
+    }
+
 
 }
 

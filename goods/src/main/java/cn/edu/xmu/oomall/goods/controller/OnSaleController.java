@@ -249,5 +249,28 @@ public class OnSaleController {
     }
 
 
+    @ApiOperation(value = "修改普通和秒杀价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 507, message = "只有草稿态和下线态才能修改"),
+    })
+    @PutMapping("shops/{shopId}/onsales/{id}")
+    public Object modifyOnSaleNorSec(@PathVariable Long shopId, @PathVariable Long id, @RequestBody ModifyOnSaleVo onSale, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        OnSale bo= (OnSale) cloneVo(onSale,OnSale.class);
+        bo.setId(id);
+
+        // 判断开始时间是否比结束时间晚
+        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        }
+
+        ReturnObject returnObject1 = onsaleService.updateOnSaleNorSec(bo,shopId,loginUserId, loginUserName);
+        return decorateReturnObject(returnObject1);
+    }
+
+
 
 }
