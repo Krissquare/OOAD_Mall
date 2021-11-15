@@ -64,7 +64,7 @@ public class ShareActivityDao {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret == 0){
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID);
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }else{
             return new ReturnObject(ReturnNo.OK);
         }
@@ -85,7 +85,7 @@ public class ShareActivityDao {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret==0){
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID);
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }else{
             return new ReturnObject(ReturnNo.OK);
         }
@@ -108,7 +108,7 @@ public class ShareActivityDao {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret == 0){
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID);
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
         }else{
             return new ReturnObject();
         }
