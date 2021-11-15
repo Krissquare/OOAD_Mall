@@ -89,8 +89,8 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,11L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
-        String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/11"))
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,-1L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
+        String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/-1"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -161,8 +161,8 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,11L)).thenReturn(new ReturnObject<>(Boolean.FALSE));
-        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/11"))
+        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,-1L)).thenReturn(new ReturnObject<>(Boolean.FALSE));
+        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/-1"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -248,7 +248,7 @@ public class ShareActivityControllerTest {
         shareActivityVo.setEndTime(LocalDateTime.parse("2021-11-11T19:30:40"));
         shareActivityVo.setStrategy(list);
         String json= JacksonUtil.toJson(shareActivityVo);
-        String responseString=this.mvc.perform(put("/shops/1/shareactivities/11")
+        String responseString=this.mvc.perform(put("/shops/1/shareactivities/-1")
                         .contentType("application/json;charset=UTF-8").content(json))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -285,7 +285,7 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional
     public void deleteShareActivity_ShareActivityIdNotFound() throws Exception{
-        String responseString=this.mvc.perform(delete("/shops/1/shareactivities/11"))
+        String responseString=this.mvc.perform(delete("/shops/1/shareactivities/-1"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -337,7 +337,7 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional
     public void shareActivityOnline_ShareActivityIdNotFound() throws Exception{
-        String responseString=this.mvc.perform(put("/shops/1/shareactivities/11/online"))
+        String responseString=this.mvc.perform(put("/shops/1/shareactivities/-1/online"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -376,7 +376,7 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional
     public void shareActivityOffline_ShareActivityIdNotFound() throws Exception{
-        String responseString=this.mvc.perform(put("/shops/1/shareactivities/11/offline"))
+        String responseString=this.mvc.perform(put("/shops/1/shareactivities/-1/offline"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
