@@ -123,7 +123,7 @@ public class GroupOnActivityController {
     })
     @PostMapping(value = "/shops/{shopId}/groupons")
     public Object addGroupOnActivity(@PathVariable("shopId") Long shopId, @Valid @RequestBody GroupOnActivityPostVo body, BindingResult bindingResult) {
-        Long createBy = 1L;
+        Long createdBy = 1L;
         String createName = "admin";
         var fieldErrors = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (fieldErrors != null) {
@@ -133,7 +133,7 @@ public class GroupOnActivityController {
         if (!body.getBeginTime().isBefore(body.getEndTime())) {
             ret = new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
         } else {
-            ret = groupOnService.addActivity(shopId, body, createBy, createName);
+            ret = groupOnService.addActivity(shopId, body, createdBy, createName);
         }
         return Common.decorateReturnObject(ret);
     }

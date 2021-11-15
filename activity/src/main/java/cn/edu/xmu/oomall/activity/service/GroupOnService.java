@@ -57,12 +57,16 @@ public class GroupOnService {
      * @return ReturnObject
      */
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject addActivity(Long shopId, GroupOnActivityPostVo vo, Long createBy, String createName) {
+    public ReturnObject addActivity(Long shopId, GroupOnActivityPostVo vo, Long createdBy, String createName) {
             var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
+            var shopInfoRet = shopService.getShopInfo(shopId);
+            if (!shopInfoRet.getCode().equals(ReturnNo.OK)) {
+                return shopInfoRet;
+            }
             bo.setShopId(shopId);
-            bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
+            bo.setShopName(shopInfoRet.getData().getName());
             bo.setState(GroupOnState.DRAFT);
-            return dao.insertActivity(bo, createBy, createName);
+            return dao.insertActivity(bo, createdBy, createName);
     }
 
     /**
@@ -84,8 +88,11 @@ public class GroupOnService {
         var example = new GroupOnActivityPoExample();
         var criteria = example.createCriteria();
         if (productId != null) {
-            var ids = getGroupOnActivitiesOfProduct(productId);
-            criteria.andIdIn(ids);
+            var idsRet = getGroupOnActivitiesOfProduct(productId);
+            if(!idsRet.getCode().equals(ReturnNo.OK)) {
+                return idsRet;
+            }
+            criteria.andIdIn((List<Long>) idsRet.getData());
         }
         if (shopId != null) {
             criteria.andShopIdEqualTo(shopId);
@@ -116,23 +123,29 @@ public class GroupOnService {
     }
 
 
-    private List<Long> getGroupOnActivitiesOfProduct(Long productId) {
+    private ReturnObject getGroupOnActivitiesOfProduct(Long productId) {
         int page = 1;
         int pages = -1;
         var list = new ArrayList<Long>();
         do {
-            var ret = goodsService.getOnsSlesOfProduct(productId, page, 10);
-            for (var simpleOnSale : ret.getData().getList()) {
-                var onSale = goodsService.getOnSale(simpleOnSale.getId());
-                if (onSale.getData().getType() == 2) {
-                    list.add(onSale.getData().getActivityId());
+            var onSalesListRet = goodsService.getOnsSalesOfProduct(productId, page, 10);
+            if (!onSalesListRet.getCode().equals(ReturnNo.OK)) {
+                return onSalesListRet;
+            }
+            for (var simpleOnSale : onSalesListRet.getData().getList()) {
+                var onSaleRet = goodsService.getOnSale(simpleOnSale.getId());
+                if (!onSaleRet.getCode().equals(ReturnNo.OK)) {
+                    return onSaleRet;
+                }
+                if (onSaleRet.getData().getType() == 2) {
+                    list.add(onSaleRet.getData().getActivityId());
                 }
             }
             if (pages == -1) {
-                pages = ret.getData().getPages();
+                pages = onSalesListRet.getData().getPages();
             }
             page++;
         } while (page <= pages);
-        return list;
+        return new ReturnObject(list);
     }
 }

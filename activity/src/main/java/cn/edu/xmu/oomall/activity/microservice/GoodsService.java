@@ -18,7 +18,7 @@ import java.util.List;
 @FeignClient(name = "Goods")
 public interface GoodsService {
     @GetMapping("/internal/products/{id}/onsales")
-    ReturnObject<PageInfoVo<SimpleOnSaleVo>> getOnsSlesOfProduct(@PathVariable Long id, @RequestParam Integer page, @RequestParam Integer pageSize);
+    ReturnObject<PageInfoVo<SimpleOnSaleVo>> getOnsSalesOfProduct(@PathVariable Long id, @RequestParam Integer page, @RequestParam Integer pageSize);
 
     @GetMapping("/internal/onsales/{id}")
     ReturnObject<OnSaleVo> getOnSale(@PathVariable Long id);
