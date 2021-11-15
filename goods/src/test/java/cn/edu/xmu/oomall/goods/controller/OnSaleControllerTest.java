@@ -368,22 +368,7 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(put("/internal/onsales/22")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
-
-//        // 商品销售时间冲突=》
-//        input = new JSONObject();
-//        input.put("price", 1000L);
-//        input.put("beginTime", "2021-11-12 09:30:30");
-//        input.put("endTime", "2022-10-12 09:40:30");
-//        input.put("quantity",10);
-//        input.put("type", 0);
-//        s = input.toJSONString();
-//        res = this.mvc.perform(post("/internal/onsales/3913")
-//                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
-//                .getResponse().getContentAsString();
-//
-        String expect="{\"errno\": 902,\"errmsg\": \"商品销售时间冲突。\"}";
-//        JSONAssert.assertEquals(expect, res,true);
-
+        
 
 //        开始时间晚于结束时间
         input = new JSONObject();
