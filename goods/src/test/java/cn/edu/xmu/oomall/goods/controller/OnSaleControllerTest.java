@@ -175,7 +175,7 @@ public class OnSaleControllerTest {
         JSONAssert.assertEquals(expect, res,true);
 
 
-        //只能处理秒杀、普通订单
+        //只能处理秒杀、普通
         res = this.mvc.perform(put("/shops/3/onsales/2/online").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
         expect="{\"errno\": 505,\"errmsg\": \"只能处理普通和秒杀类型\"}";
@@ -217,7 +217,7 @@ public class OnSaleControllerTest {
         JSONAssert.assertEquals(expect, res,true);
 
 
-        //只能处理秒杀、普通订单
+        //只能处理秒杀、普通
         res = this.mvc.perform(put("/shops/3/onsales/2/offline").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isForbidden()).andReturn().getResponse().getContentAsString();
         expect="{\"errno\": 505,\"errmsg\": \"只能处理普通和秒杀类型\"}";
@@ -382,6 +382,52 @@ public class OnSaleControllerTest {
                 .getResponse().getContentAsString();
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
+
+    }
+
+    @Test
+    public void testUpdateNorSec() throws Exception{
+
+        // 正常=》
+        JSONObject input = new JSONObject();
+        input.put("price", 1000L);
+        input.put("beginTime", "2022-10-11 15:20:30");
+        input.put("endTime", "2022-10-12 16:20:30");
+        input.put("quantity",10);
+        String s = input.toJSONString();
+        String res = this.mvc.perform(put("/internal/onsales/22")
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        String expect;
+
+//        开始时间晚于结束时间
+        input = new JSONObject();
+        input.put("price", 1000L);
+        input.put("beginTime", "2028-03-11 15:30:30");
+        input.put("endTime", "2028-02-12 16:20:30");
+        input.put("quantity",10);
+        s = input.toJSONString();
+        res = this.mvc.perform(put("/internal/onsales/29")
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
+                .getResponse().getContentAsString();
+        expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+
+//        开始时间晚于结束时间
+        input = new JSONObject();
+        input.put("price", 1000L);
+        input.put("beginTime", "2028-03-11 15:30:30");
+        input.put("endTime", "2028-02-12 16:20:30");
+        input.put("quantity",10);
+        s = input.toJSONString();
+        res = this.mvc.perform(put("/internal/onsales/2")
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn()
+                .getResponse().getContentAsString();
+        expect="{\"errno\": 505,\"errmsg\": \"限定处理普通或秒杀。\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+
 
     }
 
