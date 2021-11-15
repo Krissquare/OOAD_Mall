@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.shop.controller;
 
 import cn.edu.xmu.oomall.core.util.Common;
+import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.shop.model.vo.ShareActivityVo;
 import cn.edu.xmu.oomall.shop.service.ShareActivityService;
@@ -83,6 +84,9 @@ public class ShareActivityController {
     public Object modifyShareActivity(@PathVariable("shopId") Long shopId, @PathVariable("id") Long id, @RequestBody ShareActivityVo shareActivityVo,Long loginUser,String loginUsername){
         loginUser= 123L;
         loginUsername="pika";
+        if(shareActivityVo.getBeginTime().compareTo(shareActivityVo.getEndTime())>0){
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME));
+        }
         ReturnObject returnObject =shareActivityService.modifyShareActivity(id, shareActivityVo,loginUser,loginUsername);
         return Common.decorateReturnObject(returnObject);
     }
