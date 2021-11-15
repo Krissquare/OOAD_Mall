@@ -39,6 +39,8 @@ public class OnSaleDao {
     @Value("${oomall.goods.onsale.expiretime}")
     private long onSaleTimeout;
 
+
+
     /**
      * 创建Onsale对象
      *
@@ -76,6 +78,34 @@ public class OnSaleDao {
 
     }
 
+    public ReturnObject onlineOrOfflineOnSaleAct(Long actId, Long userId, String userName,OnSale.State cntState,OnSale.State finalState) {
+        try{
+
+            OnSalePoExample oe=new OnSalePoExample();
+            OnSalePoExample.Criteria cr=oe.createCriteria();
+            cr.andActivityIdEqualTo(actId);
+            Byte s1=(byte)(0XFF&cntState.getCode());
+            cr.andStateEqualTo(s1);
+
+            Byte s2=(byte)(0XFF&finalState.getCode());
+            List<OnSalePo> pos= onSalePoMapper.selectByExample(oe);
+
+            for(OnSalePo po:pos){
+                // delete redis if exist
+                redisUtil.del("o_"+po.getId());
+                po.setState(s2);
+                setPoModifiedFields(po,userId,userName);
+                onSalePoMapper.updateByPrimaryKeySelective(po);
+            }
+            return new ReturnObject();
+        }
+        catch(Exception e){
+            logger.error(e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
+
+    }
+
     public OnSale getOnSaleById(Long id) {
         try{
             // 先从redis中取
@@ -103,96 +133,10 @@ public class OnSaleDao {
     }
 
 
-    public ReturnObject searchOnSaleByProductNorSec(Long productId, Integer page, Integer pageSize) {
-        try{
-            PageHelper.startPage(page, pageSize);
-
-            OnSalePoExample oe=new OnSalePoExample();
-            OnSalePoExample.Criteria cr=oe.createCriteria();
-            cr.andProductIdEqualTo(productId);
-            Byte t1=(byte)(0XFF&OnSale.Type.NOACTIVITY.getCode());
-            Byte t2=(byte)(0XFF&OnSale.Type.SECKILL.getCode());
-            List<Byte> target= new ArrayList<>();
-            target.add(t1);
-            target.add(t2);
-            cr.andTypeIn(target);
-            List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
-
-            return getBoAndReturn(pos);
-        }
-        catch(Exception e){
-            logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
-        }
-
-    }
-
-    public ReturnObject searchOnSaleByProduct(Long productId, Integer page, Integer pageSize) {
-        try{
-            PageHelper.startPage(page, pageSize);
 
 
-            OnSalePoExample oe=new OnSalePoExample();
-            OnSalePoExample.Criteria cr=oe.createCriteria();
-            cr.andProductIdEqualTo(productId);
 
-            List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
 
-            return getBoAndReturn(pos);
-        }
-        catch(Exception e){
-            logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
-        }
-
-    }
-
-    public ReturnObject searchOnSaleByActivity(Long actId, Integer page, Integer pageSize, Integer state, OnSale.Type type) {
-        try{
-            PageHelper.startPage(page, pageSize);
-
-            OnSalePoExample oe=new OnSalePoExample();
-            OnSalePoExample.Criteria cr=oe.createCriteria();
-            cr.andActivityIdEqualTo(actId);
-            if(state!=null) {
-                Byte s1;
-                s1=(byte)(0XFF&state);
-                cr.andStateEqualTo(s1);
-            }
-
-            List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
-            return getBoAndReturn(pos);
-        }
-        catch(Exception e){
-            logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
-        }
-    }
-
-    public ReturnObject searchOnSaleByShare(Long actId, Integer page, Integer pageSize, Integer state) {
-        try{
-            PageHelper.startPage(page, pageSize);
-
-            OnSalePoExample oe=new OnSalePoExample();
-            OnSalePoExample.Criteria cr=oe.createCriteria();
-            cr.andShareActIdEqualTo(actId);
-
-            if(state!=null) {
-                Byte s1;
-                s1=(byte)(0XFF&state);
-                cr.andStateEqualTo(s1);
-            }
-
-            List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
-
-            return getBoAndReturn(pos);
-        }
-        catch (Exception e){
-            logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
-        }
-
-    }
 
     private ReturnObject getBoAndReturn(List<OnSalePo> pos) {
         try{
@@ -208,6 +152,35 @@ public class OnSaleDao {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
+    }
+
+    public ReturnObject deleteOnSale(Long id){
+        try{
+            // delete redis if exist
+            redisUtil.del("o_"+id);
+            onSalePoMapper.deleteByPrimaryKey(id);
+            return new ReturnObject(ReturnNo.OK);
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
+    }
+
+
+    public ReturnObject deleteOnSaleAct(Long actId){
+        try{
+            OnSalePoExample oe=new OnSalePoExample();
+            OnSalePoExample.Criteria cr=oe.createCriteria();
+            cr.andActivityIdEqualTo(actId);
+            cr.andStateEqualTo((byte)(0XFF&OnSale.State.DRAFT.getCode()));
+            List<OnSalePo> pos= onSalePoMapper.selectByExample(oe);
+            for(OnSalePo po:pos){
+                redisUtil.del("o_"+po.getId());
+                onSalePoMapper.deleteByPrimaryKey(po.getId());
+            }
+            return new ReturnObject(ReturnNo.OK);
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
     }
 
 
@@ -232,5 +205,20 @@ public class OnSaleDao {
             return true;
         }
 
+    }
+
+
+    public ReturnObject updateOnSale(OnSale onsale,Long userId, String userName){
+        try{
+            // delete redis if exist
+            redisUtil.del("o_"+onsale.getId());
+
+            OnSalePo po= (OnSalePo) cloneVo(onsale,OnSalePo.class);
+            setPoModifiedFields(po,userId,userName);
+            onSalePoMapper.updateByPrimaryKey(po);
+            return new ReturnObject(ReturnNo.OK);
+        }catch (Exception e){
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
     }
 }

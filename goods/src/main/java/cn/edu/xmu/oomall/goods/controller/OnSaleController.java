@@ -4,8 +4,8 @@ package cn.edu.xmu.oomall.goods.controller;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
+import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
-import cn.edu.xmu.oomall.goods.model.vo.OnSaleDetailRetVo;
 import cn.edu.xmu.oomall.goods.service.OnsaleService;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -78,7 +78,6 @@ public class OnSaleController {
 
     }
 
-
     @ApiOperation(value = "管理员上线商品价格浮动")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
@@ -98,7 +97,6 @@ public class OnSaleController {
         ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.State.ONLINE);
         return decorateReturnObject(returnObject1);
     }
-
 
     @ApiOperation(value = "管理员下线商品价格浮动")
     @ApiImplicitParams({
@@ -120,169 +118,40 @@ public class OnSaleController {
         return decorateReturnObject(returnObject1);
     }
 
-    @ApiOperation(value = "管理员查询特定商品价格浮动")
+
+    @ApiOperation(value = "管理员上线团购和预售活动的商品价格浮动")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "productId", value = "货品id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数目", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("shops/{shopId}/products/{id}/onsales")
-    public Object searchOnSaleByProductIdNormalSeckill(@PathVariable Long shopId, @PathVariable Long id,
-                                                       @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer page, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-
-        ReturnObject returnObject1 = onsaleService.searchOnSaleByProductNorSec(id, page, pageSize);
-        return getRetObject(returnObject1);
-
-    }
-
-    @ApiOperation(value = "管理员查询特定价格浮动的详情")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path"),
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-            @ApiResponse(code = 505, message = "只限定普通和秒杀"),
-    })
-    @GetMapping("shops/{shopId}/onsales/{id}")
-    public Object getOnSaleDetailNorSec(@PathVariable Long shopId, @PathVariable Long id, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-
-        ReturnObject returnObject1 = onsaleService.getDetail(id, true);
-        return decorateReturnObject(returnObject1);
-
-    }
-
-    @ApiOperation(value = "管理员上线商品价格浮动")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path")
+            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path")
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
-            @ApiResponse(code = 507, message = "只有草稿态才能上线"),
     })
-    @PutMapping("internal/onsales/{id}/online")
+    @PutMapping("internal/activities/{id}/onsales/online")
     public Object onlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.ONLINE);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.DRAFT,OnSale.State.ONLINE);
         return decorateReturnObject(returnObject1);
     }
 
-    @ApiOperation(value = "管理员下线商品价格浮动")
+    @ApiOperation(value = "管理员下线团购和预售活动的商品价格浮动")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path")
+            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path")
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
-            @ApiResponse(code = 507, message = "只有上线态才能下线"),
     })
-    @PutMapping("internal/onsales/{id}/offline")
+    @PutMapping("internal/activities/{id}/onsales/offline")
     public Object offlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.OFFLINE);
-        return decorateReturnObject(returnObject1);
-    }
-
-
-    @ApiOperation(value = "管理员查询所有团购活动的商品价格浮动")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "state", value = "商品浮动价格状态", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数目", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("internal/grouponactivities/{id}/onsales")
-    public Object searchOnSaleGro(@PathVariable Long id,
-                                  @RequestParam(required = false) Integer state,
-                                  @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer page, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-
-        ReturnObject returnObject1 = onsaleService.searchOnSaleByActivity(id, page, pageSize, state, OnSale.Type.GROUPON);
-        return getRetObject(returnObject1);
-    }
-
-    @ApiOperation(value = "管理员查询所有预售活动的商品价格浮动")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "state", value = "商品浮动价格状态", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数目", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("internal/advacnesaleactivities/{id}/onsales")
-    public Object searchOnSalePre(@PathVariable Long id,
-                                  @RequestParam(required = false) Integer state,
-                                  @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer page, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-
-        ReturnObject returnObject1 = onsaleService.searchOnSaleByActivity(id, page, pageSize, state, OnSale.Type.PRESALE);
-        return getRetObject(returnObject1);
-    }
-
-    @ApiOperation(value = "管理员查询所有分享活动的商品价格浮动")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "state", value = "商品浮动价格状态", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数目", required = true, dataType = "Integer", paramType = "path")
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("internal/shareactivities/{id}/onsales")
-    public Object searchOnSaleShare(@PathVariable Long id,
-                                    @RequestParam(required = false) Integer state,
-                                    @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer page, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-
-        ReturnObject returnObject1 = onsaleService.searchOnSaleByShare(id, page, pageSize, state);
-        return getRetObject(returnObject1);
-    }
-
-
-    @ApiOperation(value = "管理员查询特定价格浮动的详情")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path"),
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @GetMapping("internal/onsales/{id}")
-    public Object getOnSaleDetail(@PathVariable Long id, Long loginUserId, String loginUserName) {
-        loginUserId = 1L;
-        loginUserName = "yujie";
-        ReturnObject returnObject1 = onsaleService.getDetail(id, false);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.ONLINE,OnSale.State.OFFLINE);
         return decorateReturnObject(returnObject1);
     }
 
@@ -317,25 +186,68 @@ public class OnSaleController {
     }
 
 
-    @ApiOperation(value = "管理员查询商品的所有价格浮动")
+    @ApiOperation(value = "物理删除草稿态的普通和秒杀")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
-            @ApiImplicitParam(name = "id", value = "货品id", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "page", value = "页码", required = true, dataType = "Integer", paramType = "path"),
-            @ApiImplicitParam(name = "pageSize", value = "每页数目", required = true, dataType = "Integer", paramType = "path")
+            @ApiImplicitParam(name = "shopId", value = "商铺id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "id", value = "销售id", required = true, dataType = "Integer", paramType = "path"),
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理普通和秒杀"),
+            @ApiResponse(code = 507, message = "只能删除草稿态"),
     })
-    @GetMapping("internal/products/{id}/onsales")
-    public Object searchOnSaleAll(@PathVariable Long id,
-                                  @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "1") Integer page, Long loginUserId, String loginUserName) {
+    @DeleteMapping("shops/{shopId}/onsales/{id}")
+    public Object deleteOnSaleNorSec(@PathVariable Long shopId, @PathVariable Long id, Long loginUserId, String loginUserName){
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        ReturnObject returnObject1 = onsaleService.searchOnSaleByProduct(id, page, pageSize);
-        return getRetObject(returnObject1);
-
+        ReturnObject returnObject1=onsaleService.deleteOnSaleNorSec(shopId,id);
+        return decorateReturnObject(returnObject1);
     }
+
+    @ApiOperation(value = "物理删除草稿态的团购和预售")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "id", value = "销售id", required = true, dataType = "Integer", paramType = "path"),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
+            @ApiResponse(code = 507, message = "只能删除草稿态"),
+    })
+    @DeleteMapping("internal/activities/{id}/onsales")
+    public Object deleteOnSaleGroPre( @PathVariable Long id, Long loginUserId, String loginUserName){
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        ReturnObject returnObject1=onsaleService.deleteOnSaleGroPre(id);
+        return decorateReturnObject(returnObject1);
+    }
+
+
+    @ApiOperation(value = "修改任意类型商品价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 507, message = "只有草稿态和下线态才能修改"),
+    })
+    @PutMapping("internal/onsales/{id}")
+    public Object modifyOnSale(@PathVariable Long id, @RequestBody ModifyOnSaleVo onSale, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        OnSale bo= (OnSale) cloneVo(onSale,OnSale.class);
+        bo.setId(id);
+
+        // 判断开始时间是否比结束时间晚
+        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        }
+
+        ReturnObject returnObject1 = onsaleService.updateOnSale(bo,loginUserId, loginUserName);
+        return decorateReturnObject(returnObject1);
+    }
+
+
 
 }
