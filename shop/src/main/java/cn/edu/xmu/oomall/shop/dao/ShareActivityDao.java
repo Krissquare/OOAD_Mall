@@ -61,7 +61,7 @@ public class ShareActivityDao {
             ret = shareActivityPoMapper.updateByPrimaryKeySelective(shareActivityPo);
         }catch (Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
         if(ret == 0){
             return new ReturnObject(ReturnNo.FIELD_NOTVALID);
