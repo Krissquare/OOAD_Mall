@@ -52,6 +52,17 @@
         </dependency>
 
         <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
@@ -148,12 +159,6 @@
         </plugins>
     </build>
 
-    <distributionManagement>
-        <site>
-            <id>siteserver</id>
-            <url>dav:http://172.16.4.192/webdav/shopservice</url>
-        </site>
-    </distributionManagement>
 
 
 </project>
