@@ -103,7 +103,7 @@ public class Common {
      * TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
      */
 
-    public static Object getListRetObject(ReturnObject<List> returnObject) {
+    public static ReturnObject getListRetObject(ReturnObject<List> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
@@ -299,11 +299,10 @@ public class Common {
     }
 
 
-    public static ReturnObject getNullRetObj(ReturnObject<Object> returnObject, HttpServletResponse httpServletResponse) {
+    public static ReturnObject getNullRetObj(ReturnObject<Object> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code) {
             case RESOURCE_ID_NOTEXIST:
-                httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
                 return new ReturnObject(returnObject.getCode());
             default:
                 return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
