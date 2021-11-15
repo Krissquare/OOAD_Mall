@@ -58,15 +58,11 @@ public class GroupOnService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject addActivity(Long shopId, GroupOnActivityPostVo vo, Long createBy, String createName) {
-        if (vo.getBeginTime().isAfter(vo.getEndTime())) {
-            return new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
-        } else {
             var bo = (GroupOnActivity) Common.cloneVo(vo, GroupOnActivity.class);
             bo.setShopId(shopId);
             bo.setShopName(shopService.getShopInfo(shopId).getData().getName());
             bo.setState(GroupOnState.DRAFT.getCode().byteValue());
             return dao.insertActivity(bo, createBy, createName);
-        }
     }
 
     /**

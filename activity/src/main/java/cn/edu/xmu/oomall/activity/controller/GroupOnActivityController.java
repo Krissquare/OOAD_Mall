@@ -81,10 +81,9 @@ public class GroupOnActivityController {
     public Object getOnlineGroupOnActivity(@PathVariable Long id) {
         var ret = groupOnService.getGroupOnActivity(id, GroupOnState.ONLINE, null);
         if (ret.getCode().equals(ReturnNo.OK)) {
-            return Common.decorateReturnObject(new ReturnObject(Common.cloneVo(ret.getData(), GroupOnActivityVo.class)));
-        } else {
-            return Common.decorateReturnObject(ret);
+            ret = new ReturnObject(Common.cloneVo(ret.getData(), GroupOnActivityVo.class));
         }
+        return Common.decorateReturnObject(ret);
     }
 
 
@@ -130,7 +129,13 @@ public class GroupOnActivityController {
         if (fieldErrors != null) {
             return fieldErrors;
         }
-        return Common.decorateReturnObject(groupOnService.addActivity(shopId, body, createBy, createName));
+        ReturnObject ret;
+        if (!body.getBeginTime().isBefore(body.getEndTime())) {
+            ret = new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
+        } else {
+            ret = groupOnService.addActivity(shopId, body, createBy, createName);
+        }
+        return Common.decorateReturnObject(ret);
     }
 
     @ApiOperation(value = "管理员查看特定团购活动详情", produces = "application/json;charset=UTF-8")
@@ -147,10 +152,9 @@ public class GroupOnActivityController {
     public Object getGroupOnActivityInShop(@PathVariable Long shopId, @PathVariable Long id) {
         var ret = groupOnService.getGroupOnActivity(id, null, shopId);
         if (ret.getCode().equals(ReturnNo.OK)) {
-            return Common.decorateReturnObject(new ReturnObject(Common.cloneVo(ret.getData(), FullGroupOnActivityVo.class)));
-        } else {
-            return Common.decorateReturnObject(ret);
+            ret = new ReturnObject(Common.cloneVo(ret.getData(), FullGroupOnActivityVo.class));
         }
+        return Common.decorateReturnObject(ret);
     }
 
 }
