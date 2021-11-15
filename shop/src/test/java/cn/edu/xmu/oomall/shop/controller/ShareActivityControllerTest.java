@@ -16,8 +16,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
@@ -55,7 +53,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 2);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,1L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -73,7 +71,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,2L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,2L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -91,7 +89,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,11L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,11L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/11"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -109,7 +107,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,1L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -127,7 +125,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,4L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,4L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(post("/shops/1/onSale/1/shareActivities/4"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -145,7 +143,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(Boolean.FALSE);
+        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.FALSE));
         String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/1"))
                 .andExpect(status().is5xxServerError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -163,7 +161,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,11L)).thenReturn(Boolean.FALSE);
+        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,11L)).thenReturn(new ReturnObject<>(Boolean.FALSE));
         String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/11"))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -181,7 +179,7 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(Boolean.TRUE);
+        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
         String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
