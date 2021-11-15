@@ -7,10 +7,8 @@ import cn.edu.xmu.oomall.shop.dao.ShareActivityDao;
 import cn.edu.xmu.oomall.shop.microservice.OnSaleService;
 import cn.edu.xmu.oomall.shop.model.bo.OnSale;
 import cn.edu.xmu.oomall.shop.model.bo.ShareActivity;
-import cn.edu.xmu.oomall.shop.model.po.ShareActivityPo;
 import cn.edu.xmu.oomall.shop.model.vo.OnSaleRetVo;
 import cn.edu.xmu.oomall.shop.model.vo.ShareActivityVo;
-import cn.edu.xmu.oomall.shop.model.vo.ShopSimpleRetVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -35,6 +33,7 @@ public class ShareActivityService {
     @Autowired
     OnSaleService onSaleService;
 
+    @Transactional(rollbackFor=Exception.class)
     public ReturnObject<ShareActivity> getShareActivityByShareActivityId(Long id){
         return shareActivityDao.getShareActivityById(id);
     }
@@ -46,7 +45,7 @@ public class ShareActivityService {
      * @return OnSale
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject addShareActivityOnOnSale(Long id, Long sid){
+    public ReturnObject addShareActivityOnOnSale(Long id, Long sid, Long loginUser, String loginUsername){
         try {
             ReturnObject onSale;
             ReturnObject shareActivity;
@@ -63,7 +62,8 @@ public class ShareActivityService {
             if(shareActivity1.getState().equals(ShareActivity.State.Offline.getCode())){
                 return new ReturnObject(ReturnNo.STATENOTALLOW);
             }
-            if (!onSaleService.updateAddOnSaleShareActId(id,sid)){
+            Boolean updateRet= (Boolean) onSaleService.updateAddOnSaleShareActId(id,sid).getData();
+            if (!updateRet){
                 return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
             }
             OnSaleRetVo onSaleRetVo = (OnSaleRetVo) Common.cloneVo(onSale1,OnSaleRetVo.class);
@@ -80,7 +80,7 @@ public class ShareActivityService {
      * @return
      */
     @Transactional(rollbackFor=Exception.class)
-    public ReturnObject deleteShareActivityOnOnSale(Long id, Long sid){
+    public ReturnObject deleteShareActivityOnOnSale(Long id, Long sid, Long loginUser, String loginUsername){
         try {
             ReturnObject onSale;
             ReturnObject shareActivity;
@@ -89,8 +89,8 @@ public class ShareActivityService {
             if(onSale.getData()==null||shareActivity.getData()==null){
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
-            OnSale onSale1 = (OnSale) onSale.getData();
-            if(!onSaleService.updateDeleteOnSaleShareActId(id,sid)){
+            Boolean updateRet= (Boolean) onSaleService.updateDeleteOnSaleShareActId(id,sid).getData();
+            if(!updateRet){
                 return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
             }
             return new ReturnObject(ReturnNo.OK);
