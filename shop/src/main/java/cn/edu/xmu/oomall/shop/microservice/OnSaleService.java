@@ -20,8 +20,8 @@ public interface OnSaleService {
     ReturnObject getOnSaleById(@PathVariable("id") Long id);
 
     @PostMapping("/internal/onSales/{id}/shareActivities/{sid}")
-    Boolean updateAddOnSaleShareActId(@PathVariable("id") Long id,@PathVariable("sid") Long sid);
+    ReturnObject updateAddOnSaleShareActId(@PathVariable("id") Long id,@PathVariable("sid") Long sid);
 
     @DeleteMapping("/internal/onSales/{id}/shareActivities/{sid}")
-    Boolean updateDeleteOnSaleShareActId(@PathVariable("id") Long id,@PathVariable("sid") Long sid);
+    ReturnObject updateDeleteOnSaleShareActId(@PathVariable("id") Long id,@PathVariable("sid") Long sid);
 }
