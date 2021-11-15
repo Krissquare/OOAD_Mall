@@ -266,6 +266,7 @@ public class Common {
                     Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("name");
                     newSimpleRetVoIdField.setAccessible(true);
                     newSimpleRetVoNameField.setAccessible(true);
+
                     //bo的createdBy和createName组装为SimpleRetVo的id,name
                     if("createdBy".equals(boField.getName()))
                     {
