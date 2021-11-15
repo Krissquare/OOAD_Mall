@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.activity.dao;
 
 import cn.edu.xmu.oomall.activity.mapper.ShareActivityPoMapper;
-import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBO;
+import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;
@@ -34,21 +34,6 @@ public class ShareActivityDao {
 
     @Value("${oomall.activity.share.expiretime}")
     private long shareActivityExpireTime;
-
-
-    /**
-     * 获得分享活动的所有状态
-     *
-     * @return ReturnObject
-     */
-    public ReturnObject getShareState() {
-        List<RetStatesVO> list = new ArrayList<>();
-        for (ShareActivityStatesBO value : ShareActivityStatesBO.values()) {
-            RetStatesVO retStatesVO = new RetStatesVO(value.getCode(), value.getValue());
-            list.add(retStatesVO);
-        }
-        return new ReturnObject(list);
-    }
 
     /**
      * 显示所有状态的分享活动
@@ -83,10 +68,10 @@ public class ShareActivityDao {
             PageHelper.startPage(page, pageSize);
             List<ShareActivityPo> shareActivityPos = shareActivityPoMapper.selectByExample(example);
             PageInfo pageInfo = new PageInfo(shareActivityPos);
-            List<RetShareActivityListVO> retShareActivityListVos = new ArrayList<>();
+            List<RetShareActivityListVo> retShareActivityListVos = new ArrayList<>();
             for (ShareActivityPo shareActivityPo : shareActivityPos) {
                 //cloneVO
-                RetShareActivityListVO retShareActivityListVO = (RetShareActivityListVO) Common.cloneVo(shareActivityPo, RetShareActivityListVO.class);
+                RetShareActivityListVo retShareActivityListVO = (RetShareActivityListVo) Common.cloneVo(shareActivityPo, RetShareActivityListVo.class);
                 retShareActivityListVos.add(retShareActivityListVO);
             }
             pageInfo.setList(retShareActivityListVos);
@@ -116,7 +101,7 @@ public class ShareActivityDao {
         shareActivityPo.setStrategy(JacksonUtil.toJson(shareActivityDTO.getStrategy()));
         shareActivityPo.setShopId(shopId);
         shareActivityPo.setShopName(shopName);
-        shareActivityPo.setState(ShareActivityStatesBO.DRAFT.getCode());
+        shareActivityPo.setState(ShareActivityStatesBo.DRAFT.getCode());
         Common.setPoCreatedFields(shareActivityPo, createId, createName);
         Common.setPoModifiedFields(shareActivityPo, createId, createName);
         try {
@@ -125,12 +110,12 @@ public class ShareActivityDao {
                 return new ReturnObject(ReturnNo.FIELD_NOTVALID);
             }
             //使用clonevo
-            RetShareActivityInfoVO retShareActivityInfoVO = (RetShareActivityInfoVO) Common.cloneVo(shareActivityPo, RetShareActivityInfoVO.class);
+            RetShareActivityInfoVo retShareActivityInfoVO = (RetShareActivityInfoVo) Common.cloneVo(shareActivityPo, RetShareActivityInfoVo.class);
             if (shareActivityPo.getStrategy() != null) {
-                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                List<StrategyVo> strategyVos = (List<StrategyVo>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVo>().getClass());
                 retShareActivityInfoVO.setStrategy(strategyVos);
             }
-            retShareActivityInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
+            retShareActivityInfoVO.setShop(new ShopVo(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
             return new ReturnObject(retShareActivityInfoVO);
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -170,10 +155,10 @@ public class ShareActivityDao {
             PageHelper.startPage(page, pageSize);
             List<ShareActivityPo> shareActivityPos = shareActivityPoMapper.selectByExample(example);
             PageInfo pageInfo = new PageInfo(shareActivityPos);
-            List<RetShareActivityListVO> retShareActivityListVos = new ArrayList<>();
+            List<RetShareActivityListVo> retShareActivityListVos = new ArrayList<>();
             for (ShareActivityPo shareActivityPo : shareActivityPos) {
                 //cloneVO
-                RetShareActivityListVO retShareActivityListVO = (RetShareActivityListVO) Common.cloneVo(shareActivityPo, RetShareActivityListVO.class);
+                RetShareActivityListVo retShareActivityListVO = (RetShareActivityListVo) Common.cloneVo(shareActivityPo, RetShareActivityListVo.class);
                 retShareActivityListVos.add(retShareActivityListVO);
             }
             pageInfo.setList(retShareActivityListVos);
@@ -195,7 +180,7 @@ public class ShareActivityDao {
         try {
             Serializable serializable = redisUtil.get(key);
             if (serializable != null) {
-                RetShareActivityInfoVO ret = JacksonUtil.toObj(serializable.toString(), RetShareActivityInfoVO.class);
+                RetShareActivityInfoVo ret = JacksonUtil.toObj(serializable.toString(), RetShareActivityInfoVo.class);
                 return new ReturnObject(ret);
             }
             ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
@@ -208,12 +193,12 @@ public class ShareActivityDao {
 
             //使用clonevo
             ShareActivityPo shareActivityPo = shareActivityPos.get(0);
-            RetShareActivityInfoVO retShareActivityInfoVO = (RetShareActivityInfoVO) Common.cloneVo(shareActivityPo, RetShareActivityInfoVO.class);
+            RetShareActivityInfoVo retShareActivityInfoVO = (RetShareActivityInfoVo) Common.cloneVo(shareActivityPo, RetShareActivityInfoVo.class);
             if (shareActivityPo.getStrategy() != null) {
-                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                List<StrategyVo> strategyVos = (List<StrategyVo>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVo>().getClass());
                 retShareActivityInfoVO.setStrategy(strategyVos);
             }
-            retShareActivityInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
+            retShareActivityInfoVO.setShop(new ShopVo(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
             //查不到插入redis设置超时时间
             redisUtil.set(key, JacksonUtil.toJson(retShareActivityInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivityInfoVO);
@@ -235,7 +220,7 @@ public class ShareActivityDao {
         try {
             Serializable serializable = redisUtil.get(key);
             if (serializable != null) {
-                RetShareActivitySpecificInfoVO ret = JacksonUtil.toObj(serializable.toString(), RetShareActivitySpecificInfoVO.class);
+                RetShareActivitySpecificInfoVo ret = JacksonUtil.toObj(serializable.toString(), RetShareActivitySpecificInfoVo.class);
                 return new ReturnObject(ret);
             }
             ShareActivityPoExample shareActivityPoExample = new ShareActivityPoExample();
@@ -247,12 +232,12 @@ public class ShareActivityDao {
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
             ShareActivityPo shareActivityPo = shareActivityPos.get(0);
-            RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = (RetShareActivitySpecificInfoVO) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVO.class);
+            RetShareActivitySpecificInfoVo retShareActivitySpecificInfoVO = (RetShareActivitySpecificInfoVo) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVo.class);
             if (shareActivityPo.getStrategy() != null) {
-                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                List<StrategyVo> strategyVos = (List<StrategyVo>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVo>().getClass());
                 retShareActivitySpecificInfoVO.setStrategy(strategyVos);
             }
-            retShareActivitySpecificInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(),shareActivityPo.getShopName()));
+            retShareActivitySpecificInfoVO.setShop(new ShopVo(shareActivityPo.getShopId(),shareActivityPo.getShopName()));
             redisUtil.set(key, JacksonUtil.toJson(retShareActivitySpecificInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivitySpecificInfoVO);
         } catch (Exception e) {

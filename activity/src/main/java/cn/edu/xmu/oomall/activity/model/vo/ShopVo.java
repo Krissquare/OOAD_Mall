@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShopVO {
+public class ShopVo {
     Long id;
     String name;
 }

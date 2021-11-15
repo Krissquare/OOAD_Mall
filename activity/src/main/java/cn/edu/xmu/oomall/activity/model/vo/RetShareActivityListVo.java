@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @ApiModel(value = "分享活动列表")
-public class RetShareActivityListVO implements VoObject, Serializable {
+public class RetShareActivityListVo implements VoObject, Serializable {
     Long id;
     String name;
 

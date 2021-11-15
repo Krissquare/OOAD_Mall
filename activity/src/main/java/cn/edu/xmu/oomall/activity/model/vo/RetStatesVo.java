@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @ApiModel(value = "特定分享活动详情")
-public class RetStatesVO implements VoObject {
+public class RetStatesVo implements VoObject {
     private Byte code;
     private String name;
     @Override

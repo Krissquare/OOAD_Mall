@@ -4,7 +4,7 @@ package cn.edu.xmu.oomall.activity.model.bo;
  * @author xiuchen lang 22920192204222
  * @date 2021/11/12 14:54
  */
-public enum ShareActivityStatesBO {
+public enum ShareActivityStatesBo {
     /**
      * DRAFT活动在草稿状态
      * OFFLINE活动在下线状态
@@ -16,7 +16,7 @@ public enum ShareActivityStatesBO {
 
     private Byte code;
     private String value;
-    ShareActivityStatesBO(Byte code, String value) {
+    ShareActivityStatesBo(Byte code, String value) {
         this.code=code;
         this.value=value;
     }

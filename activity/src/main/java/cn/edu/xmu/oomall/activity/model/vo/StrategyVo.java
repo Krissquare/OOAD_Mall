@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class StrategyVO implements VoObject, Serializable {
+public class StrategyVo implements VoObject, Serializable {
     @Min(value = 0,message = "规则的数量不能小于0")
     @NotNull(message = "数量不能为空")
     private Long quantity;

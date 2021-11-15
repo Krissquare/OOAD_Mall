@@ -5,6 +5,8 @@ import cn.edu.xmu.oomall.activity.mirrorservice.GoodsService;
 import cn.edu.xmu.oomall.activity.mirrorservice.ShopService;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
+import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
+import cn.edu.xmu.oomall.activity.model.vo.RetStatesVo;
 import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
@@ -40,7 +42,12 @@ public class ShareActivityService {
      * @return ReturnObject
      */
     public ReturnObject getShareState() {
-        return shareActivityDao.getShareState();
+        List<RetStatesVo> list = new ArrayList<>();
+        for (ShareActivityStatesBo value : ShareActivityStatesBo.values()) {
+            RetStatesVo retStatesVO = new RetStatesVo(value.getCode(), value.getValue());
+            list.add(retStatesVO);
+        }
+        return new ReturnObject(list);
     }
 
     /**

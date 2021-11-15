@@ -3,7 +3,6 @@ package cn.edu.xmu.oomall.activity.model.vo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -30,5 +29,5 @@ public class ShareActivityDTO {
     private LocalDateTime endTime;
 
     @Valid
-    private List<StrategyVO> strategy;
+    private List<StrategyVo> strategy;
 }

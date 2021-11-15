@@ -18,9 +18,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel(value = "特定分享活动详情")
-public class RetShareActivitySpecificInfoVO implements VoObject, Serializable {
+public class RetShareActivitySpecificInfoVo implements VoObject, Serializable {
     Long id;
-    ShopVO shop;
+    ShopVo shop;
     String name;
     LocalDateTime beginTime;
     LocalDateTime endTime;
@@ -29,7 +29,7 @@ public class RetShareActivitySpecificInfoVO implements VoObject, Serializable {
     LocalDateTime gmtCreate;
     LocalDateTime gmtModified;
     SimpleUserRetVo modifiedBy;
-    List<StrategyVO> strategy;
+    List<StrategyVo> strategy;
 
     @Override
     public Object createVo() {
