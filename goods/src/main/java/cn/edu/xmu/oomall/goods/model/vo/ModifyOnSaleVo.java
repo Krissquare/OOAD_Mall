@@ -1,67 +1,47 @@
-package cn.edu.xmu.oomall.goods.dao;
+package cn.edu.xmu.oomall.goods.model.vo;
 
-import cn.edu.xmu.oomall.core.util.RedisUtil;
-import cn.edu.xmu.oomall.goods.mapper.ProductPoMapper;
-import cn.edu.xmu.oomall.goods.model.bo.Product;
-import cn.edu.xmu.oomall.goods.model.po.ProductPo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Repository;
+import cn.edu.xmu.oomall.goods.model.bo.OnSale;
+import lombok.Data;
 
-import static cn.edu.xmu.oomall.core.util.Common.cloneVo;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
- * @author yujie lin
- * @date 2021/11/11
+ * @author YuJie 22920192204242
+ * @date 2021/11/15
  */
-@Repository
-public class ProductDao {
-    private Logger logger = LoggerFactory.getLogger(OnSaleDao.class);
-
-    @Autowired
-    private ProductPoMapper productMapper;
-
-    @Autowired
-    private RedisUtil redisUtil;
-
-    @Value("${oomall.goods.product.expiretime}")
-    private long productTimeout;
-
-    public boolean hasExist(Long productId) {
-        return null != productMapper.selectByPrimaryKey(productId);
-    }
+@Data
+public class ModifyOnSaleVo {
 
 
+    private Long price;
 
-    public boolean matchProductShop(Long productId, Long shopId) {
+    @NotBlank(message="开始时间不能为空")
+    private String beginTime;
 
-        ProductPo productPo=productMapper.selectByPrimaryKey(productId);
-        return shopId.equals(productPo.getShopId());
-    }
+    @NotBlank(message="结束时间不能为空")
+    private String endTime;
 
-    public Long getShopIdById(Long id){
-        try{
-            Product ret=(Product) redisUtil.get("p_"+id);
-            if(null!=ret){
-                return ret.getId();
-            }
+    @Min(1)
+    private Integer quantity;
 
-            ProductPo po= productMapper.selectByPrimaryKey(id);
+    public OnSale createOnsale(Long id){
 
-            if(po == null) {
-                return null;
-            }
-            Product pro=(Product)cloneVo(po,Product.class);
-            redisUtil.set("p_"+pro.getId(),pro,productTimeout);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-            return pro.getId();
-        }
-        catch(Exception e){
-            return null;
-        }
+        OnSale onsale = new OnSale();
 
+        onsale.setId(id);
+        onsale.setPrice(this.price);
 
-    }
+        onsale.setBeginTime(LocalDateTime.parse(this.beginTime,df));
+
+        onsale.setEndTime(LocalDateTime.parse(this.endTime,df));
+        onsale.setQuantity(this.quantity);
+
+        return onsale;
+    };
+
 }

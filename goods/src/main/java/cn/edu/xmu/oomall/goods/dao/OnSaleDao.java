@@ -194,7 +194,7 @@ public class OnSaleDao {
             List<OnSalePo> l1= onSalePoMapper.selectByExample(oe);
             for(OnSalePo op:l1){
                 if(!(op.getEndTime().isBefore(onsale.getBeginTime())
-                    ||op.getBeginTime().isAfter(onsale.getEndTime()))){
+                        ||op.getBeginTime().isAfter(onsale.getEndTime()))){
                     return true;
                 }
             }

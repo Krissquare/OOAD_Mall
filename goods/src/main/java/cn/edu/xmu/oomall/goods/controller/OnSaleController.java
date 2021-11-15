@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.time.LocalDateTime;
+
 import static cn.edu.xmu.oomall.core.util.Common.*;
 
 /**
@@ -236,14 +238,14 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        OnSale bo= (OnSale) cloneVo(onSale,OnSale.class);
-        bo.setId(id);
+
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
+        OnSale bo=onSale.createOnsale(id);
         ReturnObject returnObject1 = onsaleService.updateOnSale(bo,loginUserId, loginUserName);
         return decorateReturnObject(returnObject1);
     }
@@ -259,13 +261,13 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        OnSale bo= (OnSale) cloneVo(onSale,OnSale.class);
-        bo.setId(id);
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
+
+        OnSale bo=onSale.createOnsale(id);
 
         ReturnObject returnObject1 = onsaleService.updateOnSaleNorSec(bo,shopId,loginUserId, loginUserName);
         return decorateReturnObject(returnObject1);

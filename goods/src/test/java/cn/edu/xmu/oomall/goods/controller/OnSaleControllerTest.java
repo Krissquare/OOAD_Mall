@@ -395,7 +395,7 @@ public class OnSaleControllerTest {
         input.put("endTime", "2022-10-12 16:20:30");
         input.put("quantity",10);
         String s = input.toJSONString();
-        String res = this.mvc.perform(put("/internal/onsales/22")
+        String res = this.mvc.perform(put("/shops/10/onsales/1")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
         String expect;
@@ -407,21 +407,21 @@ public class OnSaleControllerTest {
         input.put("endTime", "2028-02-12 16:20:30");
         input.put("quantity",10);
         s = input.toJSONString();
-        res = this.mvc.perform(put("/internal/onsales/29")
+        res = this.mvc.perform(put("/shops/10/onsales/1")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
 
 
-//        开始时间晚于结束时间
+//        开始普通秒杀
         input = new JSONObject();
         input.put("price", 1000L);
         input.put("beginTime", "2028-03-11 15:30:30");
-        input.put("endTime", "2028-02-12 16:20:30");
+        input.put("endTime", "2028-04-12 16:20:30");
         input.put("quantity",10);
         s = input.toJSONString();
-        res = this.mvc.perform(put("/internal/onsales/2")
+        res = this.mvc.perform(put("/shops/3/onsales/2")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn()
                 .getResponse().getContentAsString();
         expect="{\"errno\": 505,\"errmsg\": \"限定处理普通或秒杀。\"}";
