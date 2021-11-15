@@ -3,14 +3,18 @@ package cn.edu.xmu.oomall.shop.model.vo;
 import cn.edu.xmu.oomall.shop.model.bo.Category;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 /**
  * 商品分类RetVo
  *
  * @author Zhiliang Li 22920192204235
- * @date 2021/11/12
+ * @date 2021/11/15
  */
 @Data
+@NoArgsConstructor
 public class CategoryRetVo {
     @ApiModelProperty(value = "分类id")
     private Long id;
@@ -23,9 +27,9 @@ public class CategoryRetVo {
     @ApiModelProperty(value = "修改人")
     private SimpleUserRetVo modifiedBy;
     @ApiModelProperty(value = "创建时间")
-    private String gmtCreate;
+    private LocalDateTime gmtCreate;
     @ApiModelProperty(value = "修改时间")
-    private String gmtModified;
+    private LocalDateTime gmtModified;
     public CategoryRetVo(Category category) {
         this.id = category.getId();
         this.name = category.getName();
@@ -36,11 +40,7 @@ public class CategoryRetVo {
         this.modifiedBy=new SimpleUserRetVo();
         this.modifiedBy.setName(category.getModiName());
         this.modifiedBy.setId(category.getModifiedBy());
-        if(category.getGmtCreate()!=null) {
-            this.gmtCreate= category.getGmtCreate().toString();
-        }
-        if(category.getGmtModified()!=null) {
-            this.gmtModified=category.getGmtModified().toString();
-        }
+        this.gmtCreate=category.getGmtCreate();
+        this.gmtModified=category.getGmtModified();
     }
 }
