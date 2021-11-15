@@ -54,7 +54,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
     }
 
@@ -71,7 +71,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
     }
@@ -122,7 +122,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
     }
@@ -142,7 +142,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
     }
@@ -165,7 +165,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
     }
 
@@ -189,7 +189,7 @@ public class OnSaleDao {
         }
         catch (Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
     }
@@ -205,7 +205,7 @@ public class OnSaleDao {
         }
         catch(Exception e){
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR);
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
 
     }
