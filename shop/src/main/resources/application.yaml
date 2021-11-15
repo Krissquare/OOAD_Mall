@@ -11,21 +11,21 @@ server:
       max: 500
 
 spring:
-  application:
-    name: ShopService
-  cloud:
-    loadbalancer:
-      ribbon:
-        enable: true
-    nacos:
-      discovery:
-        server-addr: 192.168.31.241:8848
+#  application:
+#    name: ShopService
+#  cloud:
+#    loadbalancer:
+#      ribbon:
+#        enable: true
+#    nacos:
+#      discovery:
+#        server-addr: 192.168.31.241:8848
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.31.241:3306/oomall?serverTimezone=GMT%2B8&useSSL=false
-    username: dbuser
-    password: 12345678
+    url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useSSL=false
+    username: root
+    password: 123456
     type: com.alibaba.druid.pool.DruidDataSource
     druid:
       #初始化时建立物理连接的个数
@@ -55,7 +55,7 @@ spring:
     # Redis数据库索引（默认为0）
     database: 0
     # Redis服务器地址
-    host: 192.168.31.241
+    host: localhost
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码
