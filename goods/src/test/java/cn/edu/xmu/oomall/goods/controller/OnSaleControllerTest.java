@@ -343,9 +343,34 @@ public class OnSaleControllerTest {
 
     @Test
     public void testDeleteNorSec() throws Exception{
-        String res = this.mvc.perform(delete("/shops/9/onsales/22").contentType(MediaType.APPLICATION_JSON)
+        String res = this.mvc.perform(delete("/shops/9/onsales/30").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
+        String expect="{\"errno\": 0,\"errmsg\": \"成功\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+        //不存在价格浮动
+        res = this.mvc.perform(delete("/shops/9/onsales/66666").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNotFound()).andReturn()
+                .getResponse().getContentAsString();
+        expect="{\"errno\": 504,\"errmsg\": \"不存在该价格浮动\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+        //限定普通或秒杀
+        res = this.mvc.perform(delete("/shops/4/onsales/3").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isForbidden()).andReturn()
+                .getResponse().getContentAsString();
+        expect="{\"errno\": 505,\"errmsg\": \"只能处理普通和秒杀类型\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+        //草稿态才能删除
+        res = this.mvc.perform(delete("/shops/10/onsales/1").contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+        expect="{\"errno\": 507,\"errmsg\": \"非草稿态无法删除\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+
+
     }
 
     @Test
@@ -353,6 +378,9 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(delete("/internal/activities/1/onsales").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
+        String expect="{\"errno\": 0,\"errmsg\": \"成功\"}";
+        JSONAssert.assertEquals(expect, res,true);
+        
     }
 
     @Test
