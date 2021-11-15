@@ -3,9 +3,9 @@ package cn.edu.xmu.oomall.activity.model.bo;
 import cn.edu.xmu.oomall.activity.model.vo.StrategyVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,7 +13,6 @@ import java.util.List;
  * @date 2021/11/15 19:11
  */
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 public class ShareActivityBo {
     private Long id;
@@ -30,4 +29,7 @@ public class ShareActivityBo {
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
     private List<StrategyVo> strategy;
+    public ShareActivityBo(){
+        strategy = new ArrayList<>();
+    }
 }

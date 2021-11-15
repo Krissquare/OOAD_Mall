@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Data
 @ToString
-public class ShareActivityDTO {
+public class ShareActivityVo {
     @NotBlank(message="预售活动名称不能为空")
     private String name;
 

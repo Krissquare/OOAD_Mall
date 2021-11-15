@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.activity.controller;
 
-import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
+import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
+import cn.edu.xmu.oomall.activity.model.vo.ShareActivityVo;
 import cn.edu.xmu.oomall.activity.service.ShareActivityService;
 import cn.edu.xmu.oomall.core.util.*;
 import io.swagger.annotations.*;
@@ -79,7 +80,7 @@ public class ShareActivityController {
         if (shopId <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误");
         }
-        if (productId!=null&&productId <= 0) {
+        if (productId != null && productId <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
         }
         page = (page == null) ? 1 : page;
@@ -95,22 +96,22 @@ public class ShareActivityController {
     /**
      * 管理员新增分享活动
      *
-     * @param shopId           店铺id
-     * @param shareActivityDTO 可修改的信息
-     * @param bindingResult    合法性检验结果
+     * @param shopId          店铺id
+     * @param shareActivityVo 可修改的信息
+     * @param bindingResult   合法性检验结果
      * @return
      */
     @ApiOperation(value = "管理员新增分享活动")
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "authorization", value = "token", required = true, dataType = "String", paramType = "header"),
             @ApiImplicitParam(name = "shopId", value = "商店id", required = true, dataType = "Long", paramType = "path"),
-            @ApiImplicitParam(name = "shareActivityDTO", paramType = "body", dataType = "ShareActivityDTO", value = "修改内容", required = true)
+            @ApiImplicitParam(name = "shareActivityVo", paramType = "body", dataType = "ShareActivityVo", value = "修改内容", required = true)
     })
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功")})
     @PostMapping("/shops/{shopId}/shareactivities")
     public Object addShareAct(@PathVariable(value = "shopId", required = true) Long shopId,
-                              @Validated @RequestBody ShareActivityDTO shareActivityDTO,
+                              @Validated @RequestBody ShareActivityVo shareActivityVo,
                               BindingResult bindingResult) {
         Object obj = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (null != obj) {
@@ -118,10 +119,10 @@ public class ShareActivityController {
         }
         String createName = "lxc";
         Long createId = 666L;
-        if (shareActivityDTO.getBeginTime().isAfter(shareActivityDTO.getEndTime())) {
+        if (shareActivityVo.getBeginTime().isAfter(shareActivityVo.getEndTime())) {
             return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "开始时间不得早于结束时间");
         }
-        ReturnObject returnObject = shareActivityService.addShareAct(createName, createId, shopId, shareActivityDTO);
+        ReturnObject returnObject = shareActivityService.addShareAct(createName, createId, shopId, shareActivityVo);
         return Common.decorateReturnObject(returnObject);
     }
 
@@ -169,11 +170,10 @@ public class ShareActivityController {
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
-        ReturnObject shareByShopId = shareActivityService.getShareActivity(shopId, productId,
-                beginTime, endTime, page, pageSize);
+        ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, productId,
+                beginTime, endTime, ShareActivityStatesBo.ONLINE.getCode(), page, pageSize);
         return Common.getPageRetObject(shareByShopId);
     }
-
 
     /**
      * 查看分享活动详情 只显示上线状态的分享活动

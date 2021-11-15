@@ -5,9 +5,10 @@ import cn.edu.xmu.oomall.activity.mirrorservice.GoodsService;
 import cn.edu.xmu.oomall.activity.mirrorservice.ShopService;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
+import cn.edu.xmu.oomall.activity.model.bo.ShareActivityBo;
 import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
-import cn.edu.xmu.oomall.activity.model.vo.RetStatesVo;
-import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
+import cn.edu.xmu.oomall.activity.model.vo.*;
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
@@ -51,7 +52,7 @@ public class ShareActivityService {
     }
 
     /**
-     * 显示所有状态的分享活动
+     * 显示不同（所有/上线）状态的分享活动
      *
      * @param shopId    店铺Id
      * @param productId 货品
@@ -65,6 +66,13 @@ public class ShareActivityService {
     @Transactional(readOnly = true)
     public ReturnObject getShareByShopId(Long shopId, Long productId, LocalDateTime beginTime,
                                          LocalDateTime endTime, Byte state, Integer page, Integer pageSize) {
+        ShareActivityBo bo = new ShareActivityBo();
+        bo.setShopId(shopId);
+        bo.setBeginTime(beginTime);
+        bo.setEndTime(endTime);
+        if (state != null) {
+            bo.setState(state);
+        }
         List<Long> shareActivityIds = new ArrayList<>();
         if (productId != null) {
             //TODO:openfeign获得分享活动id
@@ -80,64 +88,61 @@ public class ShareActivityService {
                 }
             }
         }
-        return shareActivityDao.getShareByShopId(shopId, shareActivityIds, beginTime, endTime, state, page, pageSize);
+
+
+        ReturnObject<PageInfo<ShareActivityBo>> shareByShopId = shareActivityDao.getShareByShopId(bo, shareActivityIds, page, pageSize);
+        if(shareByShopId.getData()==null){
+            return shareByShopId;
+        }
+        //BO转VO
+        PageInfo<ShareActivityBo> shareByShopIdData = shareByShopId.getData();
+        if (shareByShopIdData != null) {
+            List<RetShareActivityListVo> retShareActivityListVos = new ArrayList<>();
+            for (ShareActivityBo shareActivityBo : shareByShopIdData.getList()) {
+                RetShareActivityListVo rv = (RetShareActivityListVo) Common.cloneVo(shareActivityBo, RetShareActivityListVo.class);
+                retShareActivityListVos.add(rv);
+            }
+            PageInfo<RetShareActivityListVo> p = (PageInfo<RetShareActivityListVo>) Common.cloneVo(shareByShopIdData, new PageInfo<RetShareActivityListVo>().getClass());
+            p.setTotal(shareByShopIdData.getTotal());
+            p.setList(retShareActivityListVos);
+            return new ReturnObject(p);
+        }
+        return shareByShopId;
     }
+
 
     /**
      * 管理员新增分享活动
      *
-     * @param createName       创建者姓名
-     * @param createId         创建者id
-     * @param shopId           商铺id
-     * @param shareActivityDTO 新增商铺内容
+     * @param createName      创建者姓名
+     * @param createId        创建者id
+     * @param shopId          商铺id
+     * @param shareActivityVo 新增商铺内容
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject addShareAct(String createName, Long createId,
-                                    Long shopId, ShareActivityDTO shareActivityDTO) {
+                                    Long shopId, ShareActivityVo shareActivityVo) {
+        ShareActivityBo shareActivityBo = (ShareActivityBo) Common.cloneVo(shareActivityVo, ShareActivityBo.class);
+        Common.setPoCreatedFields(shareActivityBo, createId, createName);
+        Common.setPoModifiedFields(shareActivityBo, createId, createName);
+        shareActivityBo.setState(ShareActivityStatesBo.DRAFT.getCode());
+        shareActivityBo.setShopId(shopId);
         //TODO:通过商铺id弄到商铺名称
-        String shopName = new String();
-        if (shopId != null) {
-            ReturnObject<ShopInfoVO> shop = shopService.getShop(shopId);
-            if (shop == null) {
-                return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "不存在该商铺");
-            }
-            shopName = shop.getData().getName();
+        ReturnObject<ShopInfoVO> shop = shopService.getShop(shopId);
+        if (shop.getData() == null) {
+            return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "不存在该商铺");
         }
-        return shareActivityDao.addShareAct(createName, createId, shopName, shopId, shareActivityDTO);
-    }
+        String shopName = shop.getData().getName();
+        shareActivityBo.setShopName(shopName);
 
-    /**
-     * 查询分享活动 只显示上线状态的分享活动
-     *
-     * @param shopId    店铺Id
-     * @param productId 商铺Id
-     * @param beginTime 晚于此开始时间
-     * @param endTime   早于此结束时间
-     * @param page      页码
-     * @param pageSize  每页数目
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public ReturnObject getShareActivity(Long shopId, Long productId, LocalDateTime beginTime,
-                                         LocalDateTime endTime, Integer page, Integer pageSize) {
-        List<Long> shareActivityIds = new ArrayList<>();
-        if (productId != null) {
-            //TODO:openfeign获得分享活动id
-            ReturnObject<PageInfo<SimpleSaleInfoVO>> onSalesByProductId = goodsService.getOnSalesByProductId(productId, 1, 10);
-            if (onSalesByProductId != null) {
-                long total = onSalesByProductId.getData().getTotal();
-                ReturnObject<PageInfo<SimpleSaleInfoVO>> onSalesByProductId2 = goodsService.getOnSalesByProductId(productId, 1, (int) total);
-                List<SimpleSaleInfoVO> list = onSalesByProductId2.getData().getList();
-                for (SimpleSaleInfoVO simpleSaleInfoVO : list) {
-                    if (simpleSaleInfoVO.getShareActId() != null) {
-                        shareActivityIds.add(simpleSaleInfoVO.getShareActId());
-                        shareActivityIds.add(simpleSaleInfoVO.getShareActId());
-                    }
-                }
-            }
+        ReturnObject returnObject = shareActivityDao.addShareAct(shareActivityBo);
+        if(returnObject.getData()==null){
+            return returnObject;
         }
-        return shareActivityDao.getShareActivity(shopId, shareActivityIds, beginTime, endTime, page, pageSize);
+        ShareActivityBo shareActivityBo1 = (ShareActivityBo) returnObject.getData();
+        RetShareActivityInfoVo retShareActivityInfoVo = (RetShareActivityInfoVo) Common.cloneVo(shareActivityBo1, RetShareActivityInfoVo.class);
+        return new ReturnObject(retShareActivityInfoVo);
     }
 
     /**
@@ -148,7 +153,14 @@ public class ShareActivityService {
      */
     @Transactional(readOnly = true)
     public ReturnObject getShareActivityById(Long id) {
-        return shareActivityDao.getShareActivityById(id);
+        ReturnObject returnObject = shareActivityDao.getShareActivityById(id);
+        if(returnObject.getData()==null){
+            return returnObject;
+        }
+        ShareActivityBo shareActivityBo = (ShareActivityBo) returnObject.getData();
+        RetShareActivityInfoVo retShareActivityInfoVo = (RetShareActivityInfoVo) Common.cloneVo(shareActivityBo, RetShareActivityInfoVo.class);
+        retShareActivityInfoVo.setShop(new ShopVo(shareActivityBo.getShopId(), shareActivityBo.getShopName()));
+        return new ReturnObject(retShareActivityInfoVo);
     }
 
     /**
@@ -160,7 +172,13 @@ public class ShareActivityService {
      */
     @Transactional(readOnly = true)
     public ReturnObject getShareActivityByShopIdAndId(Long shopId, Long id) {
-        return shareActivityDao.getShareActivityByShopIdAndId(shopId, id);
+        ReturnObject returnObject = shareActivityDao.getShareActivityById(id);
+        if(returnObject.getData()==null){
+            return returnObject;
+        }
+        ShareActivityBo shareActivityBo = (ShareActivityBo) returnObject.getData();
+        RetShareActivitySpecificInfoVo retShareActivitySpecificInfoVo = (RetShareActivitySpecificInfoVo) Common.cloneVo(shareActivityBo, RetShareActivitySpecificInfoVo.class);
+        retShareActivitySpecificInfoVo.setShop(new ShopVo(shareActivityBo.getShopId(), shareActivityBo.getShopName()));
+        return new ReturnObject(retShareActivitySpecificInfoVo);
     }
-
 }
