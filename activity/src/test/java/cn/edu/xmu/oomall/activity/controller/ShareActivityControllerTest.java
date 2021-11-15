@@ -48,7 +48,7 @@ public class ShareActivityControllerTest {
     private GoodsService goodsService;
 
     @MockBean
-    private ShopService shopService;
+    private ShopService shopService; 
 
     @Before
     public void createObject() throws Exception {

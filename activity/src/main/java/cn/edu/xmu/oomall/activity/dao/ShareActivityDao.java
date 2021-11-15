@@ -214,7 +214,6 @@ public class ShareActivityDao {
                 retShareActivityInfoVO.setStrategy(strategyVos);
             }
             retShareActivityInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(), shareActivityPo.getShopName()));
-
             //查不到插入redis设置超时时间
             redisUtil.set(key, JacksonUtil.toJson(retShareActivityInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivityInfoVO);
@@ -248,10 +247,12 @@ public class ShareActivityDao {
                 return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
             }
             ShareActivityPo shareActivityPo = shareActivityPos.get(0);
-            RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = new RetShareActivitySpecificInfoVO(shareActivityPo);
-            //use cloneVO   TODO：这个没有用clonevo的原因是用clonevo的效果太差，大部分还是要手动getset
-            //RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO1 = (RetShareActivitySpecificInfoVO) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVO.class);
-
+            RetShareActivitySpecificInfoVO retShareActivitySpecificInfoVO = (RetShareActivitySpecificInfoVO) Common.cloneVo(shareActivityPo, RetShareActivitySpecificInfoVO.class);
+            if (shareActivityPo.getStrategy() != null) {
+                List<StrategyVO> strategyVos = (List<StrategyVO>) JacksonUtil.toObj(shareActivityPo.getStrategy(), new ArrayList<StrategyVO>().getClass());
+                retShareActivitySpecificInfoVO.setStrategy(strategyVos);
+            }
+            retShareActivitySpecificInfoVO.setShop(new ShopVO(shareActivityPo.getShopId(),shareActivityPo.getShopName()));
             redisUtil.set(key, JacksonUtil.toJson(retShareActivitySpecificInfoVO), shareActivityExpireTime);
             return new ReturnObject(retShareActivitySpecificInfoVO);
         } catch (Exception e) {

@@ -6,7 +6,6 @@ import cn.edu.xmu.oomall.activity.mirrorservice.ShopService;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.activity.model.vo.ShareActivityDTO;
-import cn.edu.xmu.oomall.activity.util.CreateObject;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
