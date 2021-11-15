@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.freight.mapper;
 
-import cn.edu.xmu.oomall.goods.model.po.RegionPo;
-import cn.edu.xmu.oomall.goods.model.po.RegionPoExample;
+import cn.edu.xmu.oomall.freight.model.po.RegionPo;
+import cn.edu.xmu.oomall.freight.model.po.RegionPoExample;
 import java.util.List;
 
 public interface RegionPoMapper {

@@ -8,6 +8,8 @@ import java.util.List;
 /**
  * @author xincong yao
  * @date 2020-11-18
+ * modified by zhongyu wang
+ * date 2021-11-12
  */
 public class PriceCouponLimitation extends BaseCouponLimitation {
 
@@ -25,7 +27,7 @@ public class PriceCouponLimitation extends BaseCouponLimitation {
 		for (OrderItem oi : orderItems) {
 			t += oi.getQuantity() * oi.getPrice();
 		}
-		return t > value;
+		return t >= value;
 	}
 
 }
