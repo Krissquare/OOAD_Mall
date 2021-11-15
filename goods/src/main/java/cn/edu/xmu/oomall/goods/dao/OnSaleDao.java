@@ -132,28 +132,6 @@ public class OnSaleDao {
 
     }
 
-
-
-
-
-
-
-    private ReturnObject getBoAndReturn(List<OnSalePo> pos) {
-        try{
-            List<OnSale> onSales = new ArrayList<>();
-            for (OnSalePo onSalePo : pos) {
-                onSales.add((OnSale) cloneVo(onSalePo,OnSale.class));
-            }
-            PageInfo<OnSale> pageInfo = PageInfo.of(onSales);
-            return new ReturnObject(pageInfo);
-        }
-        catch(Exception e){
-            logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
-        }
-
-    }
-
     public ReturnObject deleteOnSale(Long id){
         try{
             // delete redis if exist
