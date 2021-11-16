@@ -132,8 +132,8 @@ public class CouponActivityController {
      */
     @GetMapping("couponactivities")
     public Object showOwnCouponActivities(@RequestParam(required = false) Long shopId,
-                                          @RequestParam(required = false) LocalDateTime beginTime,
-                                          @RequestParam(required = false) LocalDateTime endTime,
+                                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime beginTime,
+                                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime endTime,
                                           @RequestParam(required = false) Integer page,
                                           @RequestParam(required = false) Integer pageSize
                                           ){
@@ -159,8 +159,8 @@ public class CouponActivityController {
     @GetMapping("shop/{shopId}/couponactivities")
     public Object showOwnCouponaAtivities1(@PathVariable Long shopId,
                                           @RequestParam(required = false) Byte state,
-                                           @RequestParam(required = false) LocalDateTime beginTime,
-                                          @RequestParam(required = false) LocalDateTime endTime,
+                                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime beginTime,
+                                          @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime endTime,
                                           @RequestParam(required = false) Integer page,
                                           @RequestParam(required = false) Integer pageSize
     ){

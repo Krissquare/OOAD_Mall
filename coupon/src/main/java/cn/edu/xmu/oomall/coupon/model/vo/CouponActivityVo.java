@@ -29,8 +29,11 @@ public class CouponActivityVo implements VoObject {
     @Min(value = 0,message = "validTerm最小值为0")
     @Max(value = 1,message = "validTerm最大值为1")
     private Byte validTerm;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime couponTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime beginTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime endTime;
     @Length(max = 100,message = "strategy字符串最大长度为100")
     private String strategy;
