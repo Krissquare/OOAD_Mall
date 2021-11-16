@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
-import cn.edu.xmu.oomall.core.model.VoObject;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;

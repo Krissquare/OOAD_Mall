@@ -5,7 +5,6 @@ import cn.edu.xmu.oomall.activity.mapper.GroupOnActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
-import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityVo;
 import cn.edu.xmu.oomall.activity.model.vo.GroupOnStrategyVo;
 import cn.edu.xmu.oomall.activity.model.vo.PageInfoVo;
 import cn.edu.xmu.oomall.activity.model.vo.SimpleGroupOnActivityVo;
@@ -50,7 +49,7 @@ public class GroupOnActivityDao {
             return new ReturnObject(Common.cloneVo(bo, SimpleGroupOnActivityVo.class));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo. INTERNAL_SERVER_ERR, e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -70,7 +69,7 @@ public class GroupOnActivityDao {
             return new ReturnObject(new PageInfoVo<>(pageInfo));
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo. INTERNAL_SERVER_ERR, e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 
@@ -95,7 +94,7 @@ public class GroupOnActivityDao {
             return new ReturnObject(bo);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            return new ReturnObject(ReturnNo. INTERNAL_SERVER_ERR, e.getMessage());
+            return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());
         }
     }
 }

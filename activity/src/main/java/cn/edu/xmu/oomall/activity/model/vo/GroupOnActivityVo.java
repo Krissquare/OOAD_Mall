@@ -1,13 +1,11 @@
 package cn.edu.xmu.oomall.activity.model.vo;
 
 import cn.edu.xmu.oomall.activity.constant.Constants;
-import cn.edu.xmu.oomall.core.model.VoObject;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
 
 import java.time.LocalDateTime;
 import java.util.List;

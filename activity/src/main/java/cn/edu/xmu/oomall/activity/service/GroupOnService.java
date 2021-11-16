@@ -1,12 +1,13 @@
 package cn.edu.xmu.oomall.activity.service;
 
-import cn.edu.xmu.oomall.activity.dao.GroupOnActivityDao;
 import cn.edu.xmu.oomall.activity.constant.GroupOnState;
-import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
-import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
-import cn.edu.xmu.oomall.activity.model.vo.*;
+import cn.edu.xmu.oomall.activity.dao.GroupOnActivityDao;
 import cn.edu.xmu.oomall.activity.microservice.GoodsService;
 import cn.edu.xmu.oomall.activity.microservice.ShopService;
+import cn.edu.xmu.oomall.activity.model.bo.GroupOnActivity;
+import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPoExample;
+import cn.edu.xmu.oomall.activity.model.vo.GroupOnActivityPostVo;
+import cn.edu.xmu.oomall.activity.model.vo.StateVo;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;

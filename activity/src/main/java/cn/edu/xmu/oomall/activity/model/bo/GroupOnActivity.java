@@ -1,18 +1,13 @@
 package cn.edu.xmu.oomall.activity.model.bo;
 
 import cn.edu.xmu.oomall.activity.constant.GroupOnState;
-import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
-import cn.edu.xmu.oomall.activity.model.vo.*;
-import cn.edu.xmu.oomall.core.model.VoObject;
-import cn.edu.xmu.oomall.core.util.Common;
-import cn.edu.xmu.oomall.core.util.JacksonUtil;
+import cn.edu.xmu.oomall.activity.model.vo.GroupOnStrategyVo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
