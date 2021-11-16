@@ -16,13 +16,11 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.shop.mapper")
 @EnableFeignClients(basePackages = "cn.edu.xmu.oomall.shop.microservice")
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class ShopApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(ShopApplication.class, args);
-
     }
 
 }

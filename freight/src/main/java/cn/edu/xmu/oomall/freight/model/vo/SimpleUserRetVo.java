@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.goods.model.vo;
+package cn.edu.xmu.oomall.freight.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
