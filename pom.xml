@@ -38,6 +38,7 @@
         <module>coupon</module>
         <module>freight</module>
         <module>shop</module>
+        <module>comment</module>
     </modules>
 
     <dependencyManagement>
