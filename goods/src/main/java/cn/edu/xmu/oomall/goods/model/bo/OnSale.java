@@ -51,7 +51,7 @@ public class OnSale  implements VoObject, Serializable {
 
 
     public void setType(Type type) {
-        this.type=(byte)(0XFF & type.getCode());
+        this.type=(type.getCode().byteValue());
     }
 
 
@@ -63,7 +63,7 @@ public class OnSale  implements VoObject, Serializable {
 
     public void setState(State state) {
         Integer code=state.getCode();
-        Byte b=(byte)(0XFF & code);
+        Byte b=code.byteValue();
         this.state=b;
     }
 
