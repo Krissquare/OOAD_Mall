@@ -89,7 +89,6 @@ public class ShareActivityService {
             }
         }
 
-
         ReturnObject<PageInfo<ShareActivityBo>> shareByShopId = shareActivityDao.getShareByShopId(bo, shareActivityIds, page, pageSize);
         if(shareByShopId.getData()==null){
             return shareByShopId;
