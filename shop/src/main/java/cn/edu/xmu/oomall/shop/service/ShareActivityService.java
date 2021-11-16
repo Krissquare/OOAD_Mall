@@ -99,13 +99,7 @@ public class ShareActivityService {
      */
     @Transactional(rollbackFor=Exception.class)
     public ReturnObject modifyShareActivity(Long id, ShareActivityVo shareActivityVo,Long loginUser, String loginUsername){
-        ShareActivity shareActivity= new ShareActivity();;
-        shareActivity.setId(id);
-        shareActivity.setGmtModified(LocalDateTime.now());
-        shareActivity.setName(shareActivityVo.getName());
-        shareActivity.setBeginTime(shareActivityVo.getBeginTime());
-        shareActivity.setEndTime(shareActivityVo.getEndTime());
-        shareActivity.setStrategy(shareActivityVo.getStrategy().toString());
+        ShareActivity shareActivity = (ShareActivity)Common.cloneVo(shareActivityVo,ShareActivity.class);
         Common.setPoModifiedFields(shareActivity,loginUser,loginUsername);
         var x = getShareActivityByShareActivityId(id).getData();
         if (x==null){
