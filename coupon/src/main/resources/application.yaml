@@ -85,7 +85,6 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
-#webdav配置
 webdav:
   user: DELL
   password: zrj2714
