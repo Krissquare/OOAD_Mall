@@ -43,7 +43,7 @@ public class ShareActivityController {
     public Object addShareActivityOnOnSale(@PathVariable("shopId") Long shopId, @PathVariable("id") Long id, @PathVariable("sid") Long sid,Long loginUser,String loginUsername){
         loginUser= 123L;
         loginUsername="pika";
-        ReturnObject onSale = shareActivityService.addShareActivityOnOnSale(id,sid);
+        ReturnObject onSale = shareActivityService.addShareActivityOnOnSale(id,sid,loginUser,loginUsername);
         return Common.decorateReturnObject(onSale);
     }
 
@@ -63,7 +63,7 @@ public class ShareActivityController {
     public Object deleteShareActivityOnOnSale(@PathVariable("shopId") Long shopId, @PathVariable("id") Long id, @PathVariable("sid") Long sid,Long loginUser,String loginUsername){
         loginUser= 123L;
         loginUsername="pika";
-        ReturnObject returnObject = shareActivityService.deleteShareActivityOnOnSale(id,sid);
+        ReturnObject returnObject = shareActivityService.deleteShareActivityOnOnSale(id,sid,loginUser,loginUsername);
         return Common.decorateReturnObject(returnObject);
     }
 
