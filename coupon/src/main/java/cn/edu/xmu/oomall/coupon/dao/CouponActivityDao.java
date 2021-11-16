@@ -119,6 +119,10 @@ public class CouponActivityDao {
             if(!couponActivityPo.getShopId().equals(couponActivity.getShopId())){
                 return new ReturnObject<>(ReturnNo.RESOURCE_ID_OUTSCOPE);
             }
+            //下线状态不给返回
+            if(couponActivityPo.getState()==CouponActivity.State.OFFLINE.getCode().byteValue()){
+                return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
+            }
             return new ReturnObject<>(new CouponActivityVoInfo(couponActivityPo));
         }catch(Exception e){
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);

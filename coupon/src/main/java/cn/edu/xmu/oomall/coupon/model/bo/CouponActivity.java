@@ -21,13 +21,13 @@ public class CouponActivity {
          */
         EXAME(0,"草稿"),
         /**
-         * 下线
-         */
-        OFFLINE(1,"下线"),
-        /**
          * 上线
          */
-        ONLINE(2, "上线");
+        ONLINE(1,"上线"),
+        /**
+         * 下线
+         */
+        OFFLINE(2, "下线");
 
         private static final Map<Integer, State> STATE_MAP;
         static { //由类加载机制，静态块初始加载对应的枚举属性到map中，而不用每次取属性时，遍历一次所有枚举值

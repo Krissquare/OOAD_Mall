@@ -68,7 +68,8 @@ public class CouponActivityService {
         if(endTime!=null){
             criteria.andBeginTimeLessThan(endTime);
         }
-        criteria.andStateEqualTo((byte) 1);
+        //上线状态
+        criteria.andStateEqualTo(CouponActivity.State.ONLINE.getCode().byteValue());
         return couponActivityDao.showCouponActivitiesByExample(example,page,pageSize);
     }
 

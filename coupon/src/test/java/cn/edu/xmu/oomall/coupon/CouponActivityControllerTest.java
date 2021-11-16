@@ -74,11 +74,11 @@ public class CouponActivityControllerTest {
                 "},\n" +
                 "{\n" +
                 "\"code\": 1,\n" +
-                "\"name\": \"下线\"\n" +
+                "\"name\": \"上线\"\n" +
                 "},\n" +
                 "{\n" +
                 "\"code\": 2,\n" +
-                "\"name\": \"上线\"\n" +
+                "\"name\": \"下线\"\n" +
                 "}\n" +
                 "],\n" +
                 "\"errmsg\": \"成功\"\n" +
@@ -177,7 +177,7 @@ public class CouponActivityControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         String expectedString = "{\n" +
-                "\"errno\": 0,\n" +
+                "\"code\": OK,\n" +
                 "\"data\":{\n" +
                 "\"total\": 0,\n" +
                 "\"pages\": 0,\n" +
@@ -304,7 +304,7 @@ public class CouponActivityControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         String expectedString = "{\n" +
-                "\"errno\": 0,\n" +
+                "\"code\": OK,\n" +
                 "\"data\":{\n" +
                 "\"total\": 2,\n" +
                 "\"pages\": 1,\n" +
@@ -366,7 +366,7 @@ public class CouponActivityControllerTest {
                 .andExpect(MockMvcResultMatchers.content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         String expectedString = "{\n" +
-                "\"errno\": 0,\n" +
+                "\"code\": OK,\n" +
                 "\"data\":{\n" +
                 "\"total\": 2,\n" +
                 "\"pages\": 1,\n" +

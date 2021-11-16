@@ -10,26 +10,18 @@ server:
     threads:
       max: 500
 
-spring:
-  main:
-    # 解决Bean重复定义问题
-    allow-bean-definition-overriding: true
-  application:
-    name: coupon-service
-  profiles:
-    active: dev
-  servlet:
-    multipart:
-      #是否使用http上传
-      enabled: true
-      #最大请求文件的大小
-      max-request-size: 10MB
 
+spring:
+  boot:
+    admin:
+      client:
+        url: http://localhost:8081
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8
+    username: root
+    password: zrjwq2714#
     type: com.alibaba.druid.pool.DruidDataSource
-    username: dbuser
-    password: 12345678
     druid:
       #初始化时建立物理连接的个数
       initial-size: 3
@@ -39,6 +31,13 @@ spring:
       max-active: 100
       #获取连接时最大等待时间
       max-wait: 60000
+      #配置监控页面访问登录名及密码
+      stat-view-servlet:
+        login-username: admin
+        login-password: 123456
+        enabled: true
+        url-pattern: /druid/*
+
       filter:
         stat:
           #是否开启慢sql查询监控
@@ -46,12 +45,16 @@ spring:
           #慢SQL执行时间
           slow-sql-millis: 100
       validation-query: select 1
-      #filters: config
-      #connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALfa9QtUlD1QZNSn1jLCsWNFrLRph1leEdBk8oDYl2Fslsbvw+McsKLn3WYcY3Mue4litj+EsdUr+LO9dbt8MgMCAwEAAQ==
-
+    sql-script-encoding: UTF-8
   redis:
     # Redis数据库索引（默认为0）
     database: 0
+    # Redis服务器地址
+    host: 172.16.0.206
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码
+    password: 123456
     #连接池最大连接数（使用负值表示没有限制）
     lettuce:
       pool:
@@ -64,20 +67,14 @@ spring:
         max-wait: -1
     # 连接超时时间（毫秒）
     timeout: 5000
-  sql:
-    init:
-      mode: always
-      encoding: UTF-8
-      schema-locations: classpath:coupon.sql
-      data-locations: classpath:coupondata.sql
-      username: dbuser
-      password: icJzHtqe9O7qGlIod91x0KFwPdL5hzDNNOTcx9xXSNcS6AN43jWRLIxFG3rdk/L+EFLZfcETeIg+RhA3ZbcE3Q==
+
+
 
 mybatis:
-  #po对象的包
-  type-aliases-package: cn.edu.xmu.coupon.model
+  #domain对象的包
+  type-aliases-package: cn.edu.xmu.oomall.coupon.model.po
   #mapper.xml所在的位置
-  mapper-locations: classpath*:cn.edu.xmu.coupon.mapper/*.xml
+  mapper-locations: classpath*:mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
   configuration:
     #输出产生的SQL
@@ -92,7 +89,6 @@ webdav:
   user: DELL
   password: zrj2714
   baseurl: http://localhost/webdav/
-
 
 
 
