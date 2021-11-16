@@ -1,6 +1,6 @@
 package cn.edu.xmu.oomall.activity.util;
-import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
-import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
+import cn.edu.xmu.oomall.activity.microservice.vo.SimpleSaleInfoVO;
+import cn.edu.xmu.oomall.activity.microservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
 

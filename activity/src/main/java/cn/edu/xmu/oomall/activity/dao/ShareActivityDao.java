@@ -2,7 +2,6 @@ package cn.edu.xmu.oomall.activity.dao;
 
 import cn.edu.xmu.oomall.activity.mapper.ShareActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.bo.ShareActivityBo;
-import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPo;
 import cn.edu.xmu.oomall.activity.model.po.ShareActivityPoExample;
 import cn.edu.xmu.oomall.activity.model.vo.*;

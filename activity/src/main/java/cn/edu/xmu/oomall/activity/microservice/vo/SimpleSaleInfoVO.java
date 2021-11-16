@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.mirrorservice.vo;
+package cn.edu.xmu.oomall.activity.microservice.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
