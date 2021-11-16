@@ -77,10 +77,10 @@ public class OnSaleDao {
             OnSalePoExample oe = new OnSalePoExample();
             OnSalePoExample.Criteria cr = oe.createCriteria();
             cr.andActivityIdEqualTo(actId);
-            Byte s1 = cntState.getCode().byteValue();
+            Byte s1 = (byte) (0XFF & cntState.getCode());
             cr.andStateEqualTo(s1);
 
-            Byte s2 = finalState.getCode().byteValue();
+            Byte s2 = (byte) (0XFF & finalState.getCode());
             List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
 
             for (OnSalePo po : pos) {
@@ -154,7 +154,7 @@ public class OnSaleDao {
             OnSalePoExample oe = new OnSalePoExample();
             OnSalePoExample.Criteria cr = oe.createCriteria();
             cr.andActivityIdEqualTo(actId);
-            cr.andStateEqualTo(OnSale.State.DRAFT.getCode().byteValue());
+            cr.andStateEqualTo((byte) (0XFF & OnSale.State.DRAFT.getCode()));
             List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
             for (OnSalePo po : pos) {
                 redisUtil.del("o_" + po.getId());
