@@ -29,7 +29,7 @@ public class ModifyOnSaleVo {
 
     public OnSale createOnsale(Long id){
 
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         OnSale onsale = new OnSale();
 

@@ -30,7 +30,7 @@ public class NewOnSaleVo {
 
     public OnSale createOnsale(Long shopId, Long productId){
 
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
 
         OnSale onsale = new OnSale();
         onsale.setShopId(shopId);

@@ -178,12 +178,12 @@ public class OnSaleController {
         if (null != returnObject) {
             return returnObject;
         }
-        
-        
+
+
         if (!timeFormatMatch(newOnSaleVo.getBeginTime(), newOnSaleVo.getEndTime())) {
             return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
         }
-        
+
 
         //        判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
@@ -248,11 +248,11 @@ public class OnSaleController {
     public Object modifyOnSale(@PathVariable Long id, @RequestBody ModifyOnSaleVo onSale, Long loginUserId, String loginUserName) {
         loginUserId = 1L;
         loginUserName = "yujie";
-        
+
         if (!timeFormatMatch(onSale.getBeginTime(), onSale.getEndTime())) {
             return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
         }
-        
+
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
@@ -277,7 +277,7 @@ public class OnSaleController {
         if (!timeFormatMatch(onSale.getBeginTime(), onSale.getEndTime())) {
             return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
         }
-        
+
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
@@ -290,7 +290,7 @@ public class OnSaleController {
     }
 
     private boolean timeFormatMatch(String beginTime, String endTime) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         try {
             format.setLenient(false);
             format.parse(beginTime);
