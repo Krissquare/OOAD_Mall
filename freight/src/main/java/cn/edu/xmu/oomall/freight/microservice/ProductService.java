@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 
 /**
+ *
  * @author RenJieZheng 22920192204334
+ * @date 2021/11/17
  */
 @Component
 @FeignClient(value = "goods",url="http://localhost:8081")
