@@ -33,7 +33,7 @@ public class GroupOnActivityDao {
     @Autowired
     private RedisUtil redisUtil;
 
-    @Value("${oomall.activity.category.expiretime}")
+    @Value("${oomall.activity.groupon.expiretime}")
     private long timeout;
 
     private static Logger logger = LoggerFactory.getLogger(Common.class);

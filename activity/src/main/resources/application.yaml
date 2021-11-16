@@ -15,7 +15,7 @@ spring:
     # 解决Bean重复定义问题
     allow-bean-definition-overriding: true
   application:
-    name: coupon-service
+    name: activity-service
   profiles:
     active: dev
   servlet:
@@ -51,8 +51,6 @@ spring:
       #connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALfa9QtUlD1QZNSn1jLCsWNFrLRph1leEdBk8oDYl2Fslsbvw+McsKLn3WYcY3Mue4litj+EsdUr+LO9dbt8MgMCAwEAAQ==
 
   redis:
-    host: 101.132.164.244
-    port: 6379
     database: 0
     # Redis服务器地址
     host: 127.0.0.1
@@ -72,6 +70,13 @@ spring:
         max-wait: -1
     # 连接超时时间（毫秒）
     timeout: 5000
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.31.216:8848
+        username: nacos
+        password: nacos
+        namespace: public
 #  sql:
 #    init:
 #      mode: always
@@ -96,7 +101,10 @@ mybatis:
 pagehelper:
   helper-dialect: mysql
 
+
 oomall:
   activity:
-    category:
+    share:
+      expiretime: 10000
+    groupon:
       expiretime: 10000
