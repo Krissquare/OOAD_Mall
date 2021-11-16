@@ -142,6 +142,7 @@ public class ShareActivityService {
         }
         ShareActivityBo shareActivityBo1 = (ShareActivityBo) returnObject.getData();
         RetShareActivityInfoVo retShareActivityInfoVo = (RetShareActivityInfoVo) Common.cloneVo(shareActivityBo1, RetShareActivityInfoVo.class);
+        retShareActivityInfoVo.setShop(new ShopVo(shareActivityBo1.getShopId(), shareActivityBo1.getShopName()));
         return new ReturnObject(retShareActivityInfoVo);
     }
 
