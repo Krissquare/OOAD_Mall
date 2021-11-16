@@ -1,213 +1,278 @@
-package cn.edu.xmu.oomall.goods.service;
+package cn.edu.xmu.oomall.goods.controller;
+
 
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
-import cn.edu.xmu.oomall.goods.dao.OnSaleDao;
-import cn.edu.xmu.oomall.goods.dao.ProductDao;
-
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
+import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
+import cn.edu.xmu.oomall.goods.service.OnsaleService;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 import java.time.LocalDateTime;
 
+import static cn.edu.xmu.oomall.core.util.Common.*;
 
 /**
- * @author yujie lin
+ * @author yujie lin 22920192204242
  * @date 2021/11/10
  */
-@Service
-@Component
-public class OnsaleService {
+@Api(value = "货品销售情况", tags = "goods")
+@RestController
+@RequestMapping(value = "/", produces = "application/json;charset=UTF-8")
+public class OnSaleController {
 
-    private Logger logger = LoggerFactory.getLogger(OnsaleService.class);
-
-    @Autowired
-    private OnSaleDao onsaleDao;
+    private final Logger logger = LoggerFactory.getLogger(OnSaleController.class);
 
     @Autowired
-    private ProductDao productDao;
+    private OnsaleService onsaleService;
 
+    @Autowired
+    private HttpServletResponse httpServletResponse;
 
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject createOnSale(Long shopId, Long productId, NewOnSaleVo newOnSaleVO, Long userId, String userName) {
+    @ApiOperation(value = "管理员新增商品价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 902, message = "商品销售时间冲突"),
+            @ApiResponse(code = 947, message = "开始时间不能晚于结束时间"),
+            @ApiResponse(code = 505, message = "限定秒杀或普通"),
+    })
+    @PostMapping("shops/{shopId}/products/{id}/onsales")
+    public Object createNewOnSaleNormalSeckill(@PathVariable Long shopId, @PathVariable Long id, @Validated @RequestBody NewOnSaleVo newOnSaleVo,
+                                               Long loginUserId, String loginUserName, BindingResult bindingResult) {
 
-        //判断该货品是否存在
-        if (!productDao.hasExist(productId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
-        }
+        loginUserId = 1L;
+        loginUserName = "御姐";
 
-        // 判断该货品是否该商家的
-        if (!productDao.matchProductShop(productId, shopId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "该货品不属于该商铺。");
-        }
-
-
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-        return onsaleDao.createOnSale(bo, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject createOnSaleWithoutShopId(Long productId, NewOnSaleVo newOnSaleVO, Long userId, String userName) {
-
-        //判断该货品是否存在
-        if (!productDao.hasExist(productId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
-        }
-        Long shopId = productDao.getShopIdById(productId);
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-        return onsaleDao.createOnSale(bo, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject onlineOrOfflineOnSale(Long shopId, Long onsaleId, Long userId, String userName, OnSale.State finalState) {
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(onsaleId);
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
-        }
-
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
-        }
-
-        if (finalState == OnSale.State.OFFLINE) {
-            //只有上线态才能下线， 否则出507错误
-            if (onsale.getState() != OnSale.State.ONLINE) {
-                return new ReturnObject(ReturnNo.STATENOTALLOW, "非上线态无法下线");
-            }
-            //如果结束时间晚于当前时间且开始时间早于当前时间，修改结束时间为当前时间
-            if (onsale.getEndTime().isAfter(LocalDateTime.now()) && onsale.getBeginTime().isBefore(LocalDateTime.now())) {
-                onsale.setEndTime(LocalDateTime.now());
-            }
-        } else if (finalState == OnSale.State.ONLINE) {
-            //只有草稿态才能上线， 否则出507错误
-            if (onsale.getState() != OnSale.State.DRAFT) {
-                return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态无法上线");
-            }
-            //如果开始时间早于当前时间且结束时间晚于当前时间，修改开始时间为当前时间
-            if (onsale.getBeginTime().isBefore(LocalDateTime.now()) && onsale.getEndTime().isAfter(LocalDateTime.now())) {
-                onsale.setBeginTime(LocalDateTime.now());
-            }
-        }
-        onsale.setState(finalState);
-        return onsaleDao.onlineOrOfflineOnSale(onsale, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject onlineOrOfflineOnSaleGroupPre(Long actId, Long userId, String userName, OnSale.State cntState, OnSale.State finalState) {
-
-        //判断活动是否存在
-
-        return onsaleDao.onlineOrOfflineOnSaleAct(actId, userId, userName, cntState, finalState);
-    }
-
-
-
-
-
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject deleteOnSaleNorSec(Long shopId, Long id) {
-
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(id);
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
+        Object returnObject = processFieldErrors(bindingResult, httpServletResponse);
+        if (null != returnObject) {
+            return returnObject;
         }
 
 
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
+        // 判断是否秒杀或普通
+        if (!newOnSaleVo.getType().equals(OnSale.Type.NOACTIVITY.getCode())
+                && !newOnSaleVo.getType().equals(OnSale.Type.SECKILL.getCode())) {
+            ReturnObject<Object> returnObject2 = new ReturnObject<>(ReturnNo.RESOURCE_ID_OUTSCOPE, "限定处理普通或秒杀。");
+            return decorateReturnObject(returnObject2);
         }
 
-
-        //只有草稿态才能下线， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态无法删除");
+        // 判断开始时间是否比结束时间晚
+        if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
-        return onsaleDao.deleteOnSale(id);
+        ReturnObject returnObject1 = onsaleService.createOnSale(shopId, id, newOnSaleVo, loginUserId, loginUserName);
+        if (returnObject1.getCode() != ReturnNo.OK) {
+            return decorateReturnObject(returnObject1);
+        }
+
+        httpServletResponse.setStatus(HttpStatus.CREATED.value());
+        return getRetObject(returnObject1);
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject deleteOnSaleGroPre(Long actId) {
+    @ApiOperation(value = "管理员上线商品价格浮动，限定普通秒杀")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理普通和秒杀"),
+            @ApiResponse(code = 507, message = "只有草稿态才能上线"),
+    })
+    @PutMapping("shops/{shopId}/onsales/{id}/online")
+    public Object onlineOnSaleNormalSeckill(@PathVariable Long shopId, @PathVariable Long id, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
 
-        //判断活动是否存在
-
-        return onsaleDao.deleteOnSaleAct(actId);
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.State.ONLINE);
+        return decorateReturnObject(returnObject1);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject updateOnSale(OnSale bo,Long userId,String userName) {
+    @ApiOperation(value = "管理员下线商品价格浮动，限定普通秒杀")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "shopId", value = "店铺id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "id", value = "浮动价格id", required = true, dataType = "Integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理普通和秒杀"),
+            @ApiResponse(code = 507, message = "只有上线态才能下线"),
+    })
+    @PutMapping("shops/{shopId}/onsales/{id}/offline")
+    public Object offlineOnSaleNormalSeckill(@PathVariable Long shopId, @PathVariable Long id, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
 
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(bo.getId());
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
-        }
-
-        //只有草稿态或下线态才能修改， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT
-                &&onsale.getState() != OnSale.State.OFFLINE) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态或下线态无法修改");
-        }
-        return onsaleDao.updateOnSale(bo,userId, userName);
-
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSale(shopId, id, loginUserId, loginUserName, OnSale.State.OFFLINE);
+        return decorateReturnObject(returnObject1);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject updateOnSaleNorSec(OnSale bo,Long shopId,Long userId,String userName) {
 
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(bo.getId());
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
-        }
-        
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "限定处理普通或秒杀。");
-        }
+    @ApiOperation(value = "管理员上线团购和预售活动的商品价格浮动")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
+    })
+    @PutMapping("internal/activities/{id}/onsales/online")
+    public Object onlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
 
-
-        //只有草稿态或下线态才能修改， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT
-                &&onsale.getState() != OnSale.State.OFFLINE) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态或下线态无法修改");
-        }
-
-        bo.setProductId(onsale.getProductId());
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-
-
-        return onsaleDao.updateOnSale(bo,userId, userName);
-
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.DRAFT,OnSale.State.ONLINE);
+        return decorateReturnObject(returnObject1);
     }
+
+    @ApiOperation(value = "管理员下线团购和预售活动的商品价格浮动")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "id", value = "活动id", required = true, dataType = "Integer", paramType = "path")
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
+    })
+    @PutMapping("internal/activities/{id}/onsales/offline")
+    public Object offlineOnSaleGroupPre(@PathVariable Long id, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        ReturnObject returnObject1 = onsaleService.onlineOrOfflineOnSaleGroupPre(id, loginUserId, loginUserName, OnSale.State.ONLINE,OnSale.State.OFFLINE);
+        return decorateReturnObject(returnObject1);
+    }
+
+    @ApiOperation(value = "管理员新增商品价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 902, message = "商品销售时间冲突"),
+            @ApiResponse(code = 947, message = "开始时间不能晚于结束时间"),
+    })
+    @PostMapping("internal/products/{id}/onsales")
+    public Object createNewOnSale(@PathVariable Long id, @Validated @RequestBody NewOnSaleVo newOnSaleVo,
+                                  Long loginUserId, String loginUserName, BindingResult bindingResult) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        Object returnObject = processFieldErrors(bindingResult, httpServletResponse);
+        if (null != returnObject) {
+            return returnObject;
+        }
+
+        //        判断开始时间是否比结束时间晚
+        if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        }
+
+        ReturnObject returnObject1 = onsaleService.createOnSaleWithoutShopId(id, newOnSaleVo, loginUserId, loginUserName);
+        if (returnObject1.getCode() != ReturnNo.OK) {
+            return decorateReturnObject(returnObject1);
+        }
+        httpServletResponse.setStatus(HttpStatus.CREATED.value());
+        return getRetObject(returnObject1);
+    }
+
+
+    @ApiOperation(value = "物理删除草稿态的普通和秒杀")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "shopId", value = "商铺id", required = true, dataType = "Integer", paramType = "path"),
+            @ApiImplicitParam(name = "id", value = "销售id", required = true, dataType = "Integer", paramType = "path"),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理普通和秒杀"),
+            @ApiResponse(code = 507, message = "只能删除草稿态"),
+    })
+    @DeleteMapping("shops/{shopId}/onsales/{id}")
+    public Object deleteOnSaleNorSec(@PathVariable Long shopId, @PathVariable Long id, Long loginUserId, String loginUserName){
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        ReturnObject returnObject1=onsaleService.deleteOnSaleNorSec(shopId,id);
+        return decorateReturnObject(returnObject1);
+    }
+
+    @ApiOperation(value = "物理删除草稿态的团购和预售")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "authorization ", value = "token", required = true, dataType = "String", paramType = "header"),
+            @ApiImplicitParam(name = "id", value = "销售id", required = true, dataType = "Integer", paramType = "path"),
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 505, message = "限定只能处理团购和预售"),
+            @ApiResponse(code = 507, message = "只能删除草稿态"),
+    })
+    @DeleteMapping("internal/activities/{id}/onsales")
+    public Object deleteOnSaleGroPre( @PathVariable Long id, Long loginUserId, String loginUserName){
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+        ReturnObject returnObject1=onsaleService.deleteOnSaleGroPre(id);
+        return decorateReturnObject(returnObject1);
+    }
+
+
+    @ApiOperation(value = "修改任意类型商品价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 507, message = "只有草稿态和下线态才能修改"),
+    })
+    @PutMapping("internal/onsales/{id}")
+    public Object modifyOnSale(@PathVariable Long id, @RequestBody ModifyOnSaleVo onSale, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+
+        // 判断开始时间是否比结束时间晚
+        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        }
+
+        OnSale bo=onSale.createOnsale(id);
+        ReturnObject returnObject1 = onsaleService.updateOnSale(bo,loginUserId, loginUserName);
+        return decorateReturnObject(returnObject1);
+    }
+
+
+    @ApiOperation(value = "修改普通和秒杀价格和数量")
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+            @ApiResponse(code = 507, message = "只有草稿态和下线态才能修改"),
+    })
+    @PutMapping("shops/{shopId}/onsales/{id}")
+    public Object modifyOnSaleNorSec(@PathVariable Long shopId, @PathVariable Long id, @RequestBody ModifyOnSaleVo onSale, Long loginUserId, String loginUserName) {
+        loginUserId = 1L;
+        loginUserName = "yujie";
+
+
+        // 判断开始时间是否比结束时间晚
+        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        }
+
+        OnSale bo=onSale.createOnsale(id);
+
+        ReturnObject returnObject1 = onsaleService.updateOnSaleNorSec(bo,shopId,loginUserId, loginUserName);
+        return decorateReturnObject(returnObject1);
+    }
+
 
 
 }
-
-

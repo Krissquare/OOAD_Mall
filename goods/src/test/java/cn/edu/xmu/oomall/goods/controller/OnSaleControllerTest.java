@@ -375,11 +375,12 @@ public class OnSaleControllerTest {
 
     @Test
     public void testDeleteAct() throws Exception{
-        String res = this.mvc.perform(delete("/internal/activities/1/onsales").contentType(MediaType.APPLICATION_JSON)
+        String res = this.mvc.perform(delete("/internal/activities/3/onsales").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
         String expect="{\"errno\": 0,\"errmsg\": \"成功\"}";
         JSONAssert.assertEquals(expect, res,true);
+
 
     }
 
@@ -425,6 +426,8 @@ public class OnSaleControllerTest {
                 .getResponse().getContentAsString();
         expect="{\"errno\":504 ,\"errmsg\": \"不存在该价格浮动\"}";
         JSONAssert.assertEquals(expect, res,true);
+
+
 
     }
 

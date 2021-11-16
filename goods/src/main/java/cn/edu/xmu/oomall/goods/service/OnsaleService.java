@@ -80,6 +80,11 @@ public class OnsaleService {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
         }
 
+        //判断是否该商家的onsale
+        if(!onsaleDao.onSaleShopMatch(onsaleId,shopId)){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE,"该价格浮动不属于该商铺");
+        }
+
         //限定只能处理普通和秒杀，其他类型返回403错误
         if (onsale.getType() != OnSale.Type.NOACTIVITY
                 && onsale.getType() != OnSale.Type.SECKILL) {
@@ -112,8 +117,6 @@ public class OnsaleService {
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject onlineOrOfflineOnSaleGroupPre(Long actId, Long userId, String userName, OnSale.State cntState, OnSale.State finalState) {
 
-        //判断活动是否存在
-
         return onsaleDao.onlineOrOfflineOnSaleAct(actId, userId, userName, cntState, finalState);
     }
 
@@ -131,8 +134,10 @@ public class OnsaleService {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
         }
 
-        // 判断该价格浮动详情是否该商家的
-
+        //判断是否该商家的onsale
+        if(!onsaleDao.onSaleShopMatch(id,shopId)){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE,"该价格浮动不属于该商铺");
+        }
 
         //限定只能处理普通和秒杀，其他类型返回403错误
         if (onsale.getType() != OnSale.Type.NOACTIVITY
@@ -141,7 +146,7 @@ public class OnsaleService {
         }
 
 
-        //只有草稿态才能下线， 否则出507错误
+        //只有草稿态才能删除， 否则出507错误
         if (onsale.getState() != OnSale.State.DRAFT) {
             return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态无法删除");
         }
@@ -152,8 +157,6 @@ public class OnsaleService {
 
     @Transactional(rollbackFor = Exception.class)
     public ReturnObject deleteOnSaleGroPre(Long actId) {
-
-        //判断活动是否存在
 
         return onsaleDao.deleteOnSaleAct(actId);
     }
@@ -185,8 +188,6 @@ public class OnsaleService {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
         }
 
-        System.out.println(onsale.getId());
-        System.out.println(onsale.getType().getCode());
         //限定只能处理普通和秒杀，其他类型返回403错误
         if (onsale.getType() != OnSale.Type.NOACTIVITY
                 && onsale.getType() != OnSale.Type.SECKILL) {
