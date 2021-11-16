@@ -12,7 +12,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -138,6 +141,8 @@ public class ShareActivityControllerTest {
     @Test
     @Transactional(rollbackFor = Exception.class)
     public void testAddShareAct() throws Exception {
+        CustomComparator CUSTOM_COMPARATOR = new CustomComparator(JSONCompareMode.LENIENT,
+                new Customization("data.id", (o1, o2) -> true));
         //已测试过没把两个属性都放在最后的版本，把po的strategy属性放在了最后测试
         String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
 //        //有添加所有query都有时且合规
@@ -146,7 +151,7 @@ public class ShareActivityControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         String expectString="{\"errno\":0,\"data\":{\"id\":138,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-        JSONAssert.assertEquals(expectString,responseString,false);
+        JSONAssert.assertEquals(expectString,responseString,CUSTOM_COMPARATOR);
 
 
         //姓名为空或null
@@ -201,7 +206,7 @@ public class ShareActivityControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         String expectString7="{\"errno\":0,\"data\":{\"id\":139,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-        JSONAssert.assertEquals(expectString7,responseString7,false);
+        JSONAssert.assertEquals(expectString7,responseString7,CUSTOM_COMPARATOR);
 
 
         //时间不合规
