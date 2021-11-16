@@ -75,20 +75,6 @@ public class OnSaleControllerTest {
         JSONAssert.assertEquals(expect, res,false);
 
 
-        // 时间格式不对
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2021/11/12 09:30:30.000");
-        input.put("endTime", "2022/10/12 09:40:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
-        res = this.mvc.perform(post("/shops/2/products/2549/onsales")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
-                .getResponse().getContentAsString();
-
-        expect="{\"errno\": 503,\"errmsg\": \"时间格式错误\"}";
-        JSONAssert.assertEquals(expect, res,true);
 
 
         // 商品销售时间冲突=》
@@ -314,22 +300,6 @@ public class OnSaleControllerTest {
 String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T15:20:30\",\"endTime\":\"2022-10-12T16:20:30\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,false);
 
-        // 时间格式不对
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2021/11/12 09:30:30.000");
-        input.put("endTime", "2022/10/12 09:40:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
-        res = this.mvc.perform(post("/internal/products/2532/onsales")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
-                .getResponse().getContentAsString();
-
-        expect="{\"errno\": 503,\"errmsg\": \"时间格式错误\"}";
-        JSONAssert.assertEquals(expect, res,true);
-
-
 
 
 
@@ -448,18 +418,6 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
 
-        //       时间格式不对
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028/03/11 15:30:30.000");
-        input.put("endTime", "2028/04/12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
-        res = this.mvc.perform(put("/internal/onsales/30")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
-                .getResponse().getContentAsString();
-        String  expect="{\"errno\": 503,\"errmsg\": \"时间格式错误\"}";
-        JSONAssert.assertEquals(expect, res,true);
 
 
 
@@ -473,7 +431,7 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
         res = this.mvc.perform(put("/internal/onsales/29")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
-        expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
+        String expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
 
 
@@ -523,18 +481,7 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
         String expect;
 
 
-        //       时间格式不对
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028/03/11 15:30:30.000");
-        input.put("endTime", "2028/04/12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
-        res = this.mvc.perform(put("/shops/9/onsales/30")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
-                .getResponse().getContentAsString();
-        expect="{\"errno\": 503,\"errmsg\": \"时间格式错误\"}";
-        JSONAssert.assertEquals(expect, res,true);
+
 
 //        开始时间晚于结束时间
         input = new JSONObject();

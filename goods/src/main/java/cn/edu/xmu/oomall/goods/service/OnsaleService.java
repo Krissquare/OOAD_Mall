@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static cn.edu.xmu.oomall.core.util.Common.cloneVo;
+
 
 /**
  * @author yujie lin
@@ -48,7 +50,10 @@ public class OnsaleService {
         }
 
 
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
+        OnSale bo = (OnSale) cloneVo(newOnSaleVO,OnSale.class);
+        bo.setShopId(shopId);
+        bo.setProductId(productId);
+
         // 判断是否有冲突的销售情况
         if (onsaleDao.timeCollided(bo)) {
             return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
@@ -64,7 +69,11 @@ public class OnsaleService {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
         }
         Long shopId = productDao.getShopIdById(productId);
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
+
+        OnSale bo = (OnSale) cloneVo(newOnSaleVO,OnSale.class);
+        bo.setShopId(shopId);
+        bo.setProductId(productId);
+
         // 判断是否有冲突的销售情况
         if (onsaleDao.timeCollided(bo)) {
             return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");

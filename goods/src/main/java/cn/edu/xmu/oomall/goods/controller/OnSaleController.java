@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
 import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
+import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleRetVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
 import cn.edu.xmu.oomall.goods.service.OnsaleService;
 import io.swagger.annotations.*;
@@ -38,7 +39,7 @@ public class OnSaleController {
     @Autowired
     private HttpServletResponse httpServletResponse;
 
-    @ApiOperation(value = "管理员新增商品价格和数量")
+    @ApiOperation(value = "管理员新增商品价格和数量（普通和秒杀）")
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
             @ApiResponse(code = 902, message = "商品销售时间冲突"),
@@ -49,18 +50,13 @@ public class OnSaleController {
     public Object createNewOnSaleNormalSeckill(@PathVariable Long shopId, @PathVariable Long id, @Validated @RequestBody NewOnSaleVo newOnSaleVo,
                                                Long loginUserId, String loginUserName, BindingResult bindingResult) {
 
-        loginUserId = 1L;
-        loginUserName = "御姐";
-
         Object returnObject = processFieldErrors(bindingResult, httpServletResponse);
         if (null != returnObject) {
             return returnObject;
         }
 
-        if (!timeFormatMatch(newOnSaleVo.getBeginTime(), newOnSaleVo.getEndTime())) {
-            return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
-        }
-
+        loginUserId = 1L;
+        loginUserName = "yujie";
 
 
         // 判断是否秒杀或普通
@@ -180,11 +176,6 @@ public class OnSaleController {
         }
 
 
-        if (!timeFormatMatch(newOnSaleVo.getBeginTime(), newOnSaleVo.getEndTime())) {
-            return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
-        }
-
-
         //        判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
@@ -249,16 +240,15 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        if (!timeFormatMatch(onSale.getBeginTime(), onSale.getEndTime())) {
-            return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
-        }
+
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
-        OnSale bo = onSale.createOnsale(id);
+        OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);
+        bo.setId(id);
         ReturnObject returnObject1 = onsaleService.updateOnSale(bo, loginUserId, loginUserName);
         return decorateReturnObject(returnObject1);
     }
@@ -274,32 +264,21 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-        if (!timeFormatMatch(onSale.getBeginTime(), onSale.getEndTime())) {
-            return decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "时间格式错误"));
-        }
+
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
-        OnSale bo = onSale.createOnsale(id);
+        OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);
+        bo.setId(id);
 
         ReturnObject returnObject1 = onsaleService.updateOnSaleNorSec(bo, shopId, loginUserId, loginUserName);
         return decorateReturnObject(returnObject1);
     }
 
-    private boolean timeFormatMatch(String beginTime, String endTime) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        try {
-            format.setLenient(false);
-            format.parse(beginTime);
-            format.parse(endTime);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
-    }
+
 
 
 }

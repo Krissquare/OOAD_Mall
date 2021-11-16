@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.goods.dao;
 
-import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.mapper.OnSalePoMapper;
@@ -10,7 +9,6 @@ import cn.edu.xmu.oomall.goods.model.po.OnSalePoExample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -28,12 +26,6 @@ public class OnSaleDao {
 
     @Autowired
     private OnSalePoMapper onSalePoMapper;
-
-    @Autowired
-    private RedisUtil redisUtil;
-
-    @Value("${oomall.goods.onsale.expiretime}")
-    private long onSaleTimeout;
 
 
     /**
@@ -57,9 +49,6 @@ public class OnSaleDao {
 
     public ReturnObject onlineOrOfflineOnSale(OnSale onsale, Long userId, String userName) {
         try {
-            // delete redis if exist
-            redisUtil.del("o_" + onsale.getId());
-
             OnSalePo po = (OnSalePo) cloneVo(onsale, OnSalePo.class);
             setPoModifiedFields(po, userId, userName);
             onSalePoMapper.updateByPrimaryKeySelective(po);
@@ -84,18 +73,15 @@ public class OnSaleDao {
             List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
 
             for (OnSalePo po : pos) {
-                // delete redis if exist
-                redisUtil.del("o_" + po.getId());
                 po.setState(s2);
                 setPoModifiedFields(po, userId, userName);
 
-                if(finalState== OnSale.State.OFFLINE){
+                if (finalState == OnSale.State.OFFLINE) {
                     //如果结束时间晚于当前时间且开始时间早于当前时间，修改结束时间为当前时间
                     if (po.getEndTime().isAfter(LocalDateTime.now()) && po.getBeginTime().isBefore(LocalDateTime.now())) {
                         po.setEndTime(LocalDateTime.now());
                     }
-                }
-                else if(finalState== OnSale.State.ONLINE) {
+                } else if (finalState == OnSale.State.ONLINE) {
                     //如果开始时间早于当前时间且结束时间晚于当前时间，修改开始时间为当前时间
                     if (po.getBeginTime().isBefore(LocalDateTime.now()) && po.getEndTime().isAfter(LocalDateTime.now())) {
                         po.setBeginTime(LocalDateTime.now());
@@ -114,21 +100,11 @@ public class OnSaleDao {
 
     public OnSale getOnSaleById(Long id) {
         try {
-            // 先从redis中取
-            String key = "o_" + id;
-            OnSale retO = (OnSale) redisUtil.get(key);
-            if (null != retO) {
-                return retO;
-            }
-
             OnSalePo po = onSalePoMapper.selectByPrimaryKey(id);
             if (po == null) {
                 return null;
             }
-            // 存入redis
             OnSale ret = (OnSale) cloneVo(po, OnSale.class);
-            redisUtil.set("o_" + ret.getId(), ret, onSaleTimeout);
-
             return ret;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -139,8 +115,6 @@ public class OnSaleDao {
 
     public ReturnObject deleteOnSale(Long id) {
         try {
-            // delete redis if exist
-            redisUtil.del("o_" + id);
             onSalePoMapper.deleteByPrimaryKey(id);
             return new ReturnObject(ReturnNo.OK);
         } catch (Exception e) {
@@ -157,7 +131,6 @@ public class OnSaleDao {
             cr.andStateEqualTo((byte) (0XFF & OnSale.State.DRAFT.getCode()));
             List<OnSalePo> pos = onSalePoMapper.selectByExample(oe);
             for (OnSalePo po : pos) {
-                redisUtil.del("o_" + po.getId());
                 onSalePoMapper.deleteByPrimaryKey(po.getId());
             }
             return new ReturnObject(ReturnNo.OK);
@@ -170,7 +143,6 @@ public class OnSaleDao {
         try {
 
             OnSalePoExample oe = new OnSalePoExample();
-
             OnSalePoExample.Criteria cr = oe.createCriteria();
             cr.andIdEqualTo(id);
             cr.andShopIdEqualTo(shopId);
@@ -193,12 +165,11 @@ public class OnSaleDao {
 
             OnSalePoExample.Criteria cr = oe.createCriteria();
             cr.andProductIdEqualTo(onsale.getProductId());
+            cr.andEndTimeGreaterThan(onsale.getBeginTime());
+            cr.andBeginTimeLessThan(onsale.getEndTime());
             List<OnSalePo> l1 = onSalePoMapper.selectByExample(oe);
-            for (OnSalePo op : l1) {
-                if (!(op.getEndTime().isBefore(onsale.getBeginTime())
-                        || op.getBeginTime().isAfter(onsale.getEndTime()))) {
-                    return true;
-                }
+            if (l1.size() > 0) {
+                return true;
             }
             return false;
         } catch (Exception e) {
@@ -211,9 +182,6 @@ public class OnSaleDao {
 
     public ReturnObject updateOnSale(OnSale onsale, Long userId, String userName) {
         try {
-            // delete redis if exist
-            redisUtil.del("o_" + onsale.getId());
-
             OnSalePo po = (OnSalePo) cloneVo(onsale, OnSalePo.class);
             setPoModifiedFields(po, userId, userName);
             onSalePoMapper.updateByPrimaryKey(po);

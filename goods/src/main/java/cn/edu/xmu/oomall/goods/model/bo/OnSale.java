@@ -11,8 +11,10 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static cn.edu.xmu.oomall.core.util.Common.cloneVo;
+
 @Data
-public class OnSale  implements VoObject, Serializable {
+public class OnSale  implements  VoObject, Serializable {
 
     private Long id;
     private Long shopId;
@@ -33,17 +35,6 @@ public class OnSale  implements VoObject, Serializable {
     private LocalDateTime gmtModified;
 
 
-
-
-    @Override
-    public Object createVo() {
-        return new NewOnSaleRetVo(this);
-    }
-
-    @Override
-    public Object createSimpleVo() {
-        return null;
-    }
 
     public Type getType() {
         return Type.getTypeByCode(Integer.valueOf(type));
@@ -67,7 +58,15 @@ public class OnSale  implements VoObject, Serializable {
         this.state=b;
     }
 
+    @Override
+    public NewOnSaleRetVo createVo() {
+        return (NewOnSaleRetVo)cloneVo(this,NewOnSaleRetVo.class);
+    }
 
+    @Override
+    public Object createSimpleVo() {
+        return null;
+    }
 
 
     public enum Type {

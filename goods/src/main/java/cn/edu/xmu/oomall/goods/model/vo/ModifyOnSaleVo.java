@@ -1,7 +1,9 @@
 package cn.edu.xmu.oomall.goods.model.vo;
 
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -18,30 +20,14 @@ public class ModifyOnSaleVo {
 
     private Long price;
 
-    @NotBlank(message="开始时间不能为空")
-    private String beginTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime beginTime;
 
-    @NotBlank(message="结束时间不能为空")
-    private String endTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING ,pattern="yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime endTime;
 
     @Min(1)
     private Integer quantity;
 
-    public OnSale createOnsale(Long id){
-
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-
-        OnSale onsale = new OnSale();
-
-        onsale.setId(id);
-        onsale.setPrice(this.price);
-
-        onsale.setBeginTime(LocalDateTime.parse(this.beginTime,df));
-
-        onsale.setEndTime(LocalDateTime.parse(this.endTime,df));
-        onsale.setQuantity(this.quantity);
-
-        return onsale;
-    };
 
 }

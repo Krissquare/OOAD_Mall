@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.goods.model.vo;
 
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
@@ -15,18 +16,13 @@ public class NewOnSaleRetVo {
 
     private Long price;
 
+
     private LocalDateTime beginTime;
 
     private LocalDateTime endTime;
 
     private Integer quantity;
 
-    public NewOnSaleRetVo(OnSale onsale) {
-        this.id = onsale.getId();
-        this.price=onsale.getPrice();
-        this.beginTime=onsale.getBeginTime();
-        this.endTime=onsale.getEndTime();
-        this.quantity= onsale.getQuantity();
-    }
+
 
 }
