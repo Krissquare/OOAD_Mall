@@ -4,9 +4,15 @@ import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.dao.OnSaleDao;
 import cn.edu.xmu.oomall.goods.dao.ProductDao;
-
+import cn.edu.xmu.oomall.goods.microservice.ShareService;
+import cn.edu.xmu.oomall.goods.microservice.ShopService;
+import cn.edu.xmu.oomall.goods.microservice.bo.ActInfo;
+import cn.edu.xmu.oomall.goods.microservice.bo.ShopInfo;
 import cn.edu.xmu.oomall.goods.model.bo.OnSale;
-import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
+import cn.edu.xmu.oomall.goods.model.bo.ProductBaseInfo;
+import cn.edu.xmu.oomall.goods.model.vo.OnSaleDetailRetVo;
+import cn.edu.xmu.oomall.goods.model.vo.OnSaleSimpleRetVo;
+import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
 
@@ -33,184 +40,125 @@ public class OnsaleService {
     @Autowired
     private ProductDao productDao;
 
+    @Resource
+    private ShopService shopService;
+
+    @Resource
+    private ShareService shareService;
+
 
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject createOnSale(Long shopId, Long productId, NewOnSaleVo newOnSaleVO, Long userId, String userName) {
+    public ReturnObject searchOnSaleByProductNorSec(Long productId, Integer page, Integer pageSize) {
+
+        //判断该货品是否存在
+        if (!productDao.hasExist(productId)) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "该货品不存在。");
+        }
+
+        ReturnObject retOnSales = onsaleDao.searchOnSaleByProductNorSec(productId, page, pageSize);
+        PageInfo pageInfo = (PageInfo<OnSale>) retOnSales.getData();
+        OnSaleSimpleRetVo info = new OnSaleSimpleRetVo(pageInfo);
+        return new ReturnObject(info);
+
+
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject searchOnSaleByProduct(Long productId, Integer page, Integer pageSize) {
 
         //判断该货品是否存在
         if (!productDao.hasExist(productId)) {
             return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
         }
 
-        // 判断该货品是否该商家的
-        if (!productDao.matchProductShop(productId, shopId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "该货品不属于该商铺。");
-        }
-
-
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-        return onsaleDao.createOnSale(bo, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject createOnSaleWithoutShopId(Long productId, NewOnSaleVo newOnSaleVO, Long userId, String userName) {
-
-        //判断该货品是否存在
-        if (!productDao.hasExist(productId)) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "货品id不存在。");
-        }
-        Long shopId = productDao.getShopIdById(productId);
-        OnSale bo = newOnSaleVO.createOnsale(shopId, productId);
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-        return onsaleDao.createOnSale(bo, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject onlineOrOfflineOnSale(Long shopId, Long onsaleId, Long userId, String userName, OnSale.State finalState) {
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(onsaleId);
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
-        }
-
-        //判断是否该商家的onsale
-        if(!onsaleDao.onSaleShopMatch(onsaleId,shopId)){
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE,"该价格浮动不属于该商铺");
-        }
-
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
-        }
-
-        if (finalState == OnSale.State.OFFLINE) {
-            //只有上线态才能下线， 否则出507错误
-            if (onsale.getState() != OnSale.State.ONLINE) {
-                return new ReturnObject(ReturnNo.STATENOTALLOW, "非上线态无法下线");
-            }
-            //如果结束时间晚于当前时间且开始时间早于当前时间，修改结束时间为当前时间
-            if (onsale.getEndTime().isAfter(LocalDateTime.now()) && onsale.getBeginTime().isBefore(LocalDateTime.now())) {
-                onsale.setEndTime(LocalDateTime.now());
-            }
-        } else if (finalState == OnSale.State.ONLINE) {
-            //只有草稿态才能上线， 否则出507错误
-            if (onsale.getState() != OnSale.State.DRAFT) {
-                return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态无法上线");
-            }
-            //如果开始时间早于当前时间且结束时间晚于当前时间，修改开始时间为当前时间
-            if (onsale.getBeginTime().isBefore(LocalDateTime.now()) && onsale.getEndTime().isAfter(LocalDateTime.now())) {
-                onsale.setBeginTime(LocalDateTime.now());
-            }
-        }
-        onsale.setState(finalState);
-        return onsaleDao.onlineOrOfflineOnSale(onsale, userId, userName);
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject onlineOrOfflineOnSaleGroupPre(Long actId, Long userId, String userName, OnSale.State cntState, OnSale.State finalState) {
-
-        return onsaleDao.onlineOrOfflineOnSaleAct(actId, userId, userName, cntState, finalState);
-    }
-
-
-
-
-
-
-    @Transactional(rollbackFor = Exception.class)
-    public ReturnObject deleteOnSaleNorSec(Long shopId, Long id) {
-
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(id);
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
-        }
-
-        //判断是否该商家的onsale
-        if(!onsaleDao.onSaleShopMatch(id,shopId)){
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE,"该价格浮动不属于该商铺");
-        }
-
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "只能处理普通和秒杀类型");
-        }
-
-
-        //只有草稿态才能删除， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态无法删除");
-        }
-
-        return onsaleDao.deleteOnSale(id);
+        ReturnObject<PageInfo<OnSale>> retOnSales = onsaleDao.searchOnSaleByProduct(productId, page, pageSize);
+        PageInfo<OnSale> pageInfo = retOnSales.getData();
+        OnSaleSimpleRetVo info = new OnSaleSimpleRetVo(pageInfo);
+        return new ReturnObject(info);
 
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject deleteOnSaleGroPre(Long actId) {
+    public ReturnObject searchOnSaleByActivity(Long actId, LocalDateTime beginTime, LocalDateTime endTime, Integer page, Integer pageSize,
+                                               Integer state) {
 
-        return onsaleDao.deleteOnSaleAct(actId);
+        ReturnObject retOnSales = onsaleDao.searchOnSaleByActivity(beginTime,endTime,actId, page, pageSize, state);
+        PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) (retOnSales.getData());
+        OnSaleSimpleRetVo vo=new OnSaleSimpleRetVo(pageInfo);
+        return new ReturnObject<>(vo);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject updateOnSale(OnSale bo,Long userId,String userName) {
+    public ReturnObject searchOnSaleByShare(Long actId, Integer page, Integer pageSize,
+                                            Integer state) {
+        ReturnObject retOnSales = onsaleDao.searchOnSaleByShare(actId, page, pageSize, state);
+        PageInfo<OnSale> pageInfo = (PageInfo<OnSale>) retOnSales.getData();
+        OnSaleSimpleRetVo vo=new OnSaleSimpleRetVo(pageInfo);
+        return new ReturnObject<>(vo);
+    }
 
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(bo.getId());
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
+
+    @Transactional(rollbackFor = Exception.class)
+    public ReturnObject getDetailNorSec(Long onSaleId,Long shopId) {
+
+        OnSale onSale = onsaleDao.getOnSaleById(onSaleId);
+        //判断存不存在onsale
+        if(null==onSale){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST,"该价格浮动详情不存在");
         }
 
-        //只有草稿态或下线态才能修改， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT
-                &&onsale.getState() != OnSale.State.OFFLINE) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态或下线态无法修改");
+        //判断是不是该商家的onsale
+        if (!onSale.getShopId().equals(shopId)) {
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "该价格浮动不属于该商家");
         }
-        return onsaleDao.updateOnSale(bo,userId, userName);
 
+        //判断是否普通秒杀
+        if(!(onSale.getType()== OnSale.Type.NOACTIVITY||onSale.getType()== OnSale.Type.SECKILL)){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE,"只能处理普通或秒杀类型");
+        }
+
+        // 根据shopId 查shopName，
+        String shopName = ((ShopInfo) shopService.getInfo(shopId).getData()).getName();
+
+        //根据productId 查productName和image
+        ProductBaseInfo pInfo = productDao.getBaseInfoById(onSale.getProductId());
+        //根据shareActId查name
+        Long shareActId = onSale.getShareActId();
+        String shareActName;
+        if(shareActId==null)shareActName=null;
+        else
+        {
+           shareActName =((ActInfo) shareService.getInfo(shareActId).getData()).getName();
+       }
+
+
+        OnSaleDetailRetVo ret = new OnSaleDetailRetVo(shopName, pInfo, shareActName, onSale);
+        return new ReturnObject(ret);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ReturnObject updateOnSaleNorSec(OnSale bo,Long shopId,Long userId,String userName) {
+    public ReturnObject getDetail(Long onSaleId) {
 
-        //判断OnSale是否存在
-        OnSale onsale = onsaleDao.getOnSaleById(bo.getId());
-        if (null == onsale) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST, "不存在该价格浮动");
+        OnSale onSale = onsaleDao.getOnSaleById(onSaleId);
+        //判断存不存在onsale
+        if(null==onSale){
+            return new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST,"该价格浮动详情不存在");
         }
 
-        //限定只能处理普通和秒杀，其他类型返回403错误
-        if (onsale.getType() != OnSale.Type.NOACTIVITY
-                && onsale.getType() != OnSale.Type.SECKILL) {
-            return new ReturnObject(ReturnNo.RESOURCE_ID_OUTSCOPE, "限定处理普通或秒杀。");
-        }
+        // 根据shopId 查shopName，
+        Long shopId = onSale.getShopId();
+        String shopName = ((ShopInfo) shopService.getInfo(shopId).getData()).getName();
 
+        //根据productId 查productName和image
+        ProductBaseInfo pInfo = productDao.getBaseInfoById(onSale.getProductId());
+        //根据shareActId查name
+        Long shareActId = onSale.getShareActId();
+        String shareActName = ((ActInfo) shareService.getInfo(shareActId).getData()).getName();
 
-        //只有草稿态或下线态才能修改， 否则出507错误
-        if (onsale.getState() != OnSale.State.DRAFT
-                &&onsale.getState() != OnSale.State.OFFLINE) {
-            return new ReturnObject(ReturnNo.STATENOTALLOW, "非草稿态或下线态无法修改");
-        }
-
-        bo.setProductId(onsale.getProductId());
-        // 判断是否有冲突的销售情况
-        if (onsaleDao.timeCollided(bo)) {
-            return new ReturnObject(ReturnNo.GOODS_PRICE_CONFLICT, "商品销售时间冲突。");
-        }
-
-
-        return onsaleDao.updateOnSale(bo,userId, userName);
-
+        OnSaleDetailRetVo ret = new OnSaleDetailRetVo(shopName, pInfo, shareActName, onSale);
+        return new ReturnObject(ret);
     }
+
 
 
 }

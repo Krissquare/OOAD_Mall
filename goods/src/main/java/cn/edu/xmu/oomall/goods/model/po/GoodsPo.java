@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.goods.model.po;
 
 import java.time.LocalDateTime;
 
+
 public class GoodsPo {
     /**
      *

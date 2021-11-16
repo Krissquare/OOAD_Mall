@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class OnSale  implements VoObject, Serializable {
+public class OnSale  implements  Serializable {
 
     private Long id;
     private Long shopId;
@@ -35,23 +35,13 @@ public class OnSale  implements VoObject, Serializable {
 
 
 
-    @Override
-    public Object createVo() {
-        return new NewOnSaleRetVo(this);
-    }
-
-    @Override
-    public Object createSimpleVo() {
-        return null;
-    }
-
     public Type getType() {
         return Type.getTypeByCode(Integer.valueOf(type));
     }
 
 
     public void setType(Type type) {
-        this.type=(byte)(0XFF & type.getCode());
+        this.type=type.getCode().byteValue();
     }
 
 
@@ -63,7 +53,7 @@ public class OnSale  implements VoObject, Serializable {
 
     public void setState(State state) {
         Integer code=state.getCode();
-        Byte b=(byte)(0XFF & code);
+        Byte b=code.byteValue();
         this.state=b;
     }
 

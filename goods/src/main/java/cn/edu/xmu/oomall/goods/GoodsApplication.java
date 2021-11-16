@@ -14,6 +14,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = {"cn.edu.xmu.oomall.core.*", "cn.edu.xmu.oomall.goods.*"})
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.goods.mapper")
+@EnableFeignClients(basePackages = "cn.edu.xmu.oomall.goods.microservice")
 public class GoodsApplication {
 
     public static void main(String[] args) {

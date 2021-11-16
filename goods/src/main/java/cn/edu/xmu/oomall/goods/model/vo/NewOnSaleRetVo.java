@@ -21,12 +21,6 @@ public class NewOnSaleRetVo {
 
     private Integer quantity;
 
-    public NewOnSaleRetVo(OnSale onsale) {
-        this.id = onsale.getId();
-        this.price=onsale.getPrice();
-        this.beginTime=onsale.getBeginTime();
-        this.endTime=onsale.getEndTime();
-        this.quantity= onsale.getQuantity();
-    }
+    public NewOnSaleRetVo(){}
 
 }
