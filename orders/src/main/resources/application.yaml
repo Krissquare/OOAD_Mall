@@ -5,7 +5,7 @@ management:
         include: "*"
 
 server:
-  port: 8081
+  port: 8083
   tomcat:
     threads:
       max: 500
@@ -15,7 +15,7 @@ spring:
   boot:
     admin:
       client:
-        url: http://localhost:8081
+        url: http://localhost:8083
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8
@@ -84,13 +84,6 @@ mybatis:
 #pagehelper分页插件配置
 pagehelper:
   helper-dialect: mysql
-
-#webdav配置
-webdav:
-  user: DELL
-  password: zrj2714
-  baseurl: http://localhost/webdav/
-
 
 
 
