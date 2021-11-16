@@ -95,7 +95,7 @@ public class OnSaleDao {
                         po.setEndTime(LocalDateTime.now());
                     }
                 }
-                else if(finalState== OnSale.State.OFFLINE) {
+                else if(finalState== OnSale.State.ONLINE) {
                     //如果开始时间早于当前时间且结束时间晚于当前时间，修改开始时间为当前时间
                     if (po.getBeginTime().isBefore(LocalDateTime.now()) && po.getEndTime().isAfter(LocalDateTime.now())) {
                         po.setBeginTime(LocalDateTime.now());
