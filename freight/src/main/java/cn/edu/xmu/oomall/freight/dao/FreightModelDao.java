@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.freight.dao;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
 import cn.edu.xmu.oomall.core.util.Common;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.mapper.FreightModelPoMapper;
@@ -10,12 +11,13 @@ import cn.edu.xmu.oomall.freight.model.po.FreightModelPo;
 import cn.edu.xmu.oomall.freight.model.po.FreightModelPoExample;
 import cn.edu.xmu.oomall.freight.model.vo.FreightModelRetVo;
 import cn.edu.xmu.oomall.freight.model.vo.SimpleUserRetVo;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +32,13 @@ public class FreightModelDao {
     @Autowired
     FreightModelPoMapper freightModelPoMapper;
 
+    @Value("${oomall.freight.model.expiretime}")
+    private Long freightModelRedisTimeout;
 
+    @Autowired
+    private RedisUtil redisUtil;
+
+    private final String redisKeyForFreightModel = "freightModel_";
     /**
      * 管理员定义运费模板
      * @param freightModel 运费模板
@@ -124,6 +132,12 @@ public class FreightModelDao {
      */
     public ReturnObject<FreightModelRetVo> showFreightModelById(Long id,Long userId,String userName){
         try{
+            //查redis
+            String key = redisKeyForFreightModel + id;
+            FreightModelRetVo freightModelRetVo1 = (FreightModelRetVo) redisUtil.get(key);
+            if (null != freightModelRetVo1) {
+                return new ReturnObject<>(freightModelRetVo1);
+            }
             FreightModelPo freightModelPo = freightModelPoMapper.selectByPrimaryKey(id);
             if(freightModelPo==null){
                 return new ReturnObject<>(ReturnNo.RESOURCE_ID_NOTEXIST);
@@ -134,6 +148,7 @@ public class FreightModelDao {
             FreightModelRetVo freightModelRetVo = (FreightModelRetVo) Common.cloneVo(freightModelPo,FreightModelRetVo.class);
             freightModelRetVo.setCreateBy(new SimpleUserRetVo(freightModelPo.getCreatedBy(),freightModelPo.getCreateName()));
             freightModelRetVo.setModifiedBy(new SimpleUserRetVo(freightModelPo.getModifiedBy(),freightModelPo.getModiName()));
+            redisUtil.set(key, (Serializable) freightModelRetVo,freightModelRedisTimeout);
             return new ReturnObject<>(freightModelRetVo);
         }catch(Exception e){
             return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
