@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.mirrorservice.vo;
+package cn.edu.xmu.oomall.activity.microservice.vo;
 
 import cn.edu.xmu.oomall.core.model.VoObject;
 import lombok.AllArgsConstructor;
