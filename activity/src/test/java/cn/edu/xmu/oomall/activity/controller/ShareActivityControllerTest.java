@@ -143,12 +143,13 @@ public class ShareActivityControllerTest {
         //TODO这个测试有时候会报错500经查明是因为clonevo的bug 因为strategy的类型不同一个string 一个list导致后面的数据复制不上，gmtcreate为null所以报错
         String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
 //        //有添加所有query都有时且合规
-//        String responseString = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json;charset=UTF-8"))
-//                .andReturn().getResponse().getContentAsString();
-////        String expectString="{\"errno\":0,\"data\":{\"id\":101,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-////        JSONAssert.assertEquals(expectString,responseString,false);
+        String responseString = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString="{\"errno\":0,\"data\":{\"id\":101,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+//        String expectString="{\"errno\":0,\"data\":{\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString,responseString,false);
 
 
         //姓名为空或null
@@ -196,15 +197,16 @@ public class ShareActivityControllerTest {
         JSONAssert.assertEquals(expectString6, responseString6, true);
 
 
-//        //所有都合规
+        //所有都合规
         //TODO这个测试有时候会报错500经查明是因为clonevo的bug 因为strategy的类型不同一个string 一个list导致后面的数据复制不上，gmtcreate为null所以报错
-//        String requestJson7 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-//        String responseString7 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson7))
-//                .andExpect(status().isOk())
-//                .andExpect(content().contentType("application/json;charset=UTF-8"))
-//                .andReturn().getResponse().getContentAsString();
-////        String expectString7="{\"errno\":0,\"data\":{\"id\":97,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-////        JSONAssert.assertEquals(expectString7,responseString7,false);
+        String requestJson7 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString7 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson7))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+//        String expectString7="{\"errno\":0,\"data\":{\"id\":97,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        String expectString7="{\"errno\":0,\"data\":{\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString7,responseString7,false);
 
 
         //时间不合规
