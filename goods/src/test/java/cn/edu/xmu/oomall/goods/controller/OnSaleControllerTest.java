@@ -71,6 +71,9 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(post("/shops/3/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
+        String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T15:20:30\",\"endTime\":\"2022-10-12T16:20:30\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
+        JSONAssert.assertEquals(expect, res,false);
+
 
         // 商品销售时间冲突=》
         input = new JSONObject();
@@ -84,7 +87,7 @@ public class OnSaleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
 
-        String expect="{\"errno\": 902,\"errmsg\": \"商品销售时间冲突。\"}";
+        expect="{\"errno\": 902,\"errmsg\": \"商品销售时间冲突。\"}";
         JSONAssert.assertEquals(expect, res,true);
 
 
@@ -292,6 +295,9 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(post("/internal/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated()).andReturn()
                 .getResponse().getContentAsString();
+String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T15:20:30\",\"endTime\":\"2022-10-12T16:20:30\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
+        JSONAssert.assertEquals(expect, res,false);
+
 
 
 
@@ -306,7 +312,7 @@ public class OnSaleControllerTest {
         res = this.mvc.perform(post("/internal/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
-        String expect="{\"errno\": 902,\"errmsg\": \"商品销售时间冲突。\"}";
+        expect="{\"errno\": 902,\"errmsg\": \"商品销售时间冲突。\"}";
         JSONAssert.assertEquals(expect, res,true);
 
 
@@ -507,6 +513,18 @@ public class OnSaleControllerTest {
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isNotFound()).andReturn()
                 .getResponse().getContentAsString();
         expect="{\"errno\":504 ,\"errmsg\": \"不存在该价格浮动\"}";
+        JSONAssert.assertEquals(expect, res,true);
+
+        //草稿态/下线态 才能修改
+        input.put("price", 1000L);
+        input.put("beginTime", "2022-10-11 15:20:30.000");
+        input.put("endTime", "2022-10-12 16:20:30.000");
+        input.put("quantity",10);
+        s = input.toJSONString();
+        res = this.mvc.perform(put("/shops/4/onsales/28")
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
+                .andReturn().getResponse().getContentAsString();
+        expect="{\"errno\": 507,\"errmsg\": \"非草稿态或下线态无法修改\"}";
         JSONAssert.assertEquals(expect, res,true);
 
 
