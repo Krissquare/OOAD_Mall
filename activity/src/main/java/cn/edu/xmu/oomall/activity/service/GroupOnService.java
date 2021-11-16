@@ -41,7 +41,6 @@ public class GroupOnService {
      *
      * @return ReturnObject
      */
-    @Transactional(readOnly = true, rollbackFor = Exception.class)
     public ReturnObject getGroupOnStates() {
         var res = new ArrayList<StateVo>();
         for (var v : GroupOnState.values()) {
