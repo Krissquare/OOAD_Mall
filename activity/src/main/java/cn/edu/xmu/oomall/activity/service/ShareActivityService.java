@@ -1,10 +1,10 @@
 package cn.edu.xmu.oomall.activity.service;
 
 import cn.edu.xmu.oomall.activity.dao.ShareActivityDao;
-import cn.edu.xmu.oomall.activity.mirrorservice.GoodsService;
-import cn.edu.xmu.oomall.activity.mirrorservice.ShopService;
-import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
-import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
+import cn.edu.xmu.oomall.activity.microservice.GoodsService;
+import cn.edu.xmu.oomall.activity.microservice.ShopService;
+import cn.edu.xmu.oomall.activity.microservice.vo.SimpleSaleInfoVO;
+import cn.edu.xmu.oomall.activity.microservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.activity.model.bo.ShareActivityBo;
 import cn.edu.xmu.oomall.activity.model.bo.ShareActivityStatesBo;
 import cn.edu.xmu.oomall.activity.model.vo.*;
@@ -88,7 +88,6 @@ public class ShareActivityService {
                 }
             }
         }
-
 
         ReturnObject<PageInfo<ShareActivityBo>> shareByShopId = shareActivityDao.getShareByShopId(bo, shareActivityIds, page, pageSize);
         if(shareByShopId.getData()==null){

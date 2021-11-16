@@ -1,6 +1,6 @@
-package cn.edu.xmu.oomall.activity.mirrorservice;
+package cn.edu.xmu.oomall.activity.microservice;
 
-import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
+import cn.edu.xmu.oomall.activity.microservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

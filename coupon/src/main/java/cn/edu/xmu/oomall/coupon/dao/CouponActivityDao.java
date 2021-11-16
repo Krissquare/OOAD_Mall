@@ -149,7 +149,7 @@ public class CouponActivityDao {
                 return new ReturnObject<>(ReturnNo.RESOURCE_ID_OUTSCOPE);
             }
             //当前状态不支持
-            if(couponActivityPo.getState()!=CouponActivity.State.EXAME.getCode().byteValue()){
+            if(couponActivityPo.getState()!=CouponActivity.State.DRAFT.getCode().byteValue()){
                 return new ReturnObject<>(ReturnNo.STATENOTALLOW);
             }
             // 原来的图片Url

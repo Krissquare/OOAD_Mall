@@ -78,19 +78,19 @@ public class ShareActivityController {
                                    @RequestParam(name = "page", required = false) Integer page,
                                    @RequestParam(name = "pageSize", required = false) Integer pageSize) {
         if (shopId <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误"));
         }
         if (productId != null && productId <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误"));
         }
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 10 : pageSize;
         if (page <= 0 || pageSize <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0"));
         }
         ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, productId,
                 beginTime, endTime, state, page, pageSize);
-        return Common.getPageRetObject(shareByShopId);
+        return Common.decorateReturnObject(Common.getPageRetObject(shareByShopId));
     }
 
     /**
@@ -120,7 +120,7 @@ public class ShareActivityController {
             return obj;
         }
         if (shareActivityVo.getBeginTime().isAfter(shareActivityVo.getEndTime())) {
-            return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "开始时间不得早于结束时间");
+            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "开始时间不得早于结束时间"));
         }
         ReturnObject returnObject = shareActivityService.addShareAct(createName, createId, shopId, shareActivityVo);
         return Common.decorateReturnObject(returnObject);
@@ -160,19 +160,19 @@ public class ShareActivityController {
                                    @RequestParam(name = "page", required = false) Integer page,
                                    @RequestParam(name = "pageSize", required = false) Integer pageSize) {
         if (shopId != null && shopId <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "shopId错误"));
         }
         if (productId != null && productId <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误"));
         }
         page = (page == null) ? 1 : page;
         pageSize = (pageSize == null) ? 10 : pageSize;
         if (page <= 0 || pageSize <= 0) {
-            return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0"));
         }
         ReturnObject shareByShopId = shareActivityService.getShareByShopId(shopId, productId,
                 beginTime, endTime, ShareActivityStatesBo.ONLINE.getCode(), page, pageSize);
-        return Common.getPageRetObject(shareByShopId);
+        return Common.decorateReturnObject(Common.getPageRetObject(shareByShopId));
     }
 
     /**
