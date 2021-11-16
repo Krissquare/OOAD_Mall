@@ -80,19 +80,19 @@ public class Common {
      * @param returnObject 返回的对象
      * @return
      */
-    public static Object getRetObject(ReturnObject<VoObject> returnObject) {
+    public static ReturnObject getRetObject(ReturnObject<VoObject> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
                 VoObject data = returnObject.getData();
                 if (data != null){
                     Object voObj = data.createVo();
-                    return ResponseUtil.ok(voObj);
+                    return new ReturnObject(voObj);
                 }else{
-                    return ResponseUtil.ok();
+                    return new ReturnObject();
                 }
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -103,7 +103,7 @@ public class Common {
      * TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
      */
 
-    public static Object getListRetObject(ReturnObject<List> returnObject) {
+    public static ReturnObject getListRetObject(ReturnObject<List> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
@@ -115,16 +115,16 @@ public class Common {
                             ret.add(((VoObject)data).createVo());
                         }
                     }
-                    return ResponseUtil.ok(ret);
+                    return new ReturnObject(ret);
                 }else{
-                    return ResponseUtil.ok();
+                    return new ReturnObject();
                 }
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
-    private static Object getListRetVo(ReturnObject<List> returnObject,Class voClass)
+    public static ReturnObject getListRetVo(ReturnObject<List> returnObject,Class voClass)
     {
         ReturnNo code = returnObject.getCode();
         switch (code){
@@ -133,16 +133,16 @@ public class Common {
                 if (objs != null){
                     List<Object> ret = new ArrayList<>(objs.size());
                     for (Object data : objs) {
-                        if (data instanceof VoObject) {
+                        if (data instanceof Object) {
                             ret.add(cloneVo(data,voClass));
                         }
                     }
-                    return ResponseUtil.ok(ret);
+                    return new ReturnObject(ret);
                 }else{
-                    return ResponseUtil.ok();
+                    return new ReturnObject();
                 }
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -152,7 +152,7 @@ public class Common {
      * @return
      * TODO： 利用cloneVo方法可以生成任意类型v对象,从而把createVo方法从bo中移除
      */
-    public static Object getPageRetObject(ReturnObject<PageInfo<VoObject>> returnObject) {
+    public static ReturnObject getPageRetObject(ReturnObject<PageInfo<VoObject>> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
@@ -171,24 +171,24 @@ public class Common {
                     ret.put("page", objs.getPageNum());
                     ret.put("pageSize", objs.getPageSize());
                     ret.put("pages", objs.getPages());
-                    return ResponseUtil.ok(ret);
+                    return new ReturnObject(ret);
                 }else{
-                    return ResponseUtil.ok();
+                    return new ReturnObject();
                 }
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
-    private static Object getPageRetVo(ReturnObject<PageInfo<VoObject>> returnObject,Class voClass){
+    public static ReturnObject getPageRetVo(ReturnObject<PageInfo<Object>> returnObject,Class voClass){
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
-                PageInfo<VoObject> objs = returnObject.getData();
+                PageInfo<Object> objs = returnObject.getData();
                 if (objs != null){
                     List<Object> voObjs = new ArrayList<>(objs.getList().size());
                     for (Object data : objs.getList()) {
-                        if (data instanceof VoObject) {
+                        if (data instanceof Object) {
                             voObjs.add(cloneVo(data,voClass));
                         }
                     }
@@ -198,12 +198,12 @@ public class Common {
                     ret.put("page", objs.getPageNum());
                     ret.put("pageSize", objs.getPageSize());
                     ret.put("pages", objs.getPages());
-                    return ResponseUtil.ok(ret);
+                    return new ReturnObject(ret);
                 }else{
-                    return ResponseUtil.ok();
+                    return new ReturnObject();
                 }
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 
@@ -251,16 +251,23 @@ public class Common {
                     Object newObject = boField.get(bo);
                     voField.set(newVo, newObject);
                 }
-                //createdBy和modifiedBy特殊处理
+                //属性名相同，类型不同
                 else
                 {
-                    //bo的createdBy和createName组装为SimpleRetVo的id,name
+                    //如果不是特殊情况，赋值为null
+                    if(!"createdBy".equals(voField.getName()) && !"modifiedBy".equals(voField.getName()))
+                    {
+                        voField.set(newVo, null);
+                        continue;
+                    }
+
                     Object newSimpleRetVo = voField.getType().getDeclaredConstructor().newInstance();
                     Field newSimpleRetVoIdField=newSimpleRetVo.getClass().getDeclaredField("id");
                     Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("name");
                     newSimpleRetVoIdField.setAccessible(true);
                     newSimpleRetVoNameField.setAccessible(true);
 
+                    //bo的createdBy和createName组装为SimpleRetVo的id,name
                     if("createdBy".equals(boField.getName()))
                     {
                         Field boCreatedByField = boClass.getDeclaredField("createdBy");
@@ -299,14 +306,13 @@ public class Common {
     }
 
 
-    public static Object getNullRetObj(ReturnObject<Object> returnObject, HttpServletResponse httpServletResponse) {
+    public static ReturnObject getNullRetObj(ReturnObject<Object> returnObject) {
         ReturnNo code = returnObject.getCode();
         switch (code) {
             case RESOURCE_ID_NOTEXIST:
-                httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
-                return ResponseUtil.fail(returnObject.getCode());
+                return new ReturnObject(returnObject.getCode());
             default:
-                return ResponseUtil.fail(returnObject.getCode(), returnObject.getErrmsg());
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
         }
     }
 

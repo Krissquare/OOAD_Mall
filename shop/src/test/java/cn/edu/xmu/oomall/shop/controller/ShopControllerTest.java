@@ -20,8 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
+/**
+ * @Author: 蒋欣雨
+ * @Sn: 22920192204219
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -52,6 +54,49 @@ public class ShopControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         String expected = "{\"errno\":0,\"data\":[{\"code\":0,\"name\":\"未审核\"},{\"code\":1,\"name\":\"下线\"},{\"code\":2,\"name\":\"上线\"},{\"code\":3,\"name\":\"关闭\"}],\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expected, responseString, true);
+    }
+    /**
+     * 获取店铺信息
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getSimpleShopById() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expected = "{\"errno\":0,\"data\":{\"id\":1,\"name\":\"OOMALL自营商铺\"},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expected, responseString, true);
+
+    }
+    /**
+     * 获取所有店铺信息
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getAllShop() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/0/shops"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expected="{\"errno\":0,\"data\":{\"total\":3,\"pages\":1,\"pageSize\":3,\"page\":1,\"list\":[{\"id\":1,\"name\":\"OOMALL自营商铺\",\"deposit\":5000000,\"depositThreshold\":1000000,\"state\":0,\"createdBy\":{},\"modifiedBy\":{}},{\"id\":2,\"name\":\"甜蜜之旅\",\"deposit\":5000000,\"depositThreshold\":1000000,\"state\":0,\"createdBy\":{},\"modifiedBy\":{}},{\"id\":3,\"name\":\"向往时刻\",\"deposit\":5000000,\"depositThreshold\":1000000,\"state\":0,\"createdBy\":{},\"modifiedBy\":{}}]},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expected, responseString, false);
+    }
+    /**
+     * 获取所有店铺信息,id不为0
+     * @throws Exception
+     */
+    @Test
+    @Transactional
+    public void getAllShopIdErro() throws Exception {
+        String responseString = this.mvc.perform(get("/shops/1/shops"))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expected=" {\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
         JSONAssert.assertEquals(expected, responseString, true);
     }
 
@@ -206,7 +251,7 @@ public class ShopControllerTest {
         String expected = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expected, responseString_audit, true);
 
-        String responseString_onself = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString_onself = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -214,7 +259,7 @@ public class ShopControllerTest {
         expected = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expected, responseString_onself, true);
 
-        String responseString_offself = this.mvc.perform(put("/shops/1/offshelves").header("authorization", adminToken))
+        String responseString_offself = this.mvc.perform(put("/shops/1/offline").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -272,7 +317,7 @@ public class ShopControllerTest {
         String expected = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expected, responseString_audit, true);
 
-        String responseString_onself = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString_onself = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -453,7 +498,7 @@ public class ShopControllerTest {
         expected = "{\"errno\":0,\"data\":false,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expected, responseString_delete, true);
 
-        String responseString = this.mvc.perform(put("/shops/1/onshelves").header("authorization", adminToken))
+        String responseString = this.mvc.perform(put("/shops/1/online").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -493,7 +538,7 @@ public class ShopControllerTest {
         expected = "{\"errno\":0,\"data\":false,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expected, responseString_delete, true);
 
-        String responseString = this.mvc.perform(put("/shops/1/offshelves").header("authorization", adminToken))
+        String responseString = this.mvc.perform(put("/shops/1/offline").header("authorization", adminToken))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();

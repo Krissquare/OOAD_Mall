@@ -22,13 +22,15 @@ public enum ReturnNo {
     //--------------------------------------------
     //状态码 400
     FIELD_NOTVALID(503,"字段不合法"),
-    RESOURCE_FALSIFY(507, "信息签名不正确"),
+    RESOURCE_FALSIFY(511, "信息签名不正确"),
     IMG_FORMAT_ERROR(508,"图片格式不正确"),
     IMG_SIZE_EXCEED(509,"图片大小超限"),
+    PARAMETER_MISSED(510, "缺少必要参数"),
     ACT_LATE_BEGINTIME(947, "开始时间不能晚于结束时间"),
     ACT_LATE_PAYTIME(948, "尾款支付时间晚于活动结束时间"),
     ACT_EARLY_PAYTIME(949, "尾款支付时间早于活动开始时间"),
     COUPON_LATE_COUPONTIME(950,"优惠卷领卷时间晚于活动开始时间"),
+
 
     //所有路径带id的API都可能返回此错误
     //状态码 404

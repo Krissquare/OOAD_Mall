@@ -5,9 +5,9 @@ import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.freight.mapper.RegionPoMapper;
 import cn.edu.xmu.oomall.core.util.RedisUtil;
-import cn.edu.xmu.oomall.goods.model.bo.Region;
-import cn.edu.xmu.oomall.goods.model.po.RegionPo;
-import cn.edu.xmu.oomall.goods.model.po.RegionPoExample;
+import cn.edu.xmu.oomall.freight.model.bo.Region;
+import cn.edu.xmu.oomall.freight.model.po.RegionPo;
+import cn.edu.xmu.oomall.freight.model.po.RegionPoExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -24,10 +24,11 @@ import java.util.List;
 public class RegionDao {
 
     private static final Byte STATE_EFFCTIVE=0;
-
     private static final Byte STATE_SUSPENDED=1;
-
     private static final Byte STATE_ABANDONED=2;
+    private String redisKeyForParentRegion = "parentRegion_";
+    private String redisKeyForSubList = "subRegion_";
+    private String redisKeyForChildRegion = "childRegion_";
 
     @Value("${oomall.freight.region.expiretime}")
     private long regionRedisTimeout;
@@ -43,14 +44,13 @@ public class RegionDao {
      * @param id
      * @return ReturnObject
      */
-    public ReturnObject<List<Region>> getParentRegion(Long id) {
+    public ReturnObject getParentRegion(Long id) {
         try {
             RegionPo regionPo = new RegionPo();
             regionPo.setId(id);
 
             //查redis
-            String key = null;
-            key = "parent_region_" + id;
+            String key = redisKeyForParentRegion + id;
             List<Region> redisRegions = (List<Region>) redisUtil.get(key);
             if (null != redisRegions) {
                 return new ReturnObject(redisRegions);
@@ -94,11 +94,11 @@ public class RegionDao {
 
             RegionPo parentRegionPo = regionPoMapper.selectByPrimaryKey(regionPo.getPid());
             if (parentRegionPo == null) {
-                ReturnObject<Region> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
+                ReturnObject retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
                 return retObj;
             }
             if (parentRegionPo.getState().equals(STATE_ABANDONED)) {
-                ReturnObject<Region> retObj = new ReturnObject(ReturnNo.FREIGHT_REGIONOBSOLETE);
+                ReturnObject retObj = new ReturnObject(ReturnNo.FREIGHT_REGIONOBSOLETE);
                 return retObj;
             }
 
@@ -116,7 +116,7 @@ public class RegionDao {
      * @param id
      * @return ReturnObject
      */
-    public ReturnObject<List<Region>> adminGetChildRegion(Long id) {
+    public ReturnObject adminGetChildRegion(Long id) {
         try {
             RegionPo regionPo = new RegionPo();
             regionPo.setId(id);
@@ -124,7 +124,7 @@ public class RegionDao {
             regionPo = regionPoMapper.selectByPrimaryKey(id);
 
             if (regionPo == null) {
-                ReturnObject<List<Region>> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
+                ReturnObject<List> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
                 return retObj;
             }
 
@@ -150,7 +150,7 @@ public class RegionDao {
      * @param id
      * @return ReturnObject
      */
-    public ReturnObject<List<Region>> getChildRegion(Long id) {
+    public ReturnObject getChildRegion(Long id) {
         try {
             RegionPo regionPo = new RegionPo();
             regionPo.setId(id);
@@ -158,16 +158,16 @@ public class RegionDao {
             regionPo = regionPoMapper.selectByPrimaryKey(id);
 
             if (regionPo == null) {
-                ReturnObject<List<Region>> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
+                ReturnObject retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
                 return retObj;
             }
             if (regionPo.getState().equals(STATE_ABANDONED)) {
-                ReturnObject<List<Region>> retObj = new ReturnObject(ReturnNo.FREIGHT_REGIONOBSOLETE);
+                ReturnObject retObj = new ReturnObject(ReturnNo.FREIGHT_REGIONOBSOLETE);
                 return retObj;
             }
 
             //redis
-            String key="child_region_" + id;
+            String key = redisKeyForChildRegion + id;
             String subKey;
             List<Region> redisRegions = (List<Region>) redisUtil.get(key);
             if (redisRegions != null) {
@@ -181,7 +181,7 @@ public class RegionDao {
 
             List<RegionPo> regionPos=regionPoMapper.selectByExample(example);
             for(RegionPo rp:regionPos){
-                subKey="sub_"+rp.getId();
+                subKey = redisKeyForSubList + rp.getId();
                 redisUtil.set(subKey,id,regionRedisTimeout);
                 Region r = (Region) Common.cloneVo(rp,Region.class);
                 retRegions.add(r);
@@ -207,7 +207,7 @@ public class RegionDao {
 
             RegionPo rp = regionPoMapper.selectByPrimaryKey(regionPo.getId());
             if (rp == null) {
-                ReturnObject<Object> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
+                ReturnObject retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
                 return retObj;
             }
 
@@ -233,16 +233,16 @@ public class RegionDao {
 
             RegionPo rp=regionPoMapper.selectByPrimaryKey(regionPo.getId());
             if (rp == null) {
-                ReturnObject<Object> retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
+                ReturnObject retObj = new ReturnObject(ReturnNo.RESOURCE_ID_NOTEXIST);
                 return retObj;
             }
             if (rp.getState().equals(STATE_EFFCTIVE)) {
-                ReturnObject<Object> retObj = new ReturnObject(ReturnNo.STATENOTALLOW);
+                ReturnObject retObj = new ReturnObject(ReturnNo.STATENOTALLOW);
                 return retObj;
             }
 
             regionPoMapper.updateByPrimaryKeySelective(regionPo);
-            redisUtil.del("child_region_" + regionPo.getId());
+            redisUtil.del(redisKeyForChildRegion + regionPo.getId());
             deleteRedis(regionPo.getId());
 
             return new ReturnObject();
@@ -283,10 +283,10 @@ public class RegionDao {
     }
 
     private void deleteRedis(Long id){
-        String subKey="sub_"+id;
+        String subKey = redisKeyForSubList + id;
         // 若对应父id有记录，去redis中删除那条记录
         if (redisUtil.get(subKey)!=null){
-            redisUtil.del("child_region_"+redisUtil.get(subKey));
+            redisUtil.del(redisKeyForChildRegion + redisUtil.get(subKey) );
         }
         redisUtil.del(subKey);
     }
