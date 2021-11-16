@@ -173,7 +173,7 @@ public class ShareActivityService {
      */
     @Transactional(readOnly = true)
     public ReturnObject getShareActivityByShopIdAndId(Long shopId, Long id) {
-        ReturnObject returnObject = shareActivityDao.getShareActivityById(id);
+        ReturnObject returnObject = shareActivityDao.getShareActivityByShopIdAndId(shopId,id);
         if(returnObject.getData()==null){
             return returnObject;
         }

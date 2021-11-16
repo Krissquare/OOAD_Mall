@@ -6,6 +6,7 @@ import cn.edu.xmu.oomall.activity.mirrorservice.ShopService;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.SimpleSaleInfoVO;
 import cn.edu.xmu.oomall.activity.mirrorservice.vo.ShopInfoVO;
 import cn.edu.xmu.oomall.activity.util.CreateObject;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import com.github.pagehelper.PageInfo;
 import org.junit.Before;
@@ -52,8 +53,11 @@ public class ShareActivityControllerTest {
     @MockBean
     private ShopService shopService;
 
+    @MockBean
+    private RedisUtil redisUtil;
+
     @Before
-    public void createObject() throws Exception {
+    public void init() throws Exception {
         //生成一个 onsale对象
         ReturnObject<PageInfo<SimpleSaleInfoVO>> onSaleInfoDTO = CreateObject.createOnSaleInfoDTO(1L);
         ReturnObject<PageInfo<SimpleSaleInfoVO>> onSaleInfoDTO1 = CreateObject.createOnSaleInfoDTO(-1L);
@@ -65,6 +69,12 @@ public class ShareActivityControllerTest {
         Mockito.when(shopService.getShop(1L)).thenReturn(shopInfoDTO);
         Mockito.when(shopService.getShop(11L)).thenReturn(shopInfoDTO1);
         Mockito.when(shopService.getShop(-1L)).thenReturn(shopInfoDTO1);
+
+        //redis配置
+        Mockito.when(redisUtil.get("shareactivivybyid_11")).thenReturn(null);
+        Mockito.when(redisUtil.get("shareactivivybyid_1")).thenReturn("{\"id\":1,\"shopId\":1,\"shopName\":\"甜蜜之旅\",\"name\":\"分享活动1\",\"beginTime\":[2021,11,11,15,1,23],\"endTime\":[2022,2,19,15,1,23],\"state\":1,\"createdBy\":1,\"createName\":\"admin\",\"modifiedBy\":null,\"modiName\":null,\"gmtCreate\":[2021,11,11,15,1,23],\"gmtModified\":null,\"strategy\":null}");
+        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_11")).thenReturn(null);
+        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_1")).thenReturn("{\"id\":1,\"shopId\":1,\"shopName\":\"甜蜜之旅\",\"name\":\"分享活动1\",\"beginTime\":[2021,11,11,15,1,23],\"endTime\":[2022,2,19,15,1,23],\"state\":1,\"createdBy\":1,\"createName\":\"admin\",\"modifiedBy\":null,\"modiName\":null,\"gmtCreate\":[2021,11,11,15,1,23],\"gmtModified\":null,\"strategy\":null}");
     }
 
     /**
@@ -132,6 +142,13 @@ public class ShareActivityControllerTest {
         String expectString6 = "{\"code\":\"OK\",\"errmsg\":\"成功\",\"data\":{\"total\":3,\"pages\":1,\"pageSize\":3,\"page\":1,\"list\":[{\"id\":1,\"name\":\"分享活动1\"},{\"id\":3,\"name\":\"分享活动3\"},{\"id\":4,\"name\":\"分享活动4\"}]}}";
         JSONAssert.assertEquals(expectString6, responseString6, true);
 
+
+        String responseString7 = mvc.perform(get("/shops/1111111/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString7 = "{\"code\":\"OK\",\"errmsg\":\"成功\",\"data\":{\"total\":0,\"pages\":0,\"pageSize\":10,\"page\":1,\"list\":[]}}";
+        JSONAssert.assertEquals(expectString7, responseString7, true);
     }
 
     /**
@@ -150,8 +167,8 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString="{\"errno\":0,\"data\":{\"id\":138,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-        JSONAssert.assertEquals(expectString,responseString,CUSTOM_COMPARATOR);
+        String expectString = "{\"errno\":0,\"data\":{\"id\":138,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString, responseString, CUSTOM_COMPARATOR);
 
 
         //姓名为空或null
@@ -205,8 +222,8 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString7="{\"errno\":0,\"data\":{\"id\":139,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
-        JSONAssert.assertEquals(expectString7,responseString7,CUSTOM_COMPARATOR);
+        String expectString7 = "{\"errno\":0,\"data\":{\"id\":139,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString7, responseString7, CUSTOM_COMPARATOR);
 
 
         //时间不合规
@@ -315,6 +332,21 @@ public class ShareActivityControllerTest {
         String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11 15:01:23\",\"endTime\":\"2022-02-19 15:01:23\",\"strategy\":null},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
 
+        //没redis
+        String responseString1 = mvc.perform(get("/shareactivities/11").header("authorization", token).contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString1 = "{\"errno\":0,\"data\":{\"id\":11,\"shop\":{\"id\":1,\"name\":\"良耳的商店\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":null},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString1, responseString1, true);
+
+
+        String responseString3 = mvc.perform(get("/shareactivities/111111").header("authorization", token).contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString3 = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectString1, responseString1, true);
     }
 
     /**
@@ -328,6 +360,23 @@ public class ShareActivityControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11T15:01:23\",\"endTime\":\"2022-02-19T15:01:23\",\"state\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11T15:01:23\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"strategy\":null},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString, responseString, true);
+
+
+        //没redis
+        String responseString1 = mvc.perform(get("/shops/1/shareactivities/11").header("authorization", token).contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString1 = "{\"errno\":0,\"data\":{\"id\":11,\"shop\":{\"id\":1,\"name\":\"良耳的商店\"},\"name\":\"String\",\"beginTime\":\"2021-11-11T15:01:02\",\"endTime\":\"2021-11-11T15:01:10\",\"state\":null,\"createdBy\":{\"id\":666,\"name\":\"lxc\"},\"gmtCreate\":\"2021-11-12T18:24:24\",\"gmtModified\":\"2021-11-12T18:24:24\",\"modifiedBy\":{\"id\":666,\"name\":\"lxc\"},\"strategy\":null},\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectString1, responseString1, true);
+
+
+        String responseString3 = mvc.perform(get("/shops/1/shareactivities/11111").header("authorization", token).contentType("application/json;charset=UTF-8"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+        String expectString3 = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
     }
 
