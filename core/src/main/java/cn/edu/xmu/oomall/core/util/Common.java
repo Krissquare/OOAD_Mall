@@ -251,16 +251,23 @@ public class Common {
                     Object newObject = boField.get(bo);
                     voField.set(newVo, newObject);
                 }
-                //createdBy和modifiedBy特殊处理
+                //属性名相同，类型不同
                 else
                 {
-                    //bo的createdBy和createName组装为SimpleRetVo的id,name
+                    //如果不是特殊情况，赋值为null
+                    if(!"createdBy".equals(voField.getName()) && !"modifiedBy".equals(voField.getName()))
+                    {
+                        voField.set(newVo, null);
+                        continue;
+                    }
+
                     Object newSimpleRetVo = voField.getType().getDeclaredConstructor().newInstance();
                     Field newSimpleRetVoIdField=newSimpleRetVo.getClass().getDeclaredField("id");
                     Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("name");
                     newSimpleRetVoIdField.setAccessible(true);
                     newSimpleRetVoNameField.setAccessible(true);
 
+                    //bo的createdBy和createName组装为SimpleRetVo的id,name
                     if("createdBy".equals(boField.getName()))
                     {
                         Field boCreatedByField = boClass.getDeclaredField("createdBy");

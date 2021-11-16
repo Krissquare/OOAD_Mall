@@ -22,7 +22,7 @@ import java.util.List;
  * 商品分类Controller
  *
  * @author Zhiliang Li 22920192204235
- * @date 2021/11/12
+ * @date 2021/11/15
  */
 @Api(value = "商品类别API", tags = "商品类别API")
 @RestController
@@ -102,8 +102,7 @@ public class CategoryController {
             httpServletResponse.setStatus(HttpStatus.CREATED.value());
         }
         if (ret.getData() != null) {
-            CategoryRetVo category = new CategoryRetVo((Category) (ret.getData()));
-            ret = new ReturnObject(category);
+            return Common.getRetObject(ret);
         }
         return Common.decorateReturnObject(ret);
     }
@@ -125,6 +124,7 @@ public class CategoryController {
     public Object changeCategories(@PathVariable("id") Long id, @Valid @RequestBody CategoryVo vo, BindingResult bindingResult) {
         String modiName = "admin";
         Long modifyId = 1L;
+
         // vo合法性检查
         var res = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (res != null) {
@@ -161,13 +161,7 @@ public class CategoryController {
     private Object selectSubCategories(Long id) {
         ReturnObject ret = categoryService.getSubCategories(id);
         if (ret.getData() != null) {
-            List<Category> categories = (List<Category>) ret.getData();
-            List<CategoryRetVo> categoryRetVos = new ArrayList<>();
-            for (Category category : categories) {
-                CategoryRetVo categoryRetVo = new CategoryRetVo(category);
-                categoryRetVos.add(categoryRetVo);
-            }
-            ret = new ReturnObject(categoryRetVos);
+            return Common.getListRetVo(ret, CategoryRetVo.class);
         }
         return Common.decorateReturnObject(ret);
     }
