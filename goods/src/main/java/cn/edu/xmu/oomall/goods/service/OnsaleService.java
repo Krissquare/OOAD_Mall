@@ -93,7 +93,7 @@ public class OnsaleService {
 
         if (finalState == OnSale.State.OFFLINE) {
             //只有上线态才能下线， 否则出507错误
-            if (onsale.getState() != OnSale.State.OFFLINE) {
+            if (onsale.getState() != OnSale.State.ONLINE) {
                 return new ReturnObject(ReturnNo.STATENOTALLOW, "非上线态无法下线");
             }
             //如果结束时间晚于当前时间且开始时间早于当前时间，修改结束时间为当前时间
