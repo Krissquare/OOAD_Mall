@@ -19,6 +19,6 @@ public interface ShopFeignService {
      * @param id
      * @return
      */
-    @GetMapping(value = "/internet/shop/{id}")
+    @GetMapping(value = "/internal/shop/{id}")
     ReturnObject<Shop> getShopById(@PathVariable Long id);
 }
