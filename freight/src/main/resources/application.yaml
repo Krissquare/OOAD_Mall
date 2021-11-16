@@ -92,3 +92,5 @@ oomall:
   freight:
     region:
       expiretime: 10000
+    model:
+      expiretime: 10000
