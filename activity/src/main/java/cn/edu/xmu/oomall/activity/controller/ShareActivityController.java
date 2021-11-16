@@ -84,7 +84,7 @@ public class ShareActivityController {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
         }
         page = (page == null) ? 1 : page;
-        pageSize = (pageSize == null) ? 3 : pageSize;
+        pageSize = (pageSize == null) ? 10 : pageSize;
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
@@ -110,15 +110,15 @@ public class ShareActivityController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "成功")})
     @PostMapping("/shops/{shopId}/shareactivities")
-    public Object addShareAct(@PathVariable(value = "shopId", required = true) Long shopId,
+    public Object addShareAct(String createName, Long createId, @PathVariable(value = "shopId", required = true) Long shopId,
                               @Validated @RequestBody ShareActivityVo shareActivityVo,
                               BindingResult bindingResult) {
+        createName = "lxc";
+        createId = 666L;
         Object obj = Common.processFieldErrors(bindingResult, httpServletResponse);
         if (null != obj) {
             return obj;
         }
-        String createName = "lxc";
-        Long createId = 666L;
         if (shareActivityVo.getBeginTime().isAfter(shareActivityVo.getEndTime())) {
             return new ReturnObject<>(ReturnNo.FIELD_NOTVALID, "开始时间不得早于结束时间");
         }
@@ -166,7 +166,7 @@ public class ShareActivityController {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "productId错误");
         }
         page = (page == null) ? 1 : page;
-        pageSize = (pageSize == null) ? 3 : pageSize;
+        pageSize = (pageSize == null) ? 10 : pageSize;
         if (page <= 0 || pageSize <= 0) {
             return new ReturnObject(ReturnNo.FIELD_NOTVALID, "页数和页数大小应大于0");
         }
