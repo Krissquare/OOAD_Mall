@@ -1,0 +1,10 @@
+update oomall_share_activity set state =1 where id =1;
+update oomall_share_activity set state =2 where id =2;
+update oomall_share_activity set state =2 where id =3;
+update oomall_share_activity set state =0 where id =4;
+update oomall_share_activity set state =1 where id =5;
+update oomall_share_activity set state =1 where id =6;
+update oomall_share_activity set state =1 where id =7;
+update oomall_share_activity set state =1 where id =8;
+update oomall_share_activity set state =1 where id =9;
+update oomall_share_activity set state =1 where id =10;
