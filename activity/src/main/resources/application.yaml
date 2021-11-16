@@ -15,7 +15,7 @@ spring:
     # 解决Bean重复定义问题
     allow-bean-definition-overriding: true
   application:
-    name: coupon-service
+    name: activity-service
   profiles:
     active: dev
   servlet:
