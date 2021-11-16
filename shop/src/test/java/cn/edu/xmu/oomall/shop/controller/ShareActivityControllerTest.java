@@ -138,24 +138,6 @@ public class ShareActivityControllerTest {
     }
     @Test
     @Transactional
-    public void deleteShareActivityOnOnSale_OnSaleDeleteError() throws Exception{
-        OnSale onSale = new OnSale();
-        onSale.setId(1L);
-        onSale.setState((byte) 1);
-        Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.FALSE));
-        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/1"))
-                .andExpect(status().is5xxServerError())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
-        String expectedString= "{\n" +
-                "\t\"errno\": 500,\n" +
-                "\t\"errmsg\": \"服务器内部错误\"\n" +
-                "}";
-        JSONAssert.assertEquals(expectedString,responseString,false);
-    }
-    @Test
-    @Transactional
     public void deleteShareActivityOnOnSale_ShareActivityIdNotFound() throws Exception{
         OnSale onSale = new OnSale();
         onSale.setId(1L);
@@ -179,8 +161,8 @@ public class ShareActivityControllerTest {
         onSale.setId(1L);
         onSale.setState((byte) 1);
         Mockito.when(onSaleService.getOnSaleById(1L)).thenReturn(new ReturnObject<>(onSale));
-        Mockito.when(onSaleService.updateDeleteOnSaleShareActId(1L,1L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
-        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/1"))
+        Mockito.when(onSaleService.updateAddOnSaleShareActId(1L,4L)).thenReturn(new ReturnObject<>(Boolean.TRUE));
+        String responseString=this.mvc.perform(delete("/shops/1/onSale/1/shareActivities/4"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -227,7 +209,7 @@ public class ShareActivityControllerTest {
         String json= JacksonUtil.toJson(shareActivityVo);
         String responseString=this.mvc.perform(put("/shops/1/shareactivities/4")
                         .contentType("application/json;charset=UTF-8").content(json))
-                .andExpect(status().is4xxClientError())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
         String expectedString="{\n" +
