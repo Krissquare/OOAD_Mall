@@ -1,21 +1,16 @@
 package cn.edu.xmu.oomall.activity.controller;
 
 import cn.edu.xmu.oomall.activity.model.bo.ShopAdministrator;
-import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
-import cn.edu.xmu.oomall.activity.model.vo.GrouponUpdateSimpleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.GrouponUpdateSimpleVo;
 import cn.edu.xmu.oomall.activity.model.vo.NewGrouponProductOnSaleVo;
 import cn.edu.xmu.oomall.activity.service.GrouponService;
-import cn.edu.xmu.oomall.activity.util.GrouponProductStatus;
-import cn.edu.xmu.oomall.activity.util.GrouponReturnStatus;
-import cn.edu.xmu.oomall.core.*;
-import cn.edu.xmu.oomall.core.util.ResponseUtil;
+import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +33,6 @@ public class GrouponController {
      * @param id 团购活动id
      * @return 结果状态
      *      507: 禁止操作
-     *      924: 活动和商铺不匹配
-     *      505: 活动id错误
      *      default: 成功
      */
     @ApiOperation(value="管理员上线团购活动", produces="application/json;charset=UTF-8")
@@ -53,18 +46,8 @@ public class GrouponController {
                                          @PathVariable("id")Integer id){
         ShopAdministrator admin = new ShopAdministrator((long)233,"xxx");
 
-        GrouponReturnStatus result = grouponService.onlineGrouponActivity(id,shopId,admin);
-        switch (result){
-            //success
-            case CHANGED: return ResponseUtil.ok();
-            //500
-            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
-            //507
-            default: return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
-//            case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
-//            case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
-//            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
-        }
+        ReturnObject result = grouponService.onlineGrouponActivity(id,shopId,admin);
+        return Common.decorateReturnObject(result);
     }
 
     /**
@@ -75,8 +58,6 @@ public class GrouponController {
      * @param id 团购活动id
      * @return 结果状态
      *      507: 禁止操作
-     *      924: 活动和商铺不匹配
-     *      505: 活动id错误
      *      default: 成功
      */
     @ApiOperation(value="管理员下线团购活动", produces="application/json;charset=UTF-8")
@@ -90,15 +71,7 @@ public class GrouponController {
                                           @PathVariable("id")Integer id){
         ShopAdministrator admin = new ShopAdministrator((long)666,"yyy");
 
-        GrouponReturnStatus result = grouponService.offlineGrouponActivity(id,shopId,admin);
-        switch (result){
-            case CHANGED: return ResponseUtil.ok();
-            case ALREADY: return ResponseUtil.fail(ReturnNo.STATENOTALLOW,"已经是下线状态！");
-            case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
-            case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
-            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
-            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
-        }
+        return Common.decorateReturnObject(grouponService.offlineGrouponActivity(id,shopId,admin));
     }
 
     /**
@@ -120,25 +93,9 @@ public class GrouponController {
         ShopAdministrator admin = new ShopAdministrator((long)233,"xxx");
         DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         if (LocalDateTime.parse(actUpd.getBeginTime(),df).isAfter(LocalDateTime.parse(actUpd.getEndTime(),df))){
-            return ResponseUtil.fail(ReturnNo.ACT_LATE_BEGINTIME);
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME));
         }
-        GrouponReturnStatus result = grouponService.updateGrouponActivity(id,shopId,actUpd,admin);
-        switch (result){
-            //ok
-            case CHANGED: return ResponseUtil.ok();
-            //507
-            case CHANGE_FORBIDDEN: return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
-            //924
-            case ID_NOT_EXIT: return ResponseUtil.fail(ReturnNo.ACTIVITY_NOTFOUND,"不存在的团购活动！");
-            //505
-            case ID_SHOPID_NOT_MATCH: return ResponseUtil.fail(ReturnNo.RESOURCE_ID_OUTSCOPE,"该店铺没有这个活动！");
-            //902
-            case SALE_TIME_CONFLICT: return ResponseUtil.fail(ReturnNo.GOODS_PRICE_CONFLICT);
-            //500
-            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
-            //400-507
-            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
-        }
+        return Common.decorateReturnObject(grouponService.updateGrouponActivity(id,shopId,actUpd,admin));
     }
 
     /**
@@ -156,15 +113,8 @@ public class GrouponController {
     public Object grouponDeletedByManager(@PathVariable("shopId")Integer shopId,
                                           @PathVariable("id")Integer id){
         ShopAdministrator admin = new ShopAdministrator((long)233,"xxx");
-        GrouponReturnStatus result = grouponService.deleteGrouponActivity(id,shopId);
-        switch (result){
-            //ok
-            case CHANGED: return ResponseUtil.ok();
-            //500
-            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
-            //507
-            default: return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
-        }
+
+        return Common.decorateReturnObject(grouponService.deleteGrouponActivity(id,shopId));
     }
 
     /**
@@ -188,18 +138,7 @@ public class GrouponController {
         ShopAdministrator admin = new ShopAdministrator((long)233,"xxx");
 
         NewGrouponProductOnSaleVo retVO = new NewGrouponProductOnSaleVo();
-        GrouponProductStatus result = grouponService.addGrouponProduct(id,shopId,pid,admin,retVO);
-        switch (result){
-            case ADD_SUCCESS:return ResponseUtil.ok(retVO);
-            //507
-            case ADD_FORBIDDEN_STATE:return ResponseUtil.fail(ReturnNo.STATENOTALLOW);
-            //902
-            case ADD_TIME_CONFLICT:return ResponseUtil.fail(ReturnNo.GOODS_PRICE_CONFLICT);
-            //500
-            case INTERNAL_FAULT: return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR);
-            //400-507
-            default:return ResponseUtil.fail(ReturnNo.RESOURCE_FALSIFY);
-        }
+        return Common.decorateReturnObject(grouponService.addGrouponProduct(id,shopId,pid,admin,retVO));
     }
 
 

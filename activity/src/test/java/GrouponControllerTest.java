@@ -1,13 +1,11 @@
 import cn.edu.xmu.oomall.activity.ActivityApplication;
-import cn.edu.xmu.oomall.activity.model.vo.GrouponUpdateSimpleVo;
-import cn.edu.xmu.oomall.activity.model.vo.OnsaleSimpleVo;
-import cn.edu.xmu.oomall.activity.openfeign.OnsalesApi;
+import cn.edu.xmu.oomall.activity.microservice.vo.GrouponUpdateSimpleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.OnsaleSimpleVo;
+import cn.edu.xmu.oomall.activity.microservice.OnsalesService;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -34,8 +31,8 @@ public class GrouponControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean(name = "cn.edu.xmu.oomall.activity.openfeign.OnsalesApi")
-    private OnsalesApi onsalesApiMock;
+    @MockBean(name = "cn.edu.xmu.oomall.activity.microservice.OnsalesApi")
+    private OnsalesService onsalesApiMock;
 
     ///////////////上线///////////////
     @Test public void grouponUpLineByManagerTest1() throws Exception{

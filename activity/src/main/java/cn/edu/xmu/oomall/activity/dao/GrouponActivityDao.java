@@ -3,6 +3,8 @@ package cn.edu.xmu.oomall.activity.dao;
 import cn.edu.xmu.oomall.activity.mapper.GroupOnActivityPoMapper;
 import cn.edu.xmu.oomall.activity.model.po.GroupOnActivityPo;
 import cn.edu.xmu.oomall.core.util.RedisUtil;
+import cn.edu.xmu.oomall.core.util.ReturnNo;
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -19,23 +21,30 @@ public class GrouponActivityDao {
     @Value("${oomall.activity.groupon.expiretime}")
     private long timeout;
 
-    public GroupOnActivityPo getGrouponActivity(Long id) throws Exception{
-        //带Redis缓存的查询
-        //规定团购活动在redis里key的存储形式为"groupon_"+id
-        GroupOnActivityPo groupOnActivityPo = (GroupOnActivityPo) redisUtil.get("groupon_"+id.toString());
-        if (groupOnActivityPo == null){
-            groupOnActivityPo = groupOnActivityPoMapper.selectByPrimaryKey(id);
-            if (groupOnActivityPo != null){
-                redisUtil.set("groupon_"+groupOnActivityPo.getId().toString(),groupOnActivityPo,timeout);
+    public ReturnObject<GroupOnActivityPo> getGrouponActivity(Long id) {
+        try {
+            //规定团购活动在redis里key的存储形式为"groupon_"+id
+            GroupOnActivityPo groupOnActivityPo = (GroupOnActivityPo) redisUtil.get("groupon_" + id.toString());
+            if (groupOnActivityPo == null) {
+                groupOnActivityPo = groupOnActivityPoMapper.selectByPrimaryKey(id);
+                if (groupOnActivityPo != null) {
+                    redisUtil.set("groupon_" + groupOnActivityPo.getId().toString(), groupOnActivityPo, timeout);
+                }
             }
+            return new ReturnObject<GroupOnActivityPo>(groupOnActivityPo);
+        } catch (Exception e){
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
         }
-        return groupOnActivityPo;
     }
 
-    public void updateGrouponActivity(GroupOnActivityPo groupOnActivityPo) throws Exception{
-        //同时更新数据库和Redis缓存
-        redisUtil.set("groupon_"+groupOnActivityPo.getId().toString(),groupOnActivityPo,timeout);
-        groupOnActivityPoMapper.updateByPrimaryKey(groupOnActivityPo);
+    public ReturnObject<Object> updateGrouponActivity(GroupOnActivityPo groupOnActivityPo) {
+        try {//同时更新数据库和Redis缓存
+            redisUtil.del("groupon_" + groupOnActivityPo.getId().toString());
+            groupOnActivityPoMapper.updateByPrimaryKey(groupOnActivityPo);
+            return new ReturnObject();
+        }catch (Exception e){
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
     }
 
 //    public void insertGrouponActivity(GroupOnActivityPo groupOnActivityPo){
@@ -43,9 +52,14 @@ public class GrouponActivityDao {
 //        groupOnActivityPoMapper.insert(groupOnActivityPo);
 //    }
 
-    public void deleteGrouponActivity(GroupOnActivityPo groupOnActivityPo) throws Exception{
-        redisUtil.del("groupon_"+groupOnActivityPo.getId().toString());
-        groupOnActivityPoMapper.deleteByPrimaryKey(groupOnActivityPo.getId());
+    public ReturnObject<Object> deleteGrouponActivity(GroupOnActivityPo groupOnActivityPo) {
+        try {
+            redisUtil.del("groupon_" + groupOnActivityPo.getId().toString());
+            groupOnActivityPoMapper.deleteByPrimaryKey(groupOnActivityPo.getId());
+            return new ReturnObject<>();
+        }catch (Exception e){
+            return new ReturnObject<>(ReturnNo.INTERNAL_SERVER_ERR,e.getMessage());
+        }
     }
 
 }

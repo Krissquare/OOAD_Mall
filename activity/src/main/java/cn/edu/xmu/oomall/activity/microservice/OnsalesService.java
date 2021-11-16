@@ -1,18 +1,17 @@
-package cn.edu.xmu.oomall.activity.openfeign;
+package cn.edu.xmu.oomall.activity.microservice;
 
-import cn.edu.xmu.oomall.activity.model.vo.GrouponUpdateSimpleVo;
-import cn.edu.xmu.oomall.activity.model.vo.OnsaleSimpleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.GrouponUpdateSimpleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.OnsaleSimpleVo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
 @FeignClient(value = "onsales",url = "http://localhost:8081")
-public interface OnsalesApi {
+public interface OnsalesService {
 
     //认为需要实现而目前没有的内部api:
     //下线某团购活动的所有onsale项

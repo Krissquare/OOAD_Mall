@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.activity.model.vo;
+package cn.edu.xmu.oomall.activity.microservice.vo;
 
 import lombok.Data;
 
