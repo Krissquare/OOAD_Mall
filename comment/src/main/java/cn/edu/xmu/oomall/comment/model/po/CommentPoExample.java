@@ -944,6 +944,256 @@ public class CommentPoExample {
             addCriterion("`gmt_modified` not between", value1, value2, "gmtModified");
             return (Criteria) this;
         }
+
+        public Criteria andPostByIsNull() {
+            addCriterion("`post_by` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByIsNotNull() {
+            addCriterion("`post_by` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByEqualTo(Long value) {
+            addCriterion("`post_by` =", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByNotEqualTo(Long value) {
+            addCriterion("`post_by` <>", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByGreaterThan(Long value) {
+            addCriterion("`post_by` >", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByGreaterThanOrEqualTo(Long value) {
+            addCriterion("`post_by` >=", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByLessThan(Long value) {
+            addCriterion("`post_by` <", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByLessThanOrEqualTo(Long value) {
+            addCriterion("`post_by` <=", value, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByIn(List<Long> values) {
+            addCriterion("`post_by` in", values, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByNotIn(List<Long> values) {
+            addCriterion("`post_by` not in", values, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByBetween(Long value1, Long value2) {
+            addCriterion("`post_by` between", value1, value2, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostByNotBetween(Long value1, Long value2) {
+            addCriterion("`post_by` not between", value1, value2, "postBy");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameIsNull() {
+            addCriterion("`post_name` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameIsNotNull() {
+            addCriterion("`post_name` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameEqualTo(String value) {
+            addCriterion("`post_name` =", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameNotEqualTo(String value) {
+            addCriterion("`post_name` <>", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameGreaterThan(String value) {
+            addCriterion("`post_name` >", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameGreaterThanOrEqualTo(String value) {
+            addCriterion("`post_name` >=", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameLessThan(String value) {
+            addCriterion("`post_name` <", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameLessThanOrEqualTo(String value) {
+            addCriterion("`post_name` <=", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameLike(String value) {
+            addCriterion("`post_name` like", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameNotLike(String value) {
+            addCriterion("`post_name` not like", value, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameIn(List<String> values) {
+            addCriterion("`post_name` in", values, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameNotIn(List<String> values) {
+            addCriterion("`post_name` not in", values, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameBetween(String value1, String value2) {
+            addCriterion("`post_name` between", value1, value2, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostNameNotBetween(String value1, String value2) {
+            addCriterion("`post_name` not between", value1, value2, "postName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeIsNull() {
+            addCriterion("`post_time` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeIsNotNull() {
+            addCriterion("`post_time` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeEqualTo(LocalDateTime value) {
+            addCriterion("`post_time` =", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeNotEqualTo(LocalDateTime value) {
+            addCriterion("`post_time` <>", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeGreaterThan(LocalDateTime value) {
+            addCriterion("`post_time` >", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeGreaterThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`post_time` >=", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeLessThan(LocalDateTime value) {
+            addCriterion("`post_time` <", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeLessThanOrEqualTo(LocalDateTime value) {
+            addCriterion("`post_time` <=", value, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeIn(List<LocalDateTime> values) {
+            addCriterion("`post_time` in", values, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeNotIn(List<LocalDateTime> values) {
+            addCriterion("`post_time` not in", values, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`post_time` between", value1, value2, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andPostTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+            addCriterion("`post_time` not between", value1, value2, "postTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdIsNull() {
+            addCriterion("`shop_id` is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdIsNotNull() {
+            addCriterion("`shop_id` is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdEqualTo(Long value) {
+            addCriterion("`shop_id` =", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdNotEqualTo(Long value) {
+            addCriterion("`shop_id` <>", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdGreaterThan(Long value) {
+            addCriterion("`shop_id` >", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("`shop_id` >=", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdLessThan(Long value) {
+            addCriterion("`shop_id` <", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdLessThanOrEqualTo(Long value) {
+            addCriterion("`shop_id` <=", value, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdIn(List<Long> values) {
+            addCriterion("`shop_id` in", values, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdNotIn(List<Long> values) {
+            addCriterion("`shop_id` not in", values, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdBetween(Long value1, Long value2) {
+            addCriterion("`shop_id` between", value1, value2, "shopId");
+            return (Criteria) this;
+        }
+
+        public Criteria andShopIdNotBetween(Long value1, Long value2) {
+            addCriterion("`shop_id` not between", value1, value2, "shopId");
+            return (Criteria) this;
+        }
     }
 
     /**
