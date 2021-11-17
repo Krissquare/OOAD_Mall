@@ -96,6 +96,22 @@ public class Common {
         }
     }
 
+    public static ReturnObject getRetVo(ReturnObject<VoObject> returnObject,Class voClass) {
+        ReturnNo code = returnObject.getCode();
+        switch (code){
+            case OK:
+                VoObject data = returnObject.getData();
+                if (data != null){
+                    Object voObj = cloneVo(data,voClass);
+                    return new ReturnObject(voObj);
+                }else{
+                    return new ReturnObject();
+                }
+            default:
+                return new ReturnObject(returnObject.getCode(), returnObject.getErrmsg());
+        }
+    }
+
     /**
      * 处理返回对象
      * @param returnObject 返回的对象
