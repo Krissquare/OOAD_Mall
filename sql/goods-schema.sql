@@ -82,6 +82,10 @@ CREATE TABLE `oomall_comment` (
   `modi_name` varchar(128) DEFAULT NULL,
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
+  `post_by` bigint DEFAULT NULL,
+  `post_name` varchar(128) DEFAULT NULL,
+  `post_time` datetime DEFAULT NULL,
+  `shop_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -395,7 +399,7 @@ CREATE TABLE `oomall_shop` (
   `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `gmt_modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺';
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商铺';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -459,4 +463,4 @@ CREATE TABLE `oomall_weight_freight` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-12 21:25:12
+-- Dump completed on 2021-11-17 22:24:05
