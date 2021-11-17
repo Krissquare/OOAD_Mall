@@ -96,11 +96,11 @@ public class Common {
         }
     }
 
-    public static ReturnObject getRetVo(ReturnObject<VoObject> returnObject,Class voClass) {
+    public static ReturnObject getRetVo(ReturnObject<Object> returnObject,Class voClass) {
         ReturnNo code = returnObject.getCode();
         switch (code){
             case OK:
-                VoObject data = returnObject.getData();
+                Object data = returnObject.getData();
                 if (data != null){
                     Object voObj = cloneVo(data,voClass);
                     return new ReturnObject(voObj);
