@@ -466,8 +466,8 @@ public class Common {
      * 设置所有po对象的modifiedBy, modiName和gmtModify字段属性
      *
      * @author : Wangzixia 32420182202938
-     * @date： 2021/11/12 11:12
-     * @version: 1.0
+     * @date： 2021/11/17 15:12
+     * @version: 1.1
      *
      *
      * @param po       po对象
@@ -501,9 +501,9 @@ public class Common {
             return false;
         }
         try {
-            Field createName = aClass.getDeclaredField("gmtCreate");
-            createName.setAccessible(true);
-            createName.set(po,LocalDateTime.now());
+            Field gmtModified = aClass.getDeclaredField("gmtModified");
+            gmtModified.setAccessible(true);
+            gmtModified.set(po,LocalDateTime.now());
         } catch (NoSuchFieldException e) {
             logger.info(e.getMessage());
             return false;
