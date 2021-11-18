@@ -296,11 +296,11 @@ public class Common {
 
                     Object newSimpleRetVo = voField.getType().getDeclaredConstructor().newInstance();
                     Field newSimpleRetVoIdField=newSimpleRetVo.getClass().getDeclaredField("id");
-                    Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("name");
+                    Field newSimpleRetVoNameField=newSimpleRetVo.getClass().getDeclaredField("userName");
                     newSimpleRetVoIdField.setAccessible(true);
                     newSimpleRetVoNameField.setAccessible(true);
 
-                    //bo的xxxBy和xxxName组装为SimpleRetVo的id,name
+                    //bo的xxxBy和xxxName组装为SimpleRetVo的id,userName
                     Field boxxxByField = boClass.getDeclaredField(voField.getName());
                     boxxxByField.setAccessible(true);
                     boxxxNameField.setAccessible(true);
