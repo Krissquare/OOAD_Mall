@@ -270,13 +270,13 @@ public class Common {
                 else
                 {
                     //如果不是特殊情况，赋值为null
-                    if(!voField.getName().matches(".+By"))
+                    if(!voField.getName().matches(".+Id"))
                     {
                         voField.set(newVo, null);
                         continue;
                     }
                     //提取头部
-                    String pattern="(.+)By";
+                    String pattern="(.+)Id";
                     Matcher matcher = Pattern.compile(pattern).matcher(voField.getName());
                     matcher.find();
                     String head=matcher.group(1);
