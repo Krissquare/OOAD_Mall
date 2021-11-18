@@ -55,7 +55,6 @@ public class OnSaleControllerTest {
 
     @Test
     public void testCreateOnsale() throws Exception {
-//TODO: Test goes here...
 
         Mockito.when(redisUtil.get("p_"+2532L)).thenReturn(null);
         Mockito.when(redisUtil.get("p_"+2549L)).thenReturn(null);
@@ -71,10 +70,8 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(post("/shops/3/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
-        String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T15:20:30\",\"endTime\":\"2022-10-12T16:20:30\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
+        String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 15:20:30.000\",\"endTime\":\"2022-10-12 16:20:30.000\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,false);
-
-
 
 
         // 商品销售时间冲突=》
@@ -106,7 +103,6 @@ public class OnSaleControllerTest {
                 .getResponse().getContentAsString();
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
-
 
 
 //        非普通或秒杀
@@ -297,7 +293,7 @@ public class OnSaleControllerTest {
         String res = this.mvc.perform(post("/internal/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated()).andReturn()
                 .getResponse().getContentAsString();
-String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T15:20:30\",\"endTime\":\"2022-10-12T16:20:30\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
+String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 15:20:30.000\",\"endTime\":\"2022-10-1216:20:30.000\",\"quantity\":10},\"errmsg\":\"成功\"}\n";
         JSONAssert.assertEquals(expect, res,false);
 
 

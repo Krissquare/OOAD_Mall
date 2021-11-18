@@ -46,15 +46,15 @@ public class Product implements Serializable {
 
     private String originPlace;
 
-    private Long createdBy;
+    private Long creatorId;
 
-    private String createName;
-
-
-    private Long modifiedBy;
+    private String creatorName;
 
 
-    private String modiName;
+    private Long modifierId;
+
+
+    private String modifierName;
 
     private LocalDateTime gmtCreate;
 
