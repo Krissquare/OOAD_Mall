@@ -945,63 +945,63 @@ public class CommentPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andPostByIsNull() {
-            addCriterion("`post_by` is null");
+        public Criteria andPostIdIsNull() {
+            addCriterion("`post_id` is null");
             return (Criteria) this;
         }
 
-        public Criteria andPostByIsNotNull() {
-            addCriterion("`post_by` is not null");
+        public Criteria andPostIdIsNotNull() {
+            addCriterion("`post_id` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPostByEqualTo(Long value) {
-            addCriterion("`post_by` =", value, "postBy");
+        public Criteria andPostIdEqualTo(Long value) {
+            addCriterion("`post_id` =", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByNotEqualTo(Long value) {
-            addCriterion("`post_by` <>", value, "postBy");
+        public Criteria andPostIdNotEqualTo(Long value) {
+            addCriterion("`post_id` <>", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByGreaterThan(Long value) {
-            addCriterion("`post_by` >", value, "postBy");
+        public Criteria andPostIdGreaterThan(Long value) {
+            addCriterion("`post_id` >", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByGreaterThanOrEqualTo(Long value) {
-            addCriterion("`post_by` >=", value, "postBy");
+        public Criteria andPostIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("`post_id` >=", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByLessThan(Long value) {
-            addCriterion("`post_by` <", value, "postBy");
+        public Criteria andPostIdLessThan(Long value) {
+            addCriterion("`post_id` <", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByLessThanOrEqualTo(Long value) {
-            addCriterion("`post_by` <=", value, "postBy");
+        public Criteria andPostIdLessThanOrEqualTo(Long value) {
+            addCriterion("`post_id` <=", value, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByIn(List<Long> values) {
-            addCriterion("`post_by` in", values, "postBy");
+        public Criteria andPostIdIn(List<Long> values) {
+            addCriterion("`post_id` in", values, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByNotIn(List<Long> values) {
-            addCriterion("`post_by` not in", values, "postBy");
+        public Criteria andPostIdNotIn(List<Long> values) {
+            addCriterion("`post_id` not in", values, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByBetween(Long value1, Long value2) {
-            addCriterion("`post_by` between", value1, value2, "postBy");
+        public Criteria andPostIdBetween(Long value1, Long value2) {
+            addCriterion("`post_id` between", value1, value2, "postId");
             return (Criteria) this;
         }
 
-        public Criteria andPostByNotBetween(Long value1, Long value2) {
-            addCriterion("`post_by` not between", value1, value2, "postBy");
+        public Criteria andPostIdNotBetween(Long value1, Long value2) {
+            addCriterion("`post_id` not between", value1, value2, "postId");
             return (Criteria) this;
         }
 
@@ -1135,63 +1135,63 @@ public class CommentPoExample {
             return (Criteria) this;
         }
 
-        public Criteria andAuditByIsNull() {
-            addCriterion("`audit_by` is null");
+        public Criteria andAuditIdIsNull() {
+            addCriterion("`audit_id` is null");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByIsNotNull() {
-            addCriterion("`audit_by` is not null");
+        public Criteria andAuditIdIsNotNull() {
+            addCriterion("`audit_id` is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByEqualTo(Long value) {
-            addCriterion("`audit_by` =", value, "auditBy");
+        public Criteria andAuditIdEqualTo(Long value) {
+            addCriterion("`audit_id` =", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByNotEqualTo(Long value) {
-            addCriterion("`audit_by` <>", value, "auditBy");
+        public Criteria andAuditIdNotEqualTo(Long value) {
+            addCriterion("`audit_id` <>", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByGreaterThan(Long value) {
-            addCriterion("`audit_by` >", value, "auditBy");
+        public Criteria andAuditIdGreaterThan(Long value) {
+            addCriterion("`audit_id` >", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByGreaterThanOrEqualTo(Long value) {
-            addCriterion("`audit_by` >=", value, "auditBy");
+        public Criteria andAuditIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("`audit_id` >=", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByLessThan(Long value) {
-            addCriterion("`audit_by` <", value, "auditBy");
+        public Criteria andAuditIdLessThan(Long value) {
+            addCriterion("`audit_id` <", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByLessThanOrEqualTo(Long value) {
-            addCriterion("`audit_by` <=", value, "auditBy");
+        public Criteria andAuditIdLessThanOrEqualTo(Long value) {
+            addCriterion("`audit_id` <=", value, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByIn(List<Long> values) {
-            addCriterion("`audit_by` in", values, "auditBy");
+        public Criteria andAuditIdIn(List<Long> values) {
+            addCriterion("`audit_id` in", values, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByNotIn(List<Long> values) {
-            addCriterion("`audit_by` not in", values, "auditBy");
+        public Criteria andAuditIdNotIn(List<Long> values) {
+            addCriterion("`audit_id` not in", values, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByBetween(Long value1, Long value2) {
-            addCriterion("`audit_by` between", value1, value2, "auditBy");
+        public Criteria andAuditIdBetween(Long value1, Long value2) {
+            addCriterion("`audit_id` between", value1, value2, "auditId");
             return (Criteria) this;
         }
 
-        public Criteria andAuditByNotBetween(Long value1, Long value2) {
-            addCriterion("`audit_by` not between", value1, value2, "auditBy");
+        public Criteria andAuditIdNotBetween(Long value1, Long value2) {
+            addCriterion("`audit_id` not between", value1, value2, "auditId");
             return (Criteria) this;
         }
 
