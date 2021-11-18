@@ -1,4 +1,4 @@
-package cn.edu.xmu.oomall.freight.mapper;
+package cn.edu.xmu.oomall.freight.controller;
 
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.freight.FreightApplication;
@@ -71,7 +71,7 @@ public class RegionControllerTest {
 
         String goodJson = JacksonUtil.toJson(r);
 
-        String responseString = this.mvc.perform(post("/freight/shops/0/regions/4191/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
+        String responseString = this.mvc.perform(post("/freight/shops/0/regions/1599/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
