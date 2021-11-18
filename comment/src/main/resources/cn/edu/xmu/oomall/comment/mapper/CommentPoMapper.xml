@@ -21,6 +21,9 @@
     <result column="post_by" jdbcType="BIGINT" property="postBy" />
     <result column="post_name" jdbcType="VARCHAR" property="postName" />
     <result column="post_time" jdbcType="TIMESTAMP" property="postTime" />
+    <result column="audit_by" jdbcType="BIGINT" property="auditBy" />
+    <result column="audit_name" jdbcType="VARCHAR" property="auditName" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
     <result column="shop_id" jdbcType="BIGINT" property="shopId" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -63,7 +66,7 @@
     -->
     `id`, `product_id`, `orderitem_id`, `type`, `content`, `state`, `created_by`, `create_name`, 
     `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`, `post_by`, `post_name`, 
-    `post_time`, `shop_id`
+    `post_time`, `audit_by`, `audit_name`, `audit_time`, `shop_id`
   </sql>
   <select id="selectByExample" parameterType="cn.edu.xmu.oomall.comment.model.po.CommentPoExample" resultMap="BaseResultMap">
     <!--
@@ -114,13 +117,15 @@
       `content`, `state`, `created_by`, 
       `create_name`, `modified_by`, `modi_name`, 
       `gmt_create`, `gmt_modified`, `post_by`, 
-      `post_name`, `post_time`, `shop_id`
+      `post_name`, `post_time`, `audit_by`, 
+      `audit_name`, `audit_time`, `shop_id`
       )
     values (#{productId,jdbcType=BIGINT}, #{orderitemId,jdbcType=BIGINT}, #{type,jdbcType=TINYINT}, 
       #{content,jdbcType=VARCHAR}, #{state,jdbcType=TINYINT}, #{createdBy,jdbcType=BIGINT}, 
       #{createName,jdbcType=VARCHAR}, #{modifiedBy,jdbcType=BIGINT}, #{modiName,jdbcType=VARCHAR}, 
       #{gmtCreate,jdbcType=TIMESTAMP}, #{gmtModified,jdbcType=TIMESTAMP}, #{postBy,jdbcType=BIGINT}, 
-      #{postName,jdbcType=VARCHAR}, #{postTime,jdbcType=TIMESTAMP}, #{shopId,jdbcType=BIGINT}
+      #{postName,jdbcType=VARCHAR}, #{postTime,jdbcType=TIMESTAMP}, #{auditBy,jdbcType=BIGINT}, 
+      #{auditName,jdbcType=VARCHAR}, #{auditTime,jdbcType=TIMESTAMP}, #{shopId,jdbcType=BIGINT}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.xmu.oomall.comment.model.po.CommentPo">
@@ -175,6 +180,15 @@
       <if test="postTime != null">
         `post_time`,
       </if>
+      <if test="auditBy != null">
+        `audit_by`,
+      </if>
+      <if test="auditName != null">
+        `audit_name`,
+      </if>
+      <if test="auditTime != null">
+        `audit_time`,
+      </if>
       <if test="shopId != null">
         `shop_id`,
       </if>
@@ -221,6 +235,15 @@
       </if>
       <if test="postTime != null">
         #{postTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="auditBy != null">
+        #{auditBy,jdbcType=BIGINT},
+      </if>
+      <if test="auditName != null">
+        #{auditName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        #{auditTime,jdbcType=TIMESTAMP},
       </if>
       <if test="shopId != null">
         #{shopId,jdbcType=BIGINT},
@@ -276,6 +299,15 @@
       <if test="postTime != null">
         `post_time` = #{postTime,jdbcType=TIMESTAMP},
       </if>
+      <if test="auditBy != null">
+        `audit_by` = #{auditBy,jdbcType=BIGINT},
+      </if>
+      <if test="auditName != null">
+        `audit_name` = #{auditName,jdbcType=VARCHAR},
+      </if>
+      <if test="auditTime != null">
+        `audit_time` = #{auditTime,jdbcType=TIMESTAMP},
+      </if>
       <if test="shopId != null">
         `shop_id` = #{shopId,jdbcType=BIGINT},
       </if>
@@ -302,6 +334,9 @@
       `post_by` = #{postBy,jdbcType=BIGINT},
       `post_name` = #{postName,jdbcType=VARCHAR},
       `post_time` = #{postTime,jdbcType=TIMESTAMP},
+      `audit_by` = #{auditBy,jdbcType=BIGINT},
+      `audit_name` = #{auditName,jdbcType=VARCHAR},
+      `audit_time` = #{auditTime,jdbcType=TIMESTAMP},
       `shop_id` = #{shopId,jdbcType=BIGINT}
     where `id` = #{id,jdbcType=BIGINT}
   </update>
