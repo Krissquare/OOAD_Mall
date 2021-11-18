@@ -85,7 +85,9 @@ CREATE TABLE `oomall_comment` (
   `post_by` bigint DEFAULT NULL,
   `post_name` varchar(128) DEFAULT NULL,
   `post_time` datetime DEFAULT NULL,
-  `shop_id` bigint DEFAULT NULL,
+  `audit_by` bigint DEFAULT NULL,
+  `audit_name` varchar(128) DEFAULT NULL,
+  `audit_time` datetime DEFAULT NULL,  `shop_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='评论';
 /*!40101 SET character_set_client = @saved_cs_client */;
