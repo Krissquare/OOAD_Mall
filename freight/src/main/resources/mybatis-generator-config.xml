@@ -60,7 +60,7 @@
             <property name="useJSR310Types" value="true"/>
         </javaTypeResolver>
         <!-- 生成模型的包名和位置 -->
-        <javaModelGenerator targetPackage="cn.edu.xmu.oomall.goods.model.po"
+        <javaModelGenerator targetPackage="cn.edu.xmu.oomall.freight.model.po"
                             targetProject="src/main/java">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="false" />
