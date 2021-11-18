@@ -29,8 +29,8 @@ spring:
     url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    username: root
-    password: zrjwq2714#
+    username: dbuser
+    password: 12345678
     druid:
       #初始化时建立物理连接的个数
       initial-size: 3
@@ -91,6 +91,4 @@ pagehelper:
 oomall:
   freight:
     region:
-      expiretime: 10000
-    model:
       expiretime: 10000
