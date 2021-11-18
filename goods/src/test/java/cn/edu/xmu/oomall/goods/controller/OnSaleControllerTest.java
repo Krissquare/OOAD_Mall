@@ -102,7 +102,7 @@ public class OnSaleControllerTest {
         input.put("type", 0);
         s = input.toJSONString();
         res = this.mvc.perform(post("/shops/2/products/2549/onsales")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
@@ -327,7 +327,7 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
         input.put("type", 0);
         s = input.toJSONString();
         res = this.mvc.perform(post("/internal/products/2549/onsales")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
 
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
@@ -429,7 +429,7 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
         input.put("quantity",10);
         s = input.toJSONString();
         res = this.mvc.perform(put("/internal/onsales/29")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
         String expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
@@ -491,7 +491,7 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11T
         input.put("quantity",10);
         s = input.toJSONString();
         res = this.mvc.perform(put("/shops/10/onsales/1")
-                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
+                .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
         expect="{\"errno\": 947,\"errmsg\": \"开始时间晚于结束时间。\"}";
         JSONAssert.assertEquals(expect, res,true);
