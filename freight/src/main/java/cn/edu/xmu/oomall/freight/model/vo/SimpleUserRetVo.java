@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.freight.model.vo;
 
 import io.swagger.annotations.ApiModelProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class SimpleUserRetVo {
 
     @ApiModelProperty(value = "管理员id")
