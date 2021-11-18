@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * 商品分类RetVo
  *
  * @author Zhiliang Li 22920192204235
- * @date 2021/11/15
+ * @date 2021/11/18
  */
 @Data
 @NoArgsConstructor
@@ -23,24 +23,25 @@ public class CategoryRetVo {
     @ApiModelProperty(value = "分类名")
     private String name;
     @ApiModelProperty(value = "创建人")
-    private SimpleUserRetVo createdBy;
+    private SimpleUserRetVo creator;
     @ApiModelProperty(value = "修改人")
-    private SimpleUserRetVo modifiedBy;
+    private SimpleUserRetVo modifier;
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime gmtCreate;
     @ApiModelProperty(value = "修改时间")
     private LocalDateTime gmtModified;
+
     public CategoryRetVo(Category category) {
         this.id = category.getId();
         this.name = category.getName();
         this.commissionRatio = category.getCommissionRatio();
-        this.createdBy=new SimpleUserRetVo();
-        this.createdBy.setName(category.getCreateName());
-        this.createdBy.setId(category.getCreatedBy());
-        this.modifiedBy=new SimpleUserRetVo();
-        this.modifiedBy.setName(category.getModiName());
-        this.modifiedBy.setId(category.getModifiedBy());
-        this.gmtCreate=category.getGmtCreate();
-        this.gmtModified=category.getGmtModified();
+        this.creator = new SimpleUserRetVo();
+        this.creator.setName(category.getCreatorName());
+        this.creator.setId(category.getCreatorId());
+        this.modifier = new SimpleUserRetVo();
+        this.modifier.setName(category.getModifierName());
+        this.modifier.setId(category.getModifierId());
+        this.gmtCreate = category.getGmtCreate();
+        this.gmtModified = category.getGmtModified();
     }
 }
