@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.freight.mapper;
 
-import cn.edu.xmu.oomall.freight.model.po.WeightFreightPo;
-import cn.edu.xmu.oomall.freight.model.po.WeightFreightPoExample;
+import cn.edu.xmu.oomall.goods.model.po.WeightFreightPo;
+import cn.edu.xmu.oomall.goods.model.po.WeightFreightPoExample;
 import java.util.List;
 
 public interface WeightFreightPoMapper {

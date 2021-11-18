@@ -20,10 +20,10 @@
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="origin_place" jdbcType="VARCHAR" property="originPlace" />
-    <result column="created_by" jdbcType="BIGINT" property="createdBy" />
-    <result column="create_name" jdbcType="VARCHAR" property="createName" />
-    <result column="modified_by" jdbcType="BIGINT" property="modifiedBy" />
-    <result column="modi_name" jdbcType="VARCHAR" property="modiName" />
+    <result column="creator_id" jdbcType="BIGINT" property="creatorId" />
+    <result column="creator_name" jdbcType="VARCHAR" property="creatorName" />
+    <result column="modifier_id" jdbcType="BIGINT" property="modifierId" />
+    <result column="modifier_name" jdbcType="VARCHAR" property="modifierName" />
     <result column="gmt_create" jdbcType="TIMESTAMP" property="gmtCreate" />
     <result column="gmt_modified" jdbcType="TIMESTAMP" property="gmtModified" />
   </resultMap>
@@ -67,7 +67,7 @@
     -->
     `id`, `shop_id`, `product_id`, `goods_id`, `category_id`, `weight`, `freight_id`, 
     `sku_sn`, `name`, `original_price`, `image_url`, `barcode`, `unit`, `origin_place`, 
-    `created_by`, `create_name`, `modified_by`, `modi_name`, `gmt_create`, `gmt_modified`
+    `creator_id`, `creator_name`, `modifier_id`, `modifier_name`, `gmt_create`, `gmt_modified`
   </sql>
   <select id="selectByExample" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductDraftPoExample" resultMap="BaseResultMap">
     <!--
@@ -118,15 +118,15 @@
       `category_id`, `weight`, `freight_id`, 
       `sku_sn`, `name`, `original_price`, 
       `image_url`, `barcode`, `unit`, 
-      `origin_place`, `created_by`, `create_name`, 
-      `modified_by`, `modi_name`, `gmt_create`, 
+      `origin_place`, `creator_id`, `creator_name`, 
+      `modifier_id`, `modifier_name`, `gmt_create`, 
       `gmt_modified`)
     values (#{shopId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{goodsId,jdbcType=BIGINT}, 
       #{categoryId,jdbcType=BIGINT}, #{weight,jdbcType=BIGINT}, #{freightId,jdbcType=BIGINT}, 
       #{skuSn,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{originalPrice,jdbcType=BIGINT}, 
       #{imageUrl,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
-      #{originPlace,jdbcType=VARCHAR}, #{createdBy,jdbcType=BIGINT}, #{createName,jdbcType=VARCHAR}, 
-      #{modifiedBy,jdbcType=BIGINT}, #{modiName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
+      #{originPlace,jdbcType=VARCHAR}, #{creatorId,jdbcType=BIGINT}, #{creatorName,jdbcType=VARCHAR}, 
+      #{modifierId,jdbcType=BIGINT}, #{modifierName,jdbcType=VARCHAR}, #{gmtCreate,jdbcType=TIMESTAMP}, 
       #{gmtModified,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.edu.xmu.oomall.goods.model.po.ProductDraftPo">
@@ -178,17 +178,17 @@
       <if test="originPlace != null">
         `origin_place`,
       </if>
-      <if test="createdBy != null">
-        `created_by`,
+      <if test="creatorId != null">
+        `creator_id`,
       </if>
-      <if test="createName != null">
-        `create_name`,
+      <if test="creatorName != null">
+        `creator_name`,
       </if>
-      <if test="modifiedBy != null">
-        `modified_by`,
+      <if test="modifierId != null">
+        `modifier_id`,
       </if>
-      <if test="modiName != null">
-        `modi_name`,
+      <if test="modifierName != null">
+        `modifier_name`,
       </if>
       <if test="gmtCreate != null">
         `gmt_create`,
@@ -237,17 +237,17 @@
       <if test="originPlace != null">
         #{originPlace,jdbcType=VARCHAR},
       </if>
-      <if test="createdBy != null">
-        #{createdBy,jdbcType=BIGINT},
+      <if test="creatorId != null">
+        #{creatorId,jdbcType=BIGINT},
       </if>
-      <if test="createName != null">
-        #{createName,jdbcType=VARCHAR},
+      <if test="creatorName != null">
+        #{creatorName,jdbcType=VARCHAR},
       </if>
-      <if test="modifiedBy != null">
-        #{modifiedBy,jdbcType=BIGINT},
+      <if test="modifierId != null">
+        #{modifierId,jdbcType=BIGINT},
       </if>
-      <if test="modiName != null">
-        #{modiName,jdbcType=VARCHAR},
+      <if test="modifierName != null">
+        #{modifierName,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreate != null">
         #{gmtCreate,jdbcType=TIMESTAMP},
@@ -303,17 +303,17 @@
       <if test="originPlace != null">
         `origin_place` = #{originPlace,jdbcType=VARCHAR},
       </if>
-      <if test="createdBy != null">
-        `created_by` = #{createdBy,jdbcType=BIGINT},
+      <if test="creatorId != null">
+        `creator_id` = #{creatorId,jdbcType=BIGINT},
       </if>
-      <if test="createName != null">
-        `create_name` = #{createName,jdbcType=VARCHAR},
+      <if test="creatorName != null">
+        `creator_name` = #{creatorName,jdbcType=VARCHAR},
       </if>
-      <if test="modifiedBy != null">
-        `modified_by` = #{modifiedBy,jdbcType=BIGINT},
+      <if test="modifierId != null">
+        `modifier_id` = #{modifierId,jdbcType=BIGINT},
       </if>
-      <if test="modiName != null">
-        `modi_name` = #{modiName,jdbcType=VARCHAR},
+      <if test="modifierName != null">
+        `modifier_name` = #{modifierName,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreate != null">
         `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
@@ -343,10 +343,10 @@
       `barcode` = #{barcode,jdbcType=VARCHAR},
       `unit` = #{unit,jdbcType=VARCHAR},
       `origin_place` = #{originPlace,jdbcType=VARCHAR},
-      `created_by` = #{createdBy,jdbcType=BIGINT},
-      `create_name` = #{createName,jdbcType=VARCHAR},
-      `modified_by` = #{modifiedBy,jdbcType=BIGINT},
-      `modi_name` = #{modiName,jdbcType=VARCHAR},
+      `creator_id` = #{creatorId,jdbcType=BIGINT},
+      `creator_name` = #{creatorName,jdbcType=VARCHAR},
+      `modifier_id` = #{modifierId,jdbcType=BIGINT},
+      `modifier_name` = #{modifierName,jdbcType=VARCHAR},
       `gmt_create` = #{gmtCreate,jdbcType=TIMESTAMP},
       `gmt_modified` = #{gmtModified,jdbcType=TIMESTAMP}
     where `id` = #{id,jdbcType=BIGINT}
