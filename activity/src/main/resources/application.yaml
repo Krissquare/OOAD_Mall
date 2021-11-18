@@ -104,6 +104,8 @@ pagehelper:
 
 oomall:
   activity:
+    activity:
+      expiretime: 10000
     share:
       expiretime: 10000
     groupon:

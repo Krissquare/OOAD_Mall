@@ -98,6 +98,15 @@ public enum ReturnNo {
         this.message = message;
     }
 
+    public static ReturnNo getByCode(int code1) {
+        ReturnNo[] all=ReturnNo.values();
+        for (ReturnNo returnNo :all) {
+            if (returnNo.code==code1) {
+                return returnNo;
+            }
+        }
+        return null;
+    }
     public int getCode() {
         return code;
     }
