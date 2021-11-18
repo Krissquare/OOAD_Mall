@@ -162,7 +162,6 @@ public class ShareActivityControllerTest {
     public void testAddShareAct() throws Exception {
         CustomComparator CUSTOM_COMPARATOR = new CustomComparator(JSONCompareMode.LENIENT,
                 new Customization("data.id", (o1, o2) -> true));
-        //已测试过没把两个属性都放在最后的版本，把po的strategy属性放在了最后测试
         String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
 //        //有添加所有query都有时且合规
         String responseString = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
