@@ -18,10 +18,10 @@ public class Region implements Serializable {
     private Long pid;
     private String name;
     private Byte state;
-    private Long createdBy;
-    private String createName;
-    private Long modifiedBy;
-    private String modiName;
+    private Long creatorId;
+    private String creatorName;
+    private Long modifierId;
+    private String modifierName;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 

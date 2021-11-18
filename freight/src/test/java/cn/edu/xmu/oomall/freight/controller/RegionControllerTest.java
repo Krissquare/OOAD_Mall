@@ -1,13 +1,16 @@
 package cn.edu.xmu.oomall.freight.controller;
 
 import cn.edu.xmu.oomall.core.util.JacksonUtil;
+import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.freight.FreightApplication;
 import cn.edu.xmu.oomall.freight.model.vo.RegionVo;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,8 +31,14 @@ public class RegionControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @MockBean
+    private RedisUtil redisUtil;
+
+
     @Test
     public void getParentRegionTest() throws Exception {
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+        Mockito.when(redisUtil.set(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(true);
         String responseString = this.mvc.perform(get("/freight/region/4191/ancestor"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -40,8 +49,10 @@ public class RegionControllerTest {
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
 
-    @Test   //non-redis
+    @Test
     public void getParentRegionTest1() throws Exception {
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+        Mockito.when(redisUtil.set(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(true);
         String responseString = this.mvc.perform(get("/freight/region/2/ancestor"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -52,8 +63,10 @@ public class RegionControllerTest {
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
 
-    @Test   //non-redis
+    @Test
     public void getParentRegionTest2() throws Exception {
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+        Mockito.when(redisUtil.set(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(true);
         String responseString = this.mvc.perform(get("/freight/region/0/ancestor"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -84,35 +97,17 @@ public class RegionControllerTest {
 
     @Test
     public void addRegionTest1() throws Exception {
-        String responseString = this.mvc.perform(put("/freight/shops/0/regions/1/suspend"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, true);
-
-        responseString = this.mvc.perform(delete("/freight/shops/0/regions/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, false);
-
         RegionVo r =  new RegionVo();
         r.setName("test");
 
         String goodJson = JacksonUtil.toJson(r);
 
-        responseString = this.mvc.perform(post("/freight/shops/0/regions/1/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
+        String responseString = this.mvc.perform(post("/freight/shops/0/regions/4191/subregions").contentType("application/json;charset=UTF-8").content(goodJson))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
+        String expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
@@ -191,6 +186,7 @@ public class RegionControllerTest {
 
     @Test
     public void getChildRegionTest() throws Exception {
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
         String responseString = this.mvc.perform(get("/freight/regions/14/subregions"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -203,6 +199,8 @@ public class RegionControllerTest {
 
     @Test
     public void getChildRegionTest1() throws Exception {
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+        Mockito.when(redisUtil.set(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(true);
         String responseString = this.mvc.perform(get("/freight/regions/0/subregions").contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -215,30 +213,14 @@ public class RegionControllerTest {
 
     @Test
     public void getChildRegionTest2() throws Exception {
-        String responseString = this.mvc.perform(put("/freight/shops/0/regions/1111/suspend"))
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+        Mockito.when(redisUtil.set(Mockito.anyString(),Mockito.any(),Mockito.any())).thenReturn(true);
+        String responseString = this.mvc.perform(get("/freight/regions/4191/subregions"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, true);
-
-        responseString = this.mvc.perform(delete("/freight/shops/0/regions/1111"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, false);
-
-        responseString = this.mvc.perform(get("/freight/regions/1111/subregions"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
+        String expectedResponse = "{\"errno\":995,\"errmsg\":\"地区已废弃\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
@@ -380,30 +362,13 @@ public class RegionControllerTest {
 
     @Test   //标识此方法为测试方法
     public void suspendRegionTest1() throws Exception {
-        String responseString = this.mvc.perform(put("/freight/shops/0/regions/5/suspend"))
+
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/4191/suspend"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, true);
-
-        responseString = this.mvc.perform(delete("/freight/shops/0/regions/5"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, false);
-
-        responseString = this.mvc.perform(put("/freight/shops/0/regions/5/suspend"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
+        String expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
@@ -467,30 +432,13 @@ public class RegionControllerTest {
 
     @Test   //标识此方法为测试方法
     public void resumeRegionTest1() throws Exception {
-        String responseString = this.mvc.perform(put("/freight/shops/0/regions/7/suspend"))
+
+        String responseString = this.mvc.perform(put("/freight/shops/0/regions/4191/resume"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, true);
-
-        responseString = this.mvc.perform(delete("/freight/shops/0/regions/7"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-
-        JSONAssert.assertEquals(expectedResponse, responseString, false);
-
-        responseString = this.mvc.perform(put("/freight/shops/0/regions/7/resume"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn().getResponse().getContentAsString();
-
-        expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
+        String expectedResponse = "{\"errno\":507,\"errmsg\":\"当前状态禁止此操作\"}";
 
         JSONAssert.assertEquals(expectedResponse, responseString, true);
     }
