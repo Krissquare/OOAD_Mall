@@ -65,16 +65,18 @@ public class ShareActivityControllerTest {
         Mockito.when(goodsService.getOnSalesByProductId(-1L, 1, 10)).thenReturn(onSaleInfoDTO1);
         //生成一个shop对象
         ReturnObject<ShopInfoVO> shopInfoDTO = CreateObject.createShopInfoDTO(1L);
+        ReturnObject<ShopInfoVO> shopInfoDTO2 = CreateObject.createShopInfoDTO(2L);
         ReturnObject<ShopInfoVO> shopInfoDTO1 = CreateObject.createShopInfoDTO(-1L);
         Mockito.when(shopService.getShop(1L)).thenReturn(shopInfoDTO);
+        Mockito.when(shopService.getShop(2L)).thenReturn(shopInfoDTO2);
         Mockito.when(shopService.getShop(11L)).thenReturn(shopInfoDTO1);
         Mockito.when(shopService.getShop(-1L)).thenReturn(shopInfoDTO1);
 
         //redis配置
-        Mockito.when(redisUtil.get("shareactivivybyid_11")).thenReturn(null);
+        Mockito.when(redisUtil.get("shareactivivybyid_10")).thenReturn(null);
         Mockito.when(redisUtil.get("shareactivivybyid_1")).thenReturn("{\"id\":1,\"shopId\":1,\"shopName\":\"甜蜜之旅\",\"name\":\"分享活动1\",\"beginTime\":[2021,11,11,15,1,23],\"endTime\":[2022,2,19,15,1,23],\"state\":1,\"createdBy\":1,\"createName\":\"admin\",\"modifiedBy\":null,\"modiName\":null,\"gmtCreate\":[2021,11,11,15,1,23],\"gmtModified\":null,\"strategy\":null}");
-        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_11")).thenReturn(null);
-        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_1")).thenReturn("{\"id\":1,\"shopId\":1,\"shopName\":\"甜蜜之旅\",\"name\":\"分享活动1\",\"beginTime\":[2021,11,11,15,1,23],\"endTime\":[2022,2,19,15,1,23],\"state\":1,\"createdBy\":1,\"createName\":\"admin\",\"modifiedBy\":null,\"modiName\":null,\"gmtCreate\":[2021,11,11,15,1,23],\"gmtModified\":null,\"strategy\":null}");
+        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_10")).thenReturn(null);
+        Mockito.when(redisUtil.get("shareactivivyid_1_shopid_2")).thenReturn("{\"id\":1,\"shopId\":1,\"shopName\":\"甜蜜之旅\",\"name\":\"分享活动1\",\"beginTime\":[2021,11,11,15,1,23],\"endTime\":[2022,2,19,15,1,23],\"state\":1,\"createdBy\":1,\"createName\":\"admin\",\"modifiedBy\":null,\"modiName\":null,\"gmtCreate\":[2021,11,11,15,1,23],\"gmtModified\":null,\"strategy\":null}");
     }
 
     /**
@@ -98,22 +100,22 @@ public class ShareActivityControllerTest {
     @Test
     public void testGetShareByShopId() throws Exception {
         //不添加query时
-        String responseString = mvc.perform(get("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString = mvc.perform(get("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString = "{\"errno\":0,\"data\":{\"total\":18,\"pages\":2,\"pageSize\":10,\"page\":1,\"list\":[{\"id\":1,\"name\":\"分享活动1\"},{\"id\":2,\"name\":\"分享活动2\"},{\"id\":3,\"name\":\"分享活动3\"},{\"id\":4,\"name\":\"分享活动4\"},{\"id\":5,\"name\":\"分享活动5\"},{\"id\":11,\"name\":\"String\"},{\"id\":12,\"name\":\"String\"},{\"id\":13,\"name\":\"String\"},{\"id\":33,\"name\":\"String\"},{\"id\":34,\"name\":\"String\"}]},\"errmsg\":\"成功\"}";
+        String expectString = "{\"errno\":0,\"data\":{\"total\":3,\"pages\":1,\"pageSize\":10,\"page\":1,\"list\":[{\"id\":1,\"name\":\"分享活动1\"},{\"id\":7,\"name\":\"分享活动7\"},{\"id\":10,\"name\":\"分享活动10\"}]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
 
         //page pageSize shopId不合规时
-        String responseString2 = mvc.perform(get("/shops/1/shareactivities?page=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString2 = mvc.perform(get("/shops/2/shareactivities?page=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
         String expectString2 = "{\"errno\":503,\"errmsg\":\"页数和页数大小应大于0\"}";
         JSONAssert.assertEquals(expectString2, responseString2, true);
 
-        String responseString3 = mvc.perform(get("/shops/1/shareactivities?pageSize=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString3 = mvc.perform(get("/shops/2/shareactivities?pageSize=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -127,7 +129,7 @@ public class ShareActivityControllerTest {
         String expectString4 = "{\"errno\":503,\"errmsg\":\"shopId错误\"}";
         JSONAssert.assertEquals(expectString4, responseString4, true);
 
-        String responseString5 = mvc.perform(get("/shops/1/shareactivities?productId=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString5 = mvc.perform(get("/shops/2/shareactivities?productId=-1").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -135,11 +137,11 @@ public class ShareActivityControllerTest {
         JSONAssert.assertEquals(expectString5, responseString5, true);
 
         //有添加所有query都有时且合规
-        String responseString6 = mvc.perform(get("/shops/1/shareactivities?productId=1&beginTime=2021-11-11 10:10:10&endTime=2023-11-11 16:10:10&state=1&page=1&pageSize=3").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString6 = mvc.perform(get("/shops/2/shareactivities?productId=1&beginTime=2021-11-11 10:10:10.000&endTime=2023-11-11 16:10:10.000&state=1&page=1&pageSize=3").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString6 = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"total\":3,\"pages\":1,\"pageSize\":3,\"page\":1,\"list\":[{\"id\":1,\"name\":\"分享活动1\"},{\"id\":3,\"name\":\"分享活动3\"},{\"id\":4,\"name\":\"分享活动4\"}]}}";
+        String expectString6 = "{\"errno\":0,\"data\":{\"total\":1,\"pages\":1,\"pageSize\":3,\"page\":1,\"list\":[{\"id\":1,\"name\":\"分享活动1\"}]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString6, responseString6, true);
 
 
@@ -160,20 +162,19 @@ public class ShareActivityControllerTest {
     public void testAddShareAct() throws Exception {
         CustomComparator CUSTOM_COMPARATOR = new CustomComparator(JSONCompareMode.LENIENT,
                 new Customization("data.id", (o1, o2) -> true));
-        //已测试过没把两个属性都放在最后的版本，把po的strategy属性放在了最后测试
-        String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson = "{\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
 //        //有添加所有query都有时且合规
-        String responseString = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
+        String responseString = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString = "{\"errno\":0,\"data\":{\"id\":138,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        String expectString = "{\"errno\":0,\"data\":{\"id\":138,\"shop\":{\"id\":2,\"name\":\"良耳的商铺\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, CUSTOM_COMPARATOR);
 
 
         //姓名为空或null
-        String requestJson1 = "{\"name\":\"\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString1 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson1))
+        String requestJson1 = "{\"name\":\"\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString1 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson1))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -182,8 +183,8 @@ public class ShareActivityControllerTest {
 
 
         //时间为空
-        String requestJson2 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":null,\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString2 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson2))
+        String requestJson2 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":null,\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString2 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson2))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -192,24 +193,24 @@ public class ShareActivityControllerTest {
 
 
         //活动条件不合规
-        String requestJson4 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":null,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString4 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson4))
+        String requestJson4 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":null,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString4 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson4))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         String expectString4 = "{\"errno\":503,\"errmsg\":\"数量不能为空;\"}";
         JSONAssert.assertEquals(expectString4, responseString4, true);
 
 
-        String requestJson5 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":-5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString5 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson5))
+        String requestJson5 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":-5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString5 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson5))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         String expectString5 = "{\"errno\":503,\"errmsg\":\"规则的数量不能小于0;\"}";
         JSONAssert.assertEquals(expectString5, responseString5, true);
 
 
-        String requestJson6 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":110},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString6 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson6))
+        String requestJson6 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":5,\"percentage\":110},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString6 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson6))
                 .andExpect(status().isBadRequest())
                 .andReturn().getResponse().getContentAsString();
         String expectString6 = "{\"errno\":503,\"errmsg\":\"规则的百分比需要在0和100之间;\"}";
@@ -217,18 +218,18 @@ public class ShareActivityControllerTest {
 
 
 //        //所有都合规
-        String requestJson7 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString7 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson7))
+        String requestJson7 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString7 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson7))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString7 = "{\"errno\":0,\"data\":{\"id\":139,\"shop\":{\"id\":1,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
+        String expectString7 = "{\"errno\":0,\"data\":{\"id\":139,\"shop\":{\"id\":2,\"name\":\"良耳的商铺\"},\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString7, responseString7, CUSTOM_COMPARATOR);
 
 
         //时间不合规
-        String requestJson8 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:00\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
-        String responseString8 = mvc.perform(post("/shops/1/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson8))
+        String requestJson8 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:00.000\",\"strategy\":[{\"quantity\":10,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String responseString8 = mvc.perform(post("/shops/2/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson8))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -236,7 +237,7 @@ public class ShareActivityControllerTest {
         JSONAssert.assertEquals(expectString8, responseString8, true);
 
         //shopId没有
-        String requestJson9 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
+        String requestJson9 = "{\"name\":\"我是一个活动\",\"beginTime\":\"2021-11-11 15:01:02.000\",\"endTime\":\"2021-11-11 15:01:10.000\",\"strategy\":[{\"quantity\":5,\"percentage\":10},{\"quantity\":10,\"percentage\":10}]}";
         String responseString9 = mvc.perform(post("/shops/11/shareactivities").header("authorization", token).contentType("application/json;charset=UTF-8").content(requestJson9))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -257,7 +258,7 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"total\":4,\"pages\":1,\"pageSize\":10,\"page\":1,\"list\":[{\"id\":2,\"name\":\"分享活动2\"},{\"id\":28,\"name\":\"String\"},{\"id\":29,\"name\":\"String\"},{\"id\":30,\"name\":\"String\"}]}}";
+        String expectString = "{\"errno\":0,\"data\":{\"total\":0,\"pages\":0,\"pageSize\":10,\"page\":1,\"list\":[]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
 
         //有shopId
@@ -265,7 +266,7 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString1 = "{\"errno\":0,\"data\":{\"total\":1,\"pages\":1,\"pageSize\":10,\"page\":1,\"list\":[{\"id\":2,\"name\":\"分享活动2\"}]},\"errmsg\":\"成功\"}";
+        String expectString1 = "{\"errno\":0,\"data\":{\"total\":0,\"pages\":0,\"pageSize\":10,\"page\":1,\"list\":[]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString1, responseString1, true);
 
         //有productId
@@ -273,7 +274,7 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString2 = "{\"errno\":0,\"data\":{\"total\":1,\"pages\":1,\"pageSize\":10,\"page\":1,\"list\":[{\"id\":2,\"name\":\"分享活动2\"}]},\"errmsg\":\"成功\"}";
+        String expectString2 = "{\"errno\":0,\"data\":{\"total\":0,\"pages\":0,\"pageSize\":10,\"page\":1,\"list\":[]},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString2, responseString2, true);
 
 
@@ -294,7 +295,7 @@ public class ShareActivityControllerTest {
         JSONAssert.assertEquals(expectString5, responseString5, true);
 
         //都合规
-        String responseString6 = mvc.perform(get("/shareactivities?shopId=1&productId=1&beginTime=2021-11-11 15:01:02&endTime=2021-11-11 15:01:02&page=1&pageSize=4").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString6 = mvc.perform(get("/shareactivities?shopId=1&productId=1&beginTime=2021-11-11 15:01:02.000&endTime=2021-11-11 15:01:02.000&page=1&pageSize=4").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -302,7 +303,7 @@ public class ShareActivityControllerTest {
         JSONAssert.assertEquals(expectString6, responseString6, true);
 
         //shopId<0
-        String responseString7 = mvc.perform(get("/shareactivities?shopId=-1&productId=1&beginTime=2021-11-11 15:01:02&endTime=2021-11-11 15:01:02&page=1&pageSize=4").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString7 = mvc.perform(get("/shareactivities?shopId=-1&productId=1&beginTime=2021-11-11 15:01:02.000&endTime=2021-11-11 15:01:02.000&page=1&pageSize=4").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
@@ -329,15 +330,15 @@ public class ShareActivityControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11 15:01:23\",\"endTime\":\"2022-02-19 15:01:23\",\"strategy\":null},\"errmsg\":\"成功\"}";
+        String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11 15:01:23.000\",\"endTime\":\"2022-02-19 15:01:23.000\",\"strategy\":null},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
 
         //没redis
-        String responseString1 = mvc.perform(get("/shareactivities/11").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString1 = mvc.perform(get("/shareactivities/10").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString1 = "{\"errno\":0,\"data\":{\"id\":11,\"shop\":{\"id\":1,\"name\":\"良耳的商店\"},\"name\":\"String\",\"beginTime\":\"2021-11-11 15:01:02\",\"endTime\":\"2021-11-11 15:01:10\",\"strategy\":null},\"errmsg\":\"成功\"}";
+        String expectString1 = "{\"errno\":0,\"data\":{\"id\":10,\"shop\":{\"id\":2,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动10\",\"beginTime\":\"2021-11-11 15:01:23.000\",\"endTime\":\"2022-02-19 15:01:23.000\",\"strategy\":null},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString1, responseString1, true);
 
 
@@ -355,24 +356,23 @@ public class ShareActivityControllerTest {
      */
     @Test
     public void testGetShareActivityByShopIdAndId() throws Exception {
-        String responseString = mvc.perform(get("/shops/1/shareactivities/1").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString = mvc.perform(get("/shops/2/shareactivities/1").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11T15:01:23\",\"endTime\":\"2022-02-19T15:01:23\",\"state\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11T15:01:23\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"strategy\":null},\"errmsg\":\"成功\"}";
+        String expectString = "{\"errno\":0,\"data\":{\"id\":1,\"shop\":{\"id\":1,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动1\",\"beginTime\":\"2021-11-11 15:01:23.000\",\"endTime\":\"2022-02-19 15:01:23.000\",\"state\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 15:01:23.000\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"strategy\":null},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString, responseString, true);
 
-
         //没redis
-        String responseString1 = mvc.perform(get("/shops/1/shareactivities/11").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString1 = mvc.perform(get("/shops/2/shareactivities/10").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        String expectString1 = "{\"errno\":0,\"data\":{\"id\":11,\"shop\":{\"id\":1,\"name\":\"良耳的商店\"},\"name\":\"String\",\"beginTime\":\"2021-11-11T15:01:02\",\"endTime\":\"2021-11-11T15:01:10\",\"state\":null,\"createdBy\":{\"id\":666,\"name\":\"lxc\"},\"gmtCreate\":\"2021-11-12T18:24:24\",\"gmtModified\":\"2021-11-12T18:24:24\",\"modifiedBy\":{\"id\":666,\"name\":\"lxc\"},\"strategy\":null},\"errmsg\":\"成功\"}";
+        String expectString1 = "{\"errno\":0,\"data\":{\"id\":10,\"shop\":{\"id\":2,\"name\":\"甜蜜之旅\"},\"name\":\"分享活动10\",\"beginTime\":\"2021-11-11 15:01:23.000\",\"endTime\":\"2022-02-19 15:01:23.000\",\"state\":1,\"createdBy\":{\"id\":1,\"name\":\"admin\"},\"gmtCreate\":\"2021-11-11 15:01:23.000\",\"gmtModified\":null,\"modifiedBy\":{\"id\":null,\"name\":null},\"strategy\":null},\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectString1, responseString1, true);
 
 
-        String responseString3 = mvc.perform(get("/shops/1/shareactivities/11111").header("authorization", token).contentType("application/json;charset=UTF-8"))
+        String responseString3 = mvc.perform(get("/shops/2/shareactivities/11111").header("authorization", token).contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();

@@ -72,8 +72,8 @@ public class ShareActivityController {
     @GetMapping("/shops/{shopId}/shareactivities")
     public Object getShareByShopId(@PathVariable(name = "shopId", required = true) Long shopId,
                                    @RequestParam(name = "productId", required = false) Long productId,
-                                   @RequestParam(name = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime beginTime,
-                                   @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime,
+                                   @RequestParam(name = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime beginTime,
+                                   @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime endTime,
                                    @RequestParam(name = "state", required = false) Byte state,
                                    @RequestParam(name = "page", required = false) Integer page,
                                    @RequestParam(name = "pageSize", required = false) Integer pageSize) {
@@ -155,8 +155,8 @@ public class ShareActivityController {
     @GetMapping("/shareactivities")
     public Object getShareActivity(@RequestParam(name = "shopId", required = false) Long shopId,
                                    @RequestParam(name = "productId", required = false) Long productId,
-                                   @RequestParam(name = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime beginTime,
-                                   @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime endTime,
+                                   @RequestParam(name = "beginTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime beginTime,
+                                   @RequestParam(name = "endTime", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS") LocalDateTime endTime,
                                    @RequestParam(name = "page", required = false) Integer page,
                                    @RequestParam(name = "pageSize", required = false) Integer pageSize) {
         if (shopId != null && shopId <= 0) {
