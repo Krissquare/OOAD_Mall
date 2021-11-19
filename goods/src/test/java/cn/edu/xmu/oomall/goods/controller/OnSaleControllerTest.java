@@ -1,13 +1,16 @@
 package cn.edu.xmu.oomall.goods.controller;
 
 
+import cn.edu.xmu.oomall.core.util.JacksonUtil;
 import cn.edu.xmu.oomall.core.util.RedisUtil;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.goods.GoodsApplication;
 
 import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
-import net.minidev.json.JSONObject;
+
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -24,6 +27,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -52,21 +58,30 @@ public class OnSaleControllerTest {
     @MockBean
     private RedisUtil redisUtil;
 
+    DateTimeFormatter df;
+
+
+
+    @BeforeAll
+    void init(){
+        df=DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss.SSS");
+        Mockito.when(redisUtil.get(Mockito.anyString())).thenReturn(null);
+    }
+
 
     @Test
     public void testCreateOnsale() throws Exception {
 
-        Mockito.when(redisUtil.get("p_"+2532L)).thenReturn(null);
-        Mockito.when(redisUtil.get("p_"+2549L)).thenReturn(null);
 
         // 正常=》
-        JSONObject input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        String s = input.toJSONString();
+        NewOnSaleVo vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2022-10-11 15:20:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        String s= JacksonUtil.toJson(vo);
+
         String res = this.mvc.perform(post("/shops/3/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated())
                 .andReturn().getResponse().getContentAsString();
@@ -75,13 +90,15 @@ public class OnSaleControllerTest {
 
 
         // 商品销售时间冲突=》
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2021-11-12 09:30:30.000");
-        input.put("endTime", "2022-10-12 09:40:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2021-11-12 09:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 09:40:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
+
         res = this.mvc.perform(post("/shops/2/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
@@ -91,13 +108,14 @@ public class OnSaleControllerTest {
 
 
 //        开始时间晚于结束时间
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(post("/shops/2/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
@@ -106,13 +124,14 @@ public class OnSaleControllerTest {
 
 
 //        非普通或秒杀
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2029-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 3);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2029-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(3);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(post("/shops/2/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn()
                 .getResponse().getContentAsString();
@@ -121,13 +140,14 @@ public class OnSaleControllerTest {
 
 
         //        货品不存在
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2029-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2029-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(post("/shops/2/products/999999/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isNotFound()).andReturn()
                 .getResponse().getContentAsString();
@@ -136,13 +156,14 @@ public class OnSaleControllerTest {
 
 
         //货品非该商家
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2029-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(post("/shops/2/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn()
                 .getResponse().getContentAsString();
@@ -156,10 +177,6 @@ public class OnSaleControllerTest {
      */
     @Test
     public void testOnlineOnSale() throws Exception {
-//TODO: Test goes here...
-        Mockito.when(redisUtil.get("o_"+2L)).thenReturn(null);
-        Mockito.when(redisUtil.get("o_"+1L)).thenReturn(null);
-        Mockito.when(redisUtil.get("o_"+30L)).thenReturn(null);
 
         //        正常
         String res = this.mvc.perform(put("/shops/9/onsales/30/online").contentType(MediaType.APPLICATION_JSON)
@@ -202,12 +219,6 @@ public class OnSaleControllerTest {
      */
     @Test
     public void testOfflineOnSale() throws Exception {
-//TODO: Test goes here...
-
-        Mockito.when(redisUtil.get("o_"+2L)).thenReturn(null);
-        Mockito.when(redisUtil.get("o_"+1L)).thenReturn(null);
-        Mockito.when(redisUtil.get("o_"+30L)).thenReturn(null);
-
         //        正常
         String res = this.mvc.perform(put("/shops/10/onsales/1/offline").contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
@@ -243,7 +254,6 @@ public class OnSaleControllerTest {
 
     @Test
     public void testOnlineOnSaleGroPre() throws Exception {
-//TODO: Test goes here...
 
         //        正常
         String res = this.mvc.perform(put("/internal/activities/3/onsales/online").contentType(MediaType.APPLICATION_JSON)
@@ -276,20 +286,15 @@ public class OnSaleControllerTest {
     @Test
     public void testCreateAllOnSale() throws Exception {
 
-
-        Mockito.when(redisUtil.get("p_"+2532L)).thenReturn(null);
-        Mockito.when(redisUtil.get("p_"+2549L)).thenReturn(null);
-
         // 正常=》
         NewOnSaleVo vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2022-10-11 15:20:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 16:20:30.000",df));
+        vo.setQuantity(10);
         vo.setType(0);
-        JSONObject input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        String s = input.toJSONString();
+        String s= JacksonUtil.toJson(vo);
+
         String res = this.mvc.perform(post("/internal/products/2532/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isCreated()).andReturn()
                 .getResponse().getContentAsString();
@@ -300,13 +305,14 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
         // 商品销售时间冲突=》
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2021-11-12 09:30:30.000");
-        input.put("endTime", "2022-10-12 09:40:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2021-11-12 09:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 09:40:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(post("/internal/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk()).andReturn()
                 .getResponse().getContentAsString();
@@ -315,13 +321,15 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
 //        开始时间晚于结束时间
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
+
         res = this.mvc.perform(post("/internal/products/2549/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
@@ -330,13 +338,15 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
         JSONAssert.assertEquals(expect, res,true);
 
         //        货品不存在
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2029-02-12 16:20:30.000");
-        input.put("quantity",10);
-        input.put("type", 0);
-        s = input.toJSONString();
+        vo=new NewOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2029-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        vo.setType(0);
+        s= JacksonUtil.toJson(vo);
+
+
         res = this.mvc.perform(post("/internal/products/999999/onsales")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isNotFound()).andReturn()
                 .getResponse().getContentAsString();
@@ -404,12 +414,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
     public void testUpdate() throws Exception{
 
         // 正常=》
-        JSONObject input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        String s = input.toJSONString();
+        ModifyOnSaleVo vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2022-10-11 15:20:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        String s= JacksonUtil.toJson(vo);
+
         String res = this.mvc.perform(put("/internal/onsales/30")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -418,12 +429,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
 //        开始时间晚于结束时间
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-02-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/internal/onsales/29")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
@@ -433,12 +445,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
         //        不存在价格浮动
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-04-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-04-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/internal/onsales/66666")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isNotFound()).andReturn()
                 .getResponse().getContentAsString();
@@ -446,11 +459,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
         JSONAssert.assertEquals(expect, res,true);
 
         //草稿态/下线态 才能修改
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2022-10-11 15:20:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/internal/onsales/28")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -464,13 +479,15 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
     @Test
     public void testUpdateNorSec() throws Exception{
 
-        // 正常=》
-        JSONObject input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        String s = input.toJSONString();
+        // 正常
+        ModifyOnSaleVo vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2022-10-11 15:20:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2022-10-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        String s= JacksonUtil.toJson(vo);
+
+
         String res = this.mvc.perform(put("/shops/9/onsales/30")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
@@ -480,12 +497,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
 //        开始时间晚于结束时间
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-02-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-02-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/shops/10/onsales/1")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isBadRequest()).andReturn()
                 .getResponse().getContentAsString();
@@ -494,12 +512,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
 
 
 //        限定普通秒杀
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-04-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-04-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/shops/3/onsales/2")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isForbidden()).andReturn()
                 .getResponse().getContentAsString();
@@ -507,12 +526,13 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
         JSONAssert.assertEquals(expect, res,true);
 
         //        不存在价格浮动
-        input = new JSONObject();
-        input.put("price", 1000L);
-        input.put("beginTime", "2028-03-11 15:30:30.000");
-        input.put("endTime", "2028-04-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-04-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
+
         res = this.mvc.perform(put("/shops/3/onsales/22266")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isNotFound()).andReturn()
                 .getResponse().getContentAsString();
@@ -520,11 +540,12 @@ String expect="{\"errno\":0,\"data\":{\"price\":1000,\"beginTime\":\"2022-10-11 
         JSONAssert.assertEquals(expect, res,true);
 
         //草稿态/下线态 才能修改
-        input.put("price", 1000L);
-        input.put("beginTime", "2022-10-11 15:20:30.000");
-        input.put("endTime", "2022-10-12 16:20:30.000");
-        input.put("quantity",10);
-        s = input.toJSONString();
+        vo=new ModifyOnSaleVo();
+        vo.setPrice(1000L);
+        vo.setBeginTime(LocalDateTime.parse("2028-03-11 15:30:30.000",df));
+        vo.setEndTime(LocalDateTime.parse("2028-04-12 16:20:30.000",df));
+        vo.setQuantity(10);
+        s= JacksonUtil.toJson(vo);
         res = this.mvc.perform(put("/shops/4/onsales/28")
                 .contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk())
                 .andReturn().getResponse().getContentAsString();
