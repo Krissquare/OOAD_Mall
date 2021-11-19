@@ -8,6 +8,7 @@ import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleRetVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
 import cn.edu.xmu.oomall.goods.service.OnsaleService;
+import cn.edu.xmu.privilegegateway.annotation.annotation.Audit;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,7 +181,7 @@ public class OnSaleController {
 
 
         //        判断开始时间是否比结束时间晚
-        if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
+        if (newOnSaleVo.getBeginTime().isAfter(newOnSaleVo.getEndTime())) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
@@ -246,7 +247,7 @@ public class OnSaleController {
 
 
         // 判断开始时间是否比结束时间晚
-        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+        if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
@@ -268,7 +269,7 @@ public class OnSaleController {
         loginUserName = "yujie";
 
         // 判断开始时间是否比结束时间晚
-        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
+        if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
             return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
