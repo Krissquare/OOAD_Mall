@@ -34,12 +34,12 @@ public class ShopAccountVo implements VoObject {
     Byte priority;
 
 
-    public SimpleAdminUserVo createdBy;
+    public SimpleAdminUserVo creator;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime gmtCreate;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public LocalDateTime gmtModified;
-    public SimpleAdminUserVo modifiedBy;
+    public SimpleAdminUserVo modifier;
 
 
     /**
@@ -68,10 +68,10 @@ public class ShopAccountVo implements VoObject {
         account=shopAccountPo.getAccount();
         name=shopAccountPo.getName();
         priority=shopAccountPo.getPriority();
-        createdBy=new SimpleAdminUserVo(shopAccountPo.getCreatedBy(),shopAccountPo.getCreateName());
+        creator=new SimpleAdminUserVo(shopAccountPo.getCreatorId(),shopAccountPo.getCreatorName());
         gmtCreate=shopAccountPo.getGmtCreate();
         gmtModified=shopAccountPo.getGmtModified();
-        modifiedBy=new SimpleAdminUserVo(shopAccountPo.getModifiedBy(),shopAccountPo.getModiName());
+        modifier=new SimpleAdminUserVo(shopAccountPo.getModifierId(),shopAccountPo.getModifierName());
     }
 
     /**

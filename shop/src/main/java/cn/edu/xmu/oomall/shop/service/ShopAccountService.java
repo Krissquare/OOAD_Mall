@@ -33,8 +33,8 @@ public class ShopAccountService {
         ShopAccountPo shopAccountPo = shopAccountVo.createPo();
         if(shopAccountDao.addShopAccount(shopAccountPo,shopId,loginUserId,loginUserName)){
             ShopAccountVo shopAccountVo1=new ShopAccountVo(shopAccountPo);
-            shopAccountVo1.modifiedBy=new SimpleAdminUserVo();
-            shopAccountVo1.createdBy=new SimpleAdminUserVo(shopAccountPo.getCreatedBy(),shopAccountPo.getCreateName());
+            shopAccountVo1.modifier=new SimpleAdminUserVo();
+            shopAccountVo1.creator=new SimpleAdminUserVo(shopAccountPo.getCreatorId(),shopAccountPo.getCreatorName());
             return new ReturnObject<>(shopAccountVo1);
         }
         else
