@@ -50,11 +50,11 @@ spring:
       #filters: config
       #connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALfa9QtUlD1QZNSn1jLCsWNFrLRph1leEdBk8oDYl2Fslsbvw+McsKLn3WYcY3Mue4litj+EsdUr+LO9dbt8MgMCAwEAAQ==
 
-#  redis:
-#    host: 101.132.164.244
-#    port: 6379
-#    database: 0
-#    password: 123456
+  redis:
+    host: 101.132.164.244
+    port: 6379
+    database: 0
+    password: 123456
   cloud:
     nacos:
       discovery:
@@ -103,6 +103,8 @@ pagehelper:
 
 oomall:
   activity:
+    activity:
+      expiretime: 10000
     share:
       expiretime: 10000
 
