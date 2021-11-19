@@ -19,7 +19,7 @@ public class CouponActivity {
         /**
          * 草稿
          */
-        EXAME(0,"草稿"),
+        DRAFT(0,"草稿"),
         /**
          * 上线
          */
