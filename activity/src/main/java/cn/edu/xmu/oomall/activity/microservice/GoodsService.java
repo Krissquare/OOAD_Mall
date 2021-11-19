@@ -1,5 +1,9 @@
 package cn.edu.xmu.oomall.activity.microservice;
 
+import cn.edu.xmu.oomall.activity.microservice.vo.OnSaleVo;
+import cn.edu.xmu.oomall.activity.microservice.vo.SimpleOnSaleVo;
+import cn.edu.xmu.oomall.activity.model.vo.PageInfoVo;
+import cn.edu.xmu.oomall.core.util.ReturnObject;
 import cn.edu.xmu.oomall.activity.microservice.vo.SimpleSaleInfoVO;
 import cn.edu.xmu.oomall.activity.model.vo.OnsaleModifyVo;
 import cn.edu.xmu.oomall.activity.model.vo.OnsaleVo;
@@ -11,11 +15,16 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author xiuchen lang 22920192204222
- * @date 2021/11/13 12:21
+ * @author Gao Yanfeng
+ * @date 2021/11/13
  */
-@FeignClient(value = "goods-service")
+@FeignClient(name = "Goods")
 public interface GoodsService {
+    @GetMapping("/internal/products/{id}/onsales")
+    ReturnObject<PageInfoVo<SimpleOnSaleVo>> getOnsSalesOfProduct(@PathVariable Long id, @RequestParam Integer page, @RequestParam Integer pageSize);
+
+    @GetMapping("/internal/onsales/{id}")
+    ReturnObject<OnSaleVo> getOnSale(@PathVariable Long id);
 
     /**
      * 管理员查询所有商品的价格浮动

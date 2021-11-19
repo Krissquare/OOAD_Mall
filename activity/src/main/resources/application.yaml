@@ -28,9 +28,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=UTF8
-    username: root
-    password: 123456
+    url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8
+    username: dbuser
+    password: 12345678
     druid:
       #初始化时建立物理连接的个数
       initial-size: 3
@@ -51,10 +51,25 @@ spring:
       #connection-properties: config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBALfa9QtUlD1QZNSn1jLCsWNFrLRph1leEdBk8oDYl2Fslsbvw+McsKLn3WYcY3Mue4litj+EsdUr+LO9dbt8MgMCAwEAAQ==
 
   redis:
-    host: 101.132.164.244
-    port: 6379
     database: 0
-    password: 123456
+    # Redis服务器地址
+    host: 127.0.0.1
+    # Redis服务器连接端口
+    port: 6379
+    # Redis服务器连接密码
+    password:
+    #连接池最大连接数（使用负值表示没有限制）
+    lettuce:
+      pool:
+        max-active: 100
+        # 连接池中的最大空闲连接
+        max-idle: 100
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        #连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+    # 连接超时时间（毫秒）
+    timeout: 5000
   cloud:
     nacos:
       discovery:
@@ -62,20 +77,6 @@ spring:
         username: nacos
         password: nacos
         namespace: public
-#    # Redis数据库索引（默认为0）
-#    database: 0
-#    #连接池最大连接数（使用负值表示没有限制）
-#    lettuce:
-#      pool:
-#        max-active: 100
-#        # 连接池中的最大空闲连接
-#        max-idle: 100
-#        # 连接池中的最小空闲连接
-#        min-idle: 0
-#        #连接池最大阻塞等待时间（使用负值表示没有限制）
-#        max-wait: -1
-#    # 连接超时时间（毫秒）
-#    timeout: 5000
 #  sql:
 #    init:
 #      mode: always
@@ -89,7 +90,7 @@ mybatis:
   #po对象的包
   type-aliases-package: cn.edu.xmu.oomall.activity.model.po
   #mapper.xml所在的位置
-  mapper-locations: classpath*:cn.edu.xmu.privilege.mapper/*.xml
+  mapper-locations: classpath*:cn.edu.xmu.oomall.activity.mapper/*.xml
   #自动将SQL中查出来的带下划线的字段，转换为驼峰标志，再去匹配类中的属性
   configuration:
     #输出产生的SQL
@@ -107,6 +108,5 @@ oomall:
       expiretime: 10000
     share:
       expiretime: 10000
-
-
-
+    groupon:
+      expiretime: 10000
