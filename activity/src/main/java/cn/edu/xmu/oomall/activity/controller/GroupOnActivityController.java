@@ -132,7 +132,7 @@ public class GroupOnActivityController {
         }
         ReturnObject ret;
         if (!body.getBeginTime().isBefore(body.getEndTime())) {
-            ret = new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME);
+            ret = new ReturnObject(ReturnNo.LATE_BEGINTIME);
         } else {
             ret = groupOnService.addActivity(shopId, body, loginUserId, loginUserName);
         }

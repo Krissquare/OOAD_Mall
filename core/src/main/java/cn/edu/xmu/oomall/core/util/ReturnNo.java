@@ -26,7 +26,7 @@ public enum ReturnNo {
     IMG_FORMAT_ERROR(508,"图片格式不正确"),
     IMG_SIZE_EXCEED(509,"图片大小超限"),
     PARAMETER_MISSED(510, "缺少必要参数"),
-    ACT_LATE_BEGINTIME(947, "开始时间不能晚于结束时间"),
+    LATE_BEGINTIME(947, "开始时间不能晚于结束时间"),
     ACT_LATE_PAYTIME(948, "尾款支付时间晚于活动结束时间"),
     ACT_EARLY_PAYTIME(949, "尾款支付时间早于活动开始时间"),
     COUPON_LATE_COUPONTIME(950,"优惠卷领卷时间晚于活动开始时间"),

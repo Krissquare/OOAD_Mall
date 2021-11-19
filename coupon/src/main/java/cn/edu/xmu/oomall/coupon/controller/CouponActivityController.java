@@ -62,7 +62,7 @@ public class CouponActivityController {
         // 如果开始时间晚于结束时间
         if(couponActivityVo.getBeginTime()!=null&&couponActivityVo.getEndTime()!=null){
             if(couponActivityVo.getBeginTime().compareTo(couponActivityVo.getEndTime()) > 0){
-                return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+                return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
             }
         }
 
@@ -146,7 +146,7 @@ public class CouponActivityController {
         //对输入数据进行合法性判断
         // 如果开始时间晚于结束时间
         if(beginTime.compareTo(endTime) > 0){
-            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
         }
         return Common.getPageRetObject(couponActivityService.showOwnCouponActivities(shopId,beginTime,endTime,page,pageSize));
 
@@ -172,7 +172,7 @@ public class CouponActivityController {
         //对输入数据进行合法性判断
         // 如果开始时间晚于结束时间
         if(beginTime.compareTo(endTime) > 0){
-            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
         }
         return Common.getPageRetObject(couponActivityService.showOwnCouponActivities1(shopId,beginTime,endTime,state,page,pageSize));
     }

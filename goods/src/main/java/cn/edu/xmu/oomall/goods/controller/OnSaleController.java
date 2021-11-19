@@ -8,7 +8,6 @@ import cn.edu.xmu.oomall.goods.model.vo.ModifyOnSaleVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleRetVo;
 import cn.edu.xmu.oomall.goods.model.vo.NewOnSaleVo;
 import cn.edu.xmu.oomall.goods.service.OnsaleService;
-import cn.edu.xmu.privilegegateway.annotation.annotation.Audit;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 
 import static cn.edu.xmu.oomall.core.util.Common.*;
 
@@ -69,7 +67,7 @@ public class OnSaleController {
 
         // 判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().isAfter(newOnSaleVo.getEndTime())) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         ReturnObject returnObject1 = onsaleService.createOnSale(shopId, id, newOnSaleVo, loginUserId, loginUserName);
@@ -182,7 +180,7 @@ public class OnSaleController {
 
         //        判断开始时间是否比结束时间晚
         if (newOnSaleVo.getBeginTime().isAfter(newOnSaleVo.getEndTime())) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         ReturnObject returnObject1 = onsaleService.createOnSaleWithoutShopId(id, newOnSaleVo, loginUserId, loginUserName);
@@ -248,7 +246,7 @@ public class OnSaleController {
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);
@@ -270,7 +268,7 @@ public class OnSaleController {
 
         // 判断开始时间是否比结束时间晚
         if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);

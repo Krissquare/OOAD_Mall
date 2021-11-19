@@ -11,11 +11,12 @@ import org.springframework.validation.FieldError;
 
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 通用工具类
@@ -360,7 +361,7 @@ public class Common {
             case RESOURCE_FALSIFY:
             case IMG_FORMAT_ERROR:
             case IMG_SIZE_EXCEED:
-            case ACT_LATE_BEGINTIME:
+            case LATE_BEGINTIME:
             case ACT_LATE_PAYTIME:
             case ACT_EARLY_PAYTIME:
             case COUPON_LATE_COUPONTIME:
