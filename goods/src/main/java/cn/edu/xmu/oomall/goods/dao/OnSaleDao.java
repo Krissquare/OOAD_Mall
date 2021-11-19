@@ -184,7 +184,7 @@ public class OnSaleDao {
         try {
             OnSalePo po = (OnSalePo) cloneVo(onsale, OnSalePo.class);
             setPoModifiedFields(po, userId, userName);
-            onSalePoMapper.updateByPrimaryKey(po);
+            onSalePoMapper.updateByPrimaryKeySelective(po);
             return new ReturnObject(ReturnNo.OK);
         } catch (Exception e) {
             return new ReturnObject(ReturnNo.INTERNAL_SERVER_ERR, e.getMessage());

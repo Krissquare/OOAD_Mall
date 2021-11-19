@@ -85,7 +85,7 @@ public class ShareActivityController {
         loginUser= 123L;
         loginUsername="pika";
         if(shareActivityVo.getBeginTime().compareTo(shareActivityVo.getEndTime())>0){
-            return Common.decorateReturnObject(new ReturnObject(ReturnNo.ACT_LATE_BEGINTIME));
+            return Common.decorateReturnObject(new ReturnObject(ReturnNo.LATE_BEGINTIME));
         }
         ReturnObject returnObject =shareActivityService.modifyShareActivity(id, shareActivityVo,loginUser,loginUsername);
         return Common.decorateReturnObject(returnObject);

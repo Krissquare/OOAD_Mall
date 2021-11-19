@@ -18,7 +18,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
 
 import static cn.edu.xmu.oomall.core.util.Common.*;
 
@@ -67,17 +66,20 @@ public class OnSaleController {
         }
 
         // 判断开始时间是否比结束时间晚
-        if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        if (newOnSaleVo.getBeginTime().isAfter(newOnSaleVo.getEndTime())) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         ReturnObject returnObject1 = onsaleService.createOnSale(shopId, id, newOnSaleVo, loginUserId, loginUserName);
+
         if (returnObject1.getCode() != ReturnNo.OK) {
             return decorateReturnObject(returnObject1);
         }
 
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
-        return getRetObject(returnObject1);
+
+        return decorateReturnObject(getRetVo(returnObject1,NewOnSaleRetVo.class));
+
 
     }
 
@@ -177,8 +179,8 @@ public class OnSaleController {
 
 
         //        判断开始时间是否比结束时间晚
-        if (newOnSaleVo.getBeginTime().compareTo(newOnSaleVo.getEndTime()) >= 0) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        if (newOnSaleVo.getBeginTime().isAfter(newOnSaleVo.getEndTime())) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         ReturnObject returnObject1 = onsaleService.createOnSaleWithoutShopId(id, newOnSaleVo, loginUserId, loginUserName);
@@ -186,7 +188,8 @@ public class OnSaleController {
             return decorateReturnObject(returnObject1);
         }
         httpServletResponse.setStatus(HttpStatus.CREATED.value());
-        return getRetObject(returnObject1);
+
+        return decorateReturnObject(getRetVo(returnObject1,NewOnSaleRetVo.class));
     }
 
 
@@ -241,10 +244,9 @@ public class OnSaleController {
         loginUserName = "yujie";
 
 
-
         // 判断开始时间是否比结束时间晚
-        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);
@@ -264,11 +266,9 @@ public class OnSaleController {
         loginUserId = 1L;
         loginUserName = "yujie";
 
-
-
         // 判断开始时间是否比结束时间晚
-        if (onSale.getBeginTime().compareTo(onSale.getEndTime()) >= 0) {
-            return decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME, "开始时间晚于结束时间。"));
+        if (onSale.getBeginTime().isAfter(onSale.getEndTime())) {
+            return decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME, "开始时间晚于结束时间。"));
         }
 
         OnSale bo = (OnSale)cloneVo(onSale,OnSale.class);
@@ -277,8 +277,6 @@ public class OnSaleController {
         ReturnObject returnObject1 = onsaleService.updateOnSaleNorSec(bo, shopId, loginUserId, loginUserName);
         return decorateReturnObject(returnObject1);
     }
-
-
 
 
 }

@@ -4,18 +4,19 @@ package cn.edu.xmu.oomall.coupon.controller;
 import cn.edu.xmu.oomall.core.util.Common;
 import cn.edu.xmu.oomall.core.util.ReturnNo;
 import cn.edu.xmu.oomall.core.util.ReturnObject;
-import cn.edu.xmu.oomall.coupon.model.po.CouponActivityPoExample;
 import cn.edu.xmu.oomall.coupon.model.vo.CouponActivityVo;
 import cn.edu.xmu.oomall.coupon.service.CouponActivityService;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -48,16 +49,20 @@ public class CouponActivityController {
     public Object addCouponActivity(@PathVariable Long shopId,
                                     Long userId,
                                     String userName,
-                                    @Validated @RequestBody CouponActivityVo couponActivityVo
+                                    @Valid @RequestBody CouponActivityVo couponActivityVo,
+                                    HttpServletResponse httpServletResponse,BindingResult bindingResult
                                     ){
         userId = 1L;
         userName = "aasdf";
-
+        Object returnObject = Common.processFieldErrors(bindingResult, httpServletResponse);
+        if (null != returnObject) {
+            return returnObject;
+        }
         //对输入数据进行合法性判断
         // 如果开始时间晚于结束时间
         if(couponActivityVo.getBeginTime()!=null&&couponActivityVo.getEndTime()!=null){
             if(couponActivityVo.getBeginTime().compareTo(couponActivityVo.getEndTime()) > 0){
-                return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+                return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
             }
         }
 
@@ -82,11 +87,12 @@ public class CouponActivityController {
                                                  Long userId,
                                                  String userName,
                                                  @RequestParam(required = false) Byte state,
-                                                 @RequestParam(required = false) Integer page,
-                                                 @RequestParam(required = false) Integer pageSize
+                                                 @RequestParam(required = false,defaultValue = "1") Integer page,
+                                                 @RequestParam(required = false,defaultValue = "5") Integer pageSize
                                                  ){
         userId = 1L;
         userName = "aasdf";
+
         return Common.getPageRetObject(couponActivityService.showOwnInvalidCouponActivities(userId,userName,shopId,state,page,pageSize));
     }
 
@@ -134,13 +140,13 @@ public class CouponActivityController {
     public Object showOwnCouponActivities(@RequestParam(required = false) Long shopId,
                                           @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime beginTime,
                                           @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime endTime,
-                                          @RequestParam(required = false) Integer page,
-                                          @RequestParam(required = false) Integer pageSize
+                                          @RequestParam(required = false,defaultValue = "1") Integer page,
+                                          @RequestParam(required = false,defaultValue = "5") Integer pageSize
                                           ){
         //对输入数据进行合法性判断
         // 如果开始时间晚于结束时间
         if(beginTime.compareTo(endTime) > 0){
-            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
         }
         return Common.getPageRetObject(couponActivityService.showOwnCouponActivities(shopId,beginTime,endTime,page,pageSize));
 
@@ -161,13 +167,12 @@ public class CouponActivityController {
                                           @RequestParam(required = false) Byte state,
                                           @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime beginTime,
                                           @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") @RequestParam(required = false) LocalDateTime endTime,
-                                          @RequestParam(required = false) Integer page,
-                                          @RequestParam(required = false) Integer pageSize
-    ){
+                                          @RequestParam(required = false,defaultValue = "1") Integer page,
+                                          @RequestParam(required = false,defaultValue = "2") Integer pageSize){
         //对输入数据进行合法性判断
         // 如果开始时间晚于结束时间
         if(beginTime.compareTo(endTime) > 0){
-            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.ACT_LATE_BEGINTIME));
+            return Common.decorateReturnObject(new ReturnObject<>(ReturnNo.LATE_BEGINTIME));
         }
         return Common.getPageRetObject(couponActivityService.showOwnCouponActivities1(shopId,beginTime,endTime,state,page,pageSize));
     }

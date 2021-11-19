@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class RegionService {
 
-    private static final Byte STATE_EFFCTIVE=0;
+    private static final Byte STATE_EFFECTIVE=0;
 
     private static final Byte STATE_SUSPENDED=1;
 
@@ -53,7 +53,7 @@ public class RegionService {
 
         Region region = (Region) Common.cloneVo(regionVo,Region.class);
         region.setPid(pid);
-        region.setState(STATE_EFFCTIVE);
+        region.setState(STATE_EFFECTIVE);
 
         ReturnObject retObj = regionDao.createRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
 
@@ -134,7 +134,7 @@ public class RegionService {
 
         Region region=new Region();
         region.setId(id);
-        region.setState(STATE_EFFCTIVE);
+        region.setState(STATE_EFFECTIVE);
 
         return regionDao.modiStateRegion( (RegionPo) Common.cloneVo(region, RegionPo.class), userId,userName);
     }
