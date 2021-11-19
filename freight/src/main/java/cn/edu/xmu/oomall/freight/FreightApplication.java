@@ -14,7 +14,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = {"cn.edu.xmu.oomall.core", "cn.edu.xmu.oomall.freight", "cn.edu.xmu.privilegegateway.annotation"})
 @EnableConfigurationProperties
 @MapperScan("cn.edu.xmu.oomall.freight.mapper")
-@EnableDiscoveryClient
+//@EnableDiscoveryClient
 public class FreightApplication {
 
 	public static void main(String[] args) {

@@ -36,9 +36,9 @@ public class RegionRetVo {
     private LocalDateTime gmtModified;
 
     @ApiModelProperty(value = "创建者id")
-    private SimpleUserRetVo createdBy;
+    private SimpleUserRetVo creator;
 
     @ApiModelProperty(value = "修改者id")
-    private SimpleUserRetVo modifiedBy;
+    private SimpleUserRetVo modifier;
 
 }
